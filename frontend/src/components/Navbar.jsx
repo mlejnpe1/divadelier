@@ -13,15 +13,29 @@ export default function Navbar() {
   const menuItems = [
     {
       title: "Domovská scéna",
-      submenu: ["Divadlo Di", "Dr. Zdiv", "Divan", "VVV", "TVV"],
+      submenu: [
+        { label: "Divadlo Di", href: "/divadlo-di" },
+        { label: "Dr. Zdiv", href: "/dr-zdiv" },
+        { label: "Divan", href: "/divan" },
+        { label: "VVV", href: "/vvv" },
+        { label: "TVV", href: "/tvv" },
+      ],
     },
     {
       title: "Program & Nabídka",
-      submenu: ["Akce", "Kurzy", "E-shop"],
+      submenu: [
+        { label: "Akce", href: "/akce" },
+        { label: "Kurzy", href: "/kurzy" },
+        { label: "E-shop", href: "/eshop" },
+      ],
     },
     {
       title: "O Divadeliéru",
-      submenu: ["Historie", "Pronájem", "Kontakt"],
+      submenu: [
+        { label: "Historie", href: "/historie" },
+        { label: "Pronájem", href: "/pronajem" },
+        { label: "Kontakt", href: "/kontakt" },
+      ],
     },
   ];
 
@@ -31,7 +45,9 @@ export default function Navbar() {
         <div className='flex justify-between h-16 items-center'>
           {/* Logo */}
           <div className='flex-shrink-0 flex items-center'>
-            <img src={Logo} alt='Logo' className='h-12 w-auto' />
+            <a href='/'>
+              <img src={Logo} alt='Logo' className='h-12 w-auto' />
+            </a>
           </div>
 
           {/* Desktop menu */}
@@ -53,11 +69,11 @@ export default function Navbar() {
                   <div className='absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg animate-fadeIn'>
                     {item.submenu.map((sub) => (
                       <a
-                        key={sub}
-                        href='#'
+                        key={sub.label}
+                        href={sub.href}
                         className='block px-4 py-2 text-gray-700 hover:bg-[#f5a623] hover:text-white rounded-lg'
                       >
-                        {sub}
+                        {sub.label}
                       </a>
                     ))}
                   </div>
@@ -104,11 +120,11 @@ export default function Navbar() {
                 <div className='px-6 pb-2'>
                   {item.submenu.map((sub) => (
                     <a
-                      key={sub}
-                      href='#'
+                      key={sub.label}
+                      href={sub.href}
                       className='block py-2 text-gray-700 hover:text-[#f5a623]'
                     >
-                      {sub}
+                      {sub.label}
                     </a>
                   ))}
                 </div>

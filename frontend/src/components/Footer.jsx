@@ -127,7 +127,7 @@ const Footer = () => {
                 Pronájem
               </a>
               <a
-                href='#'
+                href='/kontakt'
                 className='text-gray-800 hover:text-[#f5a623] font-medium'
               >
                 Kontakt
