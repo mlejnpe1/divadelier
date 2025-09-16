@@ -12,7 +12,7 @@ export default function Navbar() {
 
   const menuItems = [
     {
-      title: "Naše scéna",
+      title: "Domovská scéna",
       submenu: ["Divadlo Di", "Dr. Zdiv", "Divan", "VVV", "TVV"],
     },
     {

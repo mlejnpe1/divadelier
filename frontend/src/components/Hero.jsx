@@ -15,18 +15,16 @@ const Hero = () => {
         <p className='text-gray-600 text-lg md:text-xl mb-6'>
           Prkna, která znamenají svět.
         </p>
-        {/*
-        <button className='bg-[#f5a623] text-white px-6 py-3 rounded-full font-semibold hover:bg-orange-500 transition'>
-          Prohlédnout program
-        </button>
-         */}
         <p className='text-gray-600 text-lg md:text-xl mb-6'>
           Divadlo Di, Dr. Zdiv, Divan, TV VV, Výstavy ve výloze, přednášky,
           koncerty
         </p>
-        <p className='text-gray-600 text-lg md:text-xl'>
+        <p className='text-gray-600 text-lg md:text-xl mb-6'>
           a další kulturní akce...
         </p>
+        <button className='bg-[#f5a623] text-white px-6 py-3 rounded-full font-semibold hover:bg-orange-500 transition'>
+          Prohlédnout domovskou scénu
+        </button>
       </div>
 
       {/* Image */}
