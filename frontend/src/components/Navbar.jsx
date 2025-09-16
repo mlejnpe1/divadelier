@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Logo from "../assets/logo.webp";
+import Logo from "../assets/images/logos/logo.webp";
 import { ChevronDown, ChevronUp, Menu, X, UserRoundPen } from "lucide-react";
 
 export default function Navbar() {

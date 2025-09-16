@@ -1,5 +1,5 @@
 import React from "react";
-import Logo from "../assets/logo.webp";
+import Logo from "../assets/images/logos/logo.webp";
 import { Facebook, Instagram, Youtube } from "lucide-react";
 
 const Footer = () => {
@@ -42,8 +42,8 @@ const Footer = () => {
               </a>
             </div>
           </div>
-          <div className='md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-8'>
-            <div className='flex flex-col items-start space-y-2'>
+          <div className='md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-8 text-center sm:text-left'>
+            <div className='flex flex-col space-y-4 sm:space-y-2'>
               <a
                 href='#'
                 className='text-gray-800 hover:text-[#f5a623] font-medium'
@@ -81,7 +81,7 @@ const Footer = () => {
                 TVV
               </a>
             </div>
-            <div className='flex flex-col items-start space-y-2'>
+            <div className='flex flex-col space-y-4 sm:space-y-2'>
               <a
                 href='#'
                 className='text-gray-800 hover:text-[#f5a623] font-medium'
@@ -107,7 +107,7 @@ const Footer = () => {
                 E-shop
               </a>
             </div>
-            <div className='flex flex-col items-start space-y-2'>
+            <div className='flex flex-col space-y-4 sm:space-y-2'>
               <a
                 href='#'
                 className='text-gray-800 hover:text-[#f5a623] font-medium'
