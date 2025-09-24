@@ -13,8 +13,8 @@ import cors from "cors";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5001;
 const __dirname = path.resolve();
+const PORT = process.env.PORT || 5001;
 
 if (process.env.NODE_ENV !== "production") {
   app.use(
@@ -42,8 +42,12 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log("Server started on PORT:", PORT);
-  });
-});
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () =>
+    console.log(`Server running on http://localhost:${PORT}`)
+  );
+}
+
+connectDB();
+
+export default app;
