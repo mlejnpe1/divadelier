@@ -14,7 +14,6 @@ dotenv.config();
 
 const app = express();
 const __dirname = path.resolve();
-const PORT = process.env.PORT || 5001;
 
 if (process.env.NODE_ENV !== "production") {
   app.use(
@@ -40,12 +39,6 @@ if (process.env.NODE_ENV === "production") {
   app.get("*", (req, res) => {
     res.sendFile(path.join(frontendDistPath, "index.html"));
   });
-}
-
-if (process.env.NODE_ENV !== "production") {
-  app.listen(PORT, () =>
-    console.log(`Server running on http://localhost:${PORT}`)
-  );
 }
 
 connectDB();
