@@ -14,7 +14,7 @@ export default function Navbar() {
     {
       title: "Domovská scéna",
       submenu: [
-        { label: "Divadlo Di", href: "/divadlo-di" },
+        { label: "Divadlo Di", href: "https://divadlodi.cz" },
         { label: "Dr. Zdiv", href: "/dr-zdiv" },
         { label: "Divan", href: "/divan" },
         { label: "VVV", href: "/vvv" },

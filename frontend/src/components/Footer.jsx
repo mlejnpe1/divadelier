@@ -51,7 +51,7 @@ const Footer = () => {
                 Naše scéna
               </a>
               <a
-                href='#'
+                href='https://divadlodi.cz'
                 className='text-gray-800 hover:text-[#f5a623] font-medium'
               >
                 Divadlo Di

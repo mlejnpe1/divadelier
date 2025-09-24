@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 
 const ContactPage = () => {
   return (
-    <section className='bg-gray-50 max-w-6xl mx-auto py-20 px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-20'>
+    <section className='bg-gray-50 max-w-6xl mx-auto py-20 px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 w-full gap-16'>
       {/* Information */}
-      <div>
+      <div className='flex flex-col w-full space-y-6 min-w-0'>
         <h2 className='text-3xl font-bold text-gray-900 mb-6'>
           Kontaktujte nás
         </h2>
@@ -15,7 +15,7 @@ const ContactPage = () => {
           Máte dotaz nebo zájem o spolupráci? Napište nám, zavolejte nebo se
           zastavte.
         </p>
-        <ul className='space-y-3 text-gray-700'>
+        <ul className='space-y-3 text-gray-'>
           <li className='flex flex-row'>
             <MapPin className='w-5 h-5 text-[#f5a623] mr-2' />
             <strong className='mr-4'>Adresa:</strong> Pražská 8, 566 01 Vysoké
@@ -33,7 +33,7 @@ const ContactPage = () => {
       </div>
 
       {/* Socials */}
-      <div className='text-center mt-12 space-y-6'>
+      <div className='w-full text-center space-y-6'>
         <h3 className='text-2xl font-bold text-gray-900'>Sledujte nás</h3>
         <p className='text-gray-600'>Zůstaňte v kontaktu i mimo Divadeliér</p>
         <div className='flex justify-center space-x-6'>
