@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router";
 import LandingPage from "./pages/LandingPage";
 import Layout from "./components/Layout";
 import ContactPage from "./pages/ContactPage";
+import DrZdivPage from "./pages/DrZdivPage";
 
 const App = () => {
   return (
@@ -21,6 +22,14 @@ const App = () => {
           element={
             <Layout>
               <ContactPage />
+            </Layout>
+          }
+        />
+        <Route
+          path='/drZdiv'
+          element={
+            <Layout>
+              <DrZdivPage />
             </Layout>
           }
         />

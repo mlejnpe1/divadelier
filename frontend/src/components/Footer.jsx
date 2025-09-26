@@ -57,7 +57,7 @@ const Footer = () => {
                 Divadlo Di
               </a>
               <a
-                href='#'
+                href='/drZdiv'
                 className='text-gray-800 hover:text-[#f5a623] font-medium'
               >
                 Dr. Zdiv

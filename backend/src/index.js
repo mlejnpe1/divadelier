@@ -13,6 +13,7 @@ import { connectDB } from "./config/db.js";
 
 dotenv.config();
 const app = express();
+const PORT = process.env.PORT || 5001;
 
 // Lokální CORS
 if (process.env.NODE_ENV !== "production") {
@@ -29,6 +30,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/specials", specialRoutes);
 
 // Připojení k DB
-connectDB();
-
-export default app;
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log("Server started on PORT:", PORT);
+  });
+});
