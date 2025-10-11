@@ -1,4 +1,5 @@
 import express from "express";
+import serverless from "serverless-http";
 import cors from "cors";
 import dotenv from "dotenv";
 
@@ -29,7 +30,4 @@ app.use("/api/specials", specialRoutes);
 
 await connectDB();
 
-const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
-  console.log(`Server running locally on PORT: ${PORT}`);
-});
+export const handler = serverless(app);
