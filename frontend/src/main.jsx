@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router";
 import { Toaster } from "react-hot-toast";
+import "./assets/styles/disableScrollBar.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
