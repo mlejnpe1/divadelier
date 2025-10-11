@@ -6,6 +6,10 @@ const exhibitionSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    title_image: {
+      data: Buffer,
+      contentType: String,
+    },
     information: {
       type: String,
       required: true,

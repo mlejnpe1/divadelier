@@ -42,8 +42,12 @@ const DrZdivPage = () => {
         subtitle='Divadelní skupina plná energie a hravosti'
         description='Přinášíme nové nápady a divadelní tvorbu pro všechny generace.'
         children={
-          latestNews ? (
-            <div className='bg-white rounded-xl shadow-lg p-6 max-w-sm w-full'>
+          loadingNews ? (
+            <div className='flex justify-center items-center bg-white rounded-xl shadow-lg p-6 max-w-sm w-full h-48'>
+              <div className='animate-spin rounded-full h-12 w-12 border-t-4 border-[#f5a623] border-solid'></div>
+            </div>
+          ) : latestNews ? (
+            <div className='bg-white rounded-xl shadow-lg p-6 max-w-sm w-full h-'>
               <div className='flex items-center mb-8'>
                 <Megaphone className='w-8 h-8 text-[#f5a623] mr-3' />
                 <h2 className='text-3xl font-bold'>Aktualita</h2>
@@ -73,34 +77,38 @@ const DrZdivPage = () => {
           <h2 className='text-3xl font-bold'>Rozpis skupin</h2>
         </div>
         <div className='grid gap-8 md:grid-cols-2'>
-          {meetings.map((meeting, index) => (
-            <motion.div
-              key={meeting._id}
-              className='relative rounded-xl shadow-lg overflow-hidden cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-2xl'
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-            >
-              <div
-                className={`absolute inset-0 bg-gradient-to-t ${
-                  gradientBackgrounds[index % gradientBackgrounds.length]
-                }`}
-              />
+          {loadingMeetings ? (
+            <div className='animate-spin rounded-full h-12 w-12 border-t-4 border-[#f5a623] border-solid'></div>
+          ) : (
+            meetings.map((meeting, index) => (
+              <motion.div
+                key={meeting._id}
+                className='relative rounded-xl shadow-lg overflow-hidden cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-2xl'
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
+                <div
+                  className={`absolute inset-0 bg-gradient-to-t ${
+                    gradientBackgrounds[index % gradientBackgrounds.length]
+                  }`}
+                />
 
-              <div className='relative p-6 flex flex-col justify-end h-64'>
-                <h3 className='text-xl md:text-2xl font-bold text-black'>
-                  {meeting.title}
-                </h3>
-                <p className='text-black/90 text-sm md:text-base mt-1'>
-                  {meeting.information}
-                </p>
-                <p className='text-black text-xs mt-2 italic'>
-                  Den: {meeting.day_in_week}
-                </p>
-              </div>
-            </motion.div>
-          ))}
+                <div className='relative p-6 flex flex-col justify-end h-64'>
+                  <h3 className='text-xl md:text-2xl font-bold text-black'>
+                    {meeting.title}
+                  </h3>
+                  <p className='text-black/90 text-sm md:text-base mt-1'>
+                    {meeting.information}
+                  </p>
+                  <p className='text-black text-xs mt-2 italic'>
+                    Den: {meeting.day_in_week}
+                  </p>
+                </div>
+              </motion.div>
+            ))
+          )}
         </div>
       </section>
 
@@ -113,21 +121,25 @@ const DrZdivPage = () => {
           <h2 className='text-3xl font-bold'>Aktuality</h2>
         </div>
         <div className='space-y-6'>
-          {news.map((n, index) => (
-            <motion.div
-              key={n._id}
-              className='bg-white rounded-xl shadow p-6'
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-            >
-              <p className='text-gray-700'>{n.information}</p>
-              <p className='text-sm text-gray-500 mt-2'>
-                {new Date(n.createdAt).toLocaleDateString("cs-CZ")}
-              </p>
-            </motion.div>
-          ))}
+          {loadingNews ? (
+            <div className='animate-spin rounded-full h-12 w-12 border-t-4 border-[#f5a623] border-solid'></div>
+          ) : (
+            news.map((n, index) => (
+              <motion.div
+                key={n._id}
+                className='bg-white rounded-xl shadow p-6'
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
+                <p className='text-gray-700'>{n.information}</p>
+                <p className='text-sm text-gray-500 mt-2'>
+                  {new Date(n.createdAt).toLocaleDateString("cs-CZ")}
+                </p>
+              </motion.div>
+            ))
+          )}
         </div>
       </section>
     </div>

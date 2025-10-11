@@ -5,6 +5,7 @@ import Layout from "./components/Layout";
 import ContactPage from "./pages/ContactPage";
 import DrZdivPage from "./pages/DrZdivPage";
 import DivanPage from "./pages/DivanPage";
+import VVVPage from "./pages/VVVPage";
 
 const App = () => {
   return (
@@ -39,6 +40,14 @@ const App = () => {
           element={
             <Layout>
               <DivanPage />
+            </Layout>
+          }
+        />
+        <Route
+          path='/vvv'
+          element={
+            <Layout>
+              <VVVPage />
             </Layout>
           }
         />

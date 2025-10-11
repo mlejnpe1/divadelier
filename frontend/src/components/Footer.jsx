@@ -69,7 +69,7 @@ const Footer = () => {
                 Divan
               </a>
               <a
-                href='#'
+                href='/vvv'
                 className='text-gray-800 hover:text-[#f5a623] font-medium'
               >
                 VVV

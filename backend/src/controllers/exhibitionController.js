@@ -26,6 +26,10 @@ export async function createExhibition(req, res) {
   try {
     const { title, information, date } = req.body;
     const exhibition = new Exhibition({ title, information, date });
+    if (req.file) {
+      exhibition.image.data = req.file.buffer;
+      exhibition.image.contentType = req.file.mimetype;
+    }
     const savedExhibition = await exhibition.save();
     res.status(201).json(savedExhibition);
   } catch (error) {
