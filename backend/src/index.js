@@ -13,7 +13,10 @@ import { connectDB } from "./config/db.js";
 dotenv.config();
 const app = express();
 
-const allowedOrigins = ["http://localhost:5173", "divadelier.vercel.app"];
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://divadelier.vercel.app",
+];
 
 app.use(
   cors({
