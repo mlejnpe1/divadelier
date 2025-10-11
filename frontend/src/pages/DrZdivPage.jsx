@@ -9,6 +9,7 @@ const DrZdivPage = () => {
   const [news, setNews] = useState([]);
   const [loadingMeetings, setLoadingMeetings] = useState(true);
   const [loadingNews, setLoadingNews] = useState(true);
+  const API_URL = import.meta.env.API_URL;
 
   const gradientBackgrounds = [
     "from-purple-500/70 via-pink-500/50 to-yellow-300/30",
@@ -18,13 +19,13 @@ const DrZdivPage = () => {
   ];
 
   useEffect(() => {
-    fetch("http://localhost:5001/api/meetings")
+    fetch("${API_URL}/api/meetings")
       .then((res) => res.json())
       .then((data) => setMeetings(data))
       .catch((err) => console.error(err))
       .finally(() => setLoadingMeetings(false));
 
-    fetch("http://localhost:5001/api/news")
+    fetch("${API_URL}/api/news")
       .then((res) => res.json())
       .then((data) => setNews(data))
       .catch((err) => console.error(err))
