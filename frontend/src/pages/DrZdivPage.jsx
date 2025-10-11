@@ -9,7 +9,6 @@ const DrZdivPage = () => {
   const [news, setNews] = useState([]);
   const [loadingMeetings, setLoadingMeetings] = useState(true);
   const [loadingNews, setLoadingNews] = useState(true);
-  const API_URL = import.meta.env.API_URL;
 
   const gradientBackgrounds = [
     "from-purple-500/70 via-pink-500/50 to-yellow-300/30",
@@ -18,14 +17,16 @@ const DrZdivPage = () => {
     "from-indigo-600/70 via-purple-500/50 to-pink-300/30",
   ];
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
-    fetch("${API_URL}/api/meetings")
+    fetch(`${API_URL}/api/meetings`)
       .then((res) => res.json())
       .then((data) => setMeetings(data))
       .catch((err) => console.error(err))
       .finally(() => setLoadingMeetings(false));
 
-    fetch("${API_URL}/api/news")
+    fetch(`${API_URL}/api/news`)
       .then((res) => res.json())
       .then((data) => setNews(data))
       .catch((err) => console.error(err))
