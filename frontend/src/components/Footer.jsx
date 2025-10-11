@@ -63,7 +63,7 @@ const Footer = () => {
                 Dr. Zdiv
               </a>
               <a
-                href='#'
+                href='/divan'
                 className='text-gray-800 hover:text-[#f5a623] font-medium'
               >
                 Divan

@@ -2,22 +2,26 @@ import React from "react";
 import Hero from "../components/Hero";
 import About from "../components/About";
 import ProgramOffer from "../components/ProgramOffer";
-import HeroImageRotator from "../components/HeroImageRotator";
+import ImageRotator from "../components/ImageRotator";
+import HeroImage1 from "../assets/images/hero-landingPage/hero1.webp";
+import HeroImage2 from "../assets/images/hero-landingPage/hero2.webp";
+import HeroImage3 from "../assets/images/hero-landingPage/hero3.webp";
+
+const heroImages = [HeroImage1, HeroImage2, HeroImage3];
 
 const LandingPage = () => {
   return (
     <>
       <Hero
-        title={
-          <>
-            Vítejte v <span className='text-[#f5a623]'>Divadeliéru</span>
-          </>
-        }
+        title={<>Vítejte v Divadeliéru</>}
         subtitle='Prkna, která znamenají svět.'
         description='Divadlo Di, Dr.Zdiv, Divan, TV VV, Výstavy ve výloze, přednášky, koncerty a další kulturní akce...'
-        buttonText='Prohlédnout domovskou scénu'
       >
-        <HeroImageRotator />
+        <ImageRotator
+          images={heroImages}
+          interval={4000}
+          className='w-3/4 md:w-full h-80 md:h-96'
+        />
       </Hero>
       <About />
       <ProgramOffer />
