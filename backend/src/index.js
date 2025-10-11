@@ -8,16 +8,28 @@ import newsRoutes from "./routes/newsRoutes.js";
 import shopItemRoutes from "./routes/shopItemRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import specialRoutes from "./routes/specialRoutes.js";
-
 import { connectDB } from "./config/db.js";
 
 dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 5001;
 
-if (process.env.NODE_ENV !== "production") {
-  app.use(cors({ origin: "http://localhost:5173" }));
-}
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://divadelier-naqw.vercel.app",
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 
@@ -28,8 +40,9 @@ app.use("/api/shopItems", shopItemRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/specials", specialRoutes);
 
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log("Server started on PORT:", PORT);
-  });
+await connectDB();
+
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => {
+  console.log(`Server running locally on PORT: ${PORT}`);
 });
