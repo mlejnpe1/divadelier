@@ -1,9 +1,11 @@
 import ShopItem from "../models/ShopItem.js";
 
-export async function getAllShopItems(_, res) {
+export async function getAllShopItems(req, res) {
   try {
-    const shopItem = await ShopItem.find().sort({ createdAt: -1 });
-    res.status(200).json(shopItem);
+    const { shop_id } = req.query;
+    const filter = shop_id !== undefined ? { shop_id: Number(shop_id) } : {};
+    const shopItems = await ShopItem.find(filter).sort({ createdAt: -1 });
+    res.status(200).json(shopItems);
   } catch (error) {
     console.error("Error in getAllShopItem Controller.");
     res.status(500).json({ message: "Internal server error." });
@@ -26,6 +28,12 @@ export async function createShopItem(req, res) {
   try {
     const { shop_id, title, price, contact } = req.body;
     const shopItem = new ShopItem({ shop_id, title, price, contact });
+
+    if (req.file) {
+      shopItem.image.data = req.file.buffer;
+      shopItem.image.contentType = req.file.mimetype;
+    }
+
     const savedShopItem = await shopItem.save();
     res.status(201).json(savedShopItem);
   } catch (error) {

@@ -101,7 +101,7 @@ const Footer = () => {
                 Kurzy
               </a>
               <a
-                href='#'
+                href='/eshop'
                 className='text-gray-800 hover:text-[#f5a623] font-medium'
               >
                 E-shop

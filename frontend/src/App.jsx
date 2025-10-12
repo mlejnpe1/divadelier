@@ -7,6 +7,7 @@ import DrZdivPage from "./pages/DrZdivPage";
 import DivanPage from "./pages/DivanPage";
 import VVVPage from "./pages/VVVPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import EshopPage from "./pages/EshopPage";
 
 const App = () => {
   return (
@@ -49,6 +50,14 @@ const App = () => {
           element={
             <Layout>
               <VVVPage />
+            </Layout>
+          }
+        />
+        <Route
+          path='/eshop'
+          element={
+            <Layout>
+              <EshopPage />
             </Layout>
           }
         />
