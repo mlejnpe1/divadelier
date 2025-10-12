@@ -6,6 +6,7 @@ import ContactPage from "./pages/ContactPage";
 import DrZdivPage from "./pages/DrZdivPage";
 import DivanPage from "./pages/DivanPage";
 import VVVPage from "./pages/VVVPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 const App = () => {
   return (
@@ -51,6 +52,7 @@ const App = () => {
             </Layout>
           }
         />
+        <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </>
   );
