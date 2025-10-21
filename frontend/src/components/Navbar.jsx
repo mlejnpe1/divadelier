@@ -43,14 +43,12 @@ export default function Navbar() {
     <nav className='bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
         <div className='flex justify-between h-16 items-center'>
-          {/* Logo */}
           <div className='flex-shrink-0 flex items-center'>
             <a href='/'>
               <img src={Logo} alt='Logo' className='h-12 w-auto' />
             </a>
           </div>
 
-          {/* Desktop menu */}
           <div className='hidden md:flex space-x-6 items-center'>
             {menuItems.map((item) => (
               <div key={item.title} className='relative'>
@@ -80,11 +78,9 @@ export default function Navbar() {
                 )}
               </div>
             ))}
-            {/* Avatar */}
             <UserRoundPen className='w-6 h-6 text-gray-700 hover:text-[#f5a623] cursor-pointer' />
           </div>
 
-          {/* Mobile menu button */}
           <div className='md:hidden flex items-center'>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -100,7 +96,6 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {mobileOpen && (
         <div className='md:hidden bg-white border-t border-gray-200 shadow-md animate-fadeIn'>
           {menuItems.map((item) => (

@@ -8,62 +8,26 @@ import DivanPage from "./pages/DivanPage";
 import VVVPage from "./pages/VVVPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import EshopPage from "./pages/EshopPage";
+import HistoryPage from "./pages/HistoryPage";
 
 const App = () => {
+  const routes = [
+    { path: "/", element: <LandingPage /> },
+    { path: "/kontakt", element: <ContactPage /> },
+    { path: "/drZdiv", element: <DrZdivPage /> },
+    { path: "/divan", element: <DivanPage /> },
+    { path: "/vvv", element: <VVVPage /> },
+    { path: "/eshop", element: <EshopPage /> },
+    { path: "/historie", element: <HistoryPage /> },
+  ];
+
   return (
-    <>
-      <Routes>
-        <Route
-          path='/'
-          element={
-            <Layout>
-              <LandingPage />
-            </Layout>
-          }
-        />
-        <Route
-          path='/kontakt'
-          element={
-            <Layout>
-              <ContactPage />
-            </Layout>
-          }
-        />
-        <Route
-          path='/drZdiv'
-          element={
-            <Layout>
-              <DrZdivPage />
-            </Layout>
-          }
-        />
-        <Route
-          path='/divan'
-          element={
-            <Layout>
-              <DivanPage />
-            </Layout>
-          }
-        />
-        <Route
-          path='/vvv'
-          element={
-            <Layout>
-              <VVVPage />
-            </Layout>
-          }
-        />
-        <Route
-          path='/eshop'
-          element={
-            <Layout>
-              <EshopPage />
-            </Layout>
-          }
-        />
-        <Route path='*' element={<NotFoundPage />} />
-      </Routes>
-    </>
+    <Routes>
+      {routes.map(({ path, element }) => (
+        <Route key={path} path={path} element={<Layout>{element}</Layout>} />
+      ))}
+      <Route path='*' element={<NotFoundPage />} />
+    </Routes>
   );
 };
 

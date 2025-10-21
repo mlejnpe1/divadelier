@@ -3,136 +3,83 @@ import Logo from "../assets/images/logos/logo.webp";
 import { Facebook, Instagram, Youtube } from "lucide-react";
 
 const Footer = () => {
+  const socialLinks = [
+    { icon: Facebook, href: "https://facebook.com", color: "text-blue-500" },
+    { icon: Youtube, href: "https://youtube.com", color: "text-red-500" },
+    { icon: Instagram, href: "https://instagram.com", color: "text-pink-500" },
+  ];
+
+  const linkColumns = [
+    {
+      title: "Naše scéna",
+      links: [
+        { label: "Divadlo Di", href: "https://divadlodi.cz" },
+        { label: "Dr. Zdiv", href: "/drZdiv" },
+        { label: "Divan", href: "/divan" },
+        { label: "VVV", href: "/vvv" },
+        { label: "TVV", href: "#" },
+      ],
+    },
+    {
+      title: "Program & Nabídka",
+      links: [
+        { label: "Program & Nabídka", href: "#" },
+        { label: "Akce", href: "#" },
+        { label: "Kurzy", href: "#" },
+        { label: "E-shop", href: "/eshop" },
+      ],
+    },
+    {
+      title: "O Divadeliéru",
+      links: [
+        { label: "O Divadeliéru", href: "#" },
+        { label: "Historie", href: "/historie" },
+        { label: "Pronájem", href: "#" },
+        { label: "Kontakt", href: "/kontakt" },
+      ],
+    },
+  ];
+
   return (
-    <footer className='bg-white border-t border-gray-200 shadow-sm bottom-0 z-50'>
+    <footer className='bg-white border-t border-gray-200 shadow-sm'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
         <div className='grid grid-cols-1 md:grid-cols-4 gap-10 py-10'>
           <div className='md:col-span-2 flex flex-col items-center space-y-4'>
             <img src={Logo} alt='Divadeliér' className='h-28 w-auto' />
             <div className='flex flex-row space-x-4'>
-              <a
-                href='https://facebook.com'
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                <Facebook
-                  className='h-8 w-auto text-blue-500 hover:text-blue-700'
-                  aria-label='Facebook'
-                />
-              </a>
-              <a
-                href='https://youtube.com'
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                <Youtube
-                  className='h-8 w-auto text-red-500 hover:text-red-700'
-                  aria-label='Youtube'
-                />
-              </a>
-              <a
-                href='https://instagram.com'
-                target='_blank'
-                rel='noopener noreferrer'
-              >
-                <Instagram
-                  className='h-8 w-auto text-pink-500 hover:text-pink-700'
-                  aria-label='Instagram'
-                />
-              </a>
+              {socialLinks.map((social, idx) => {
+                const Icon = social.icon;
+                return (
+                  <a
+                    key={idx}
+                    href={social.href}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    <Icon
+                      className={`${social.color} h-8 w-auto hover:opacity-80`}
+                      aria-label={social.href}
+                    />
+                  </a>
+                );
+              })}
             </div>
           </div>
+
           <div className='md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-8 text-center sm:text-left'>
-            <div className='flex flex-col space-y-4 sm:space-y-2'>
-              <a
-                href='#'
-                className='text-gray-800 hover:text-[#f5a623] font-medium'
-              >
-                Naše scéna
-              </a>
-              <a
-                href='https://divadlodi.cz'
-                className='text-gray-800 hover:text-[#f5a623] font-medium'
-              >
-                Divadlo Di
-              </a>
-              <a
-                href='/drZdiv'
-                className='text-gray-800 hover:text-[#f5a623] font-medium'
-              >
-                Dr. Zdiv
-              </a>
-              <a
-                href='/divan'
-                className='text-gray-800 hover:text-[#f5a623] font-medium'
-              >
-                Divan
-              </a>
-              <a
-                href='/vvv'
-                className='text-gray-800 hover:text-[#f5a623] font-medium'
-              >
-                VVV
-              </a>
-              <a
-                href='#'
-                className='text-gray-800 hover:text-[#f5a623] font-medium'
-              >
-                TVV
-              </a>
-            </div>
-            <div className='flex flex-col space-y-4 sm:space-y-2'>
-              <a
-                href='#'
-                className='text-gray-800 hover:text-[#f5a623] font-medium'
-              >
-                Program & Nabídka
-              </a>
-              <a
-                href='#'
-                className='text-gray-800 hover:text-[#f5a623] font-medium'
-              >
-                Akce
-              </a>
-              <a
-                href='#'
-                className='text-gray-800 hover:text-[#f5a623] font-medium'
-              >
-                Kurzy
-              </a>
-              <a
-                href='/eshop'
-                className='text-gray-800 hover:text-[#f5a623] font-medium'
-              >
-                E-shop
-              </a>
-            </div>
-            <div className='flex flex-col space-y-4 sm:space-y-2'>
-              <a
-                href='#'
-                className='text-gray-800 hover:text-[#f5a623] font-medium'
-              >
-                O Divadeliéru
-              </a>
-              <a
-                href='#'
-                className='text-gray-800 hover:text-[#f5a623] font-medium'
-              >
-                Historie
-              </a>
-              <a
-                href='#'
-                className='text-gray-800 hover:text-[#f5a623] font-medium'
-              >
-                Pronájem
-              </a>
-              <a
-                href='/kontakt'
-                className='text-gray-800 hover:text-[#f5a623] font-medium'
-              >
-                Kontakt
-              </a>
-            </div>
+            {linkColumns.map((column, idx) => (
+              <div key={idx} className='flex flex-col space-y-4 sm:space-y-2'>
+                {column.links.map((link, linkIdx) => (
+                  <a
+                    key={linkIdx}
+                    href={link.href}
+                    className='text-gray-800 hover:text-[#f5a623] font-medium'
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            ))}
           </div>
         </div>
       </div>
