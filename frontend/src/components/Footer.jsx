@@ -25,7 +25,7 @@ const Footer = () => {
       links: [
         { label: "Program & Nabídka", href: "#" },
         { label: "Akce", href: "#" },
-        { label: "Kurzy", href: "#" },
+        { label: "Kurzy", href: "/kurzy" },
         { label: "E-shop", href: "/eshop" },
       ],
     },

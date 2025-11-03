@@ -9,6 +9,7 @@ import VVVPage from "./pages/VVVPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import EshopPage from "./pages/EshopPage";
 import HistoryPage from "./pages/HistoryPage";
+import CoursesPage from "./pages/CoursesPage";
 
 const App = () => {
   const routes = [
@@ -19,6 +20,7 @@ const App = () => {
     { path: "/vvv", element: <VVVPage /> },
     { path: "/eshop", element: <EshopPage /> },
     { path: "/historie", element: <HistoryPage /> },
+    { path: "/kurzy", element: <CoursesPage /> },
   ];
 
   return (
