@@ -11,7 +11,7 @@ const CourseCard = ({ course, isFirst }) => {
     <motion.section
       ref={ref}
       style={{
-        minHeight: isFirst ? "90vh" : "75vh",
+        minHeight: isFirst ? "95vh" : "75vh",
         willChange: "transform, opacity",
         transform: "translateZ(0)",
       }}
@@ -21,9 +21,9 @@ const CourseCard = ({ course, isFirst }) => {
         scale: isInView ? 1 : 0.98,
       }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className='border-t border-gray-200 relative z-10 mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center justify-center gap-12'
+      className='max-h-max border-b border-gray-300 flex align-middle'
     >
-      <div className='container mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center gap-12'>
+      <div className='max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12'>
         <motion.div
           className='flex-1'
           animate={{

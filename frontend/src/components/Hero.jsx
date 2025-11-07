@@ -25,7 +25,12 @@ const Hero = ({
           <p className='text-white text-lg md:text-xl mb-6'>{subtitle}</p>
         )}
         {description && (
-          <p className='text-white text-lg md:text-xl mb-6'>{description}</p>
+          <p
+            className='text-white text-lg md:text-xl mb-6'
+            style={{ whiteSpace: "pre-line" }}
+          >
+            {description}
+          </p>
         )}
         {buttonText && (
           <a

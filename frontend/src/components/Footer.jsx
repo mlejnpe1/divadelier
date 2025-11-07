@@ -14,17 +14,16 @@ const Footer = () => {
       title: "Naše scéna",
       links: [
         { label: "Divadlo Di", href: "https://divadlodi.cz" },
-        { label: "Dr. Zdiv", href: "/drZdiv" },
+        { label: "Dr. ZDIV", href: "/drZdiv" },
         { label: "Divan", href: "/divan" },
         { label: "VVV", href: "/vvv" },
-        { label: "TVV", href: "#" },
+        { label: "TV VV", href: "/tvvv" },
       ],
     },
     {
       title: "Program & Nabídka",
       links: [
-        { label: "Program & Nabídka", href: "#" },
-        { label: "Akce", href: "#" },
+        { label: "Akce", href: "/akce" },
         { label: "Kurzy", href: "/kurzy" },
         { label: "E-shop", href: "/eshop" },
       ],
@@ -32,7 +31,6 @@ const Footer = () => {
     {
       title: "O Divadeliéru",
       links: [
-        { label: "O Divadeliéru", href: "#" },
         { label: "Historie", href: "/historie" },
         { label: "Pronájem", href: "#" },
         { label: "Kontakt", href: "/kontakt" },
@@ -69,6 +67,9 @@ const Footer = () => {
           <div className='md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-8 text-center sm:text-left'>
             {linkColumns.map((column, idx) => (
               <div key={idx} className='flex flex-col space-y-4 sm:space-y-2'>
+                <a className='cursor-default text-gray-800 font-medium'>
+                  {column.title}
+                </a>
                 {column.links.map((link, linkIdx) => (
                   <a
                     key={linkIdx}

@@ -16,15 +16,15 @@ const About = () => {
             O <span className='text-[#f5a623]'>Divadeliéru</span>
           </h2>
           <p className='text-lg text-gray-700 leading-relaxed mb-4'>
-            Divadeliér je otevřený prostor pro diavdelní tvorbu, koncerty,
+            Divadeliér je otevřený prostor pro divadelní tvorbu, koncerty,
             přednášky i výstavy.
           </p>
           <p className='text-lg text-gray-700 leading-relaxed mb-4'>
-            Přinášíme živou kulturu do srdce mšsta a dáváme prostor začínajícím
+            Přinášíme živou kulturu do srdce města a dáváme prostor začínajícím
             i zkušeným umělcům.
           </p>
           <p className='text-lg text-gray-700 leading-relaxed'>
-            Cheme, aby si každý našel své místo – ať už jako divák, účinkující,
+            Chceme, aby si každý našel své místo – ať už jako divák, účinkující,
             nebo organizátor.
           </p>
         </motion.div>

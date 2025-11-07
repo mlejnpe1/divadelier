@@ -25,7 +25,7 @@ const courses = [
 
 const CoursesPage = () => {
   return (
-    <div className='w-full min-h-screen bg-gray-50 text-gray-800'>
+    <div className='bg-gray-50 text-gray-800 min-h-screen'>
       {courses.map((course, index) => (
         <CourseCard
           key={index}
