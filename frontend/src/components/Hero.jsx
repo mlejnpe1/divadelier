@@ -6,6 +6,7 @@ const Hero = ({
   description,
   buttonText,
   buttonLink,
+  onButtonClick,
   children,
 }) => {
   return (
@@ -32,9 +33,17 @@ const Hero = ({
             {description}
           </p>
         )}
-        {buttonText && (
+        {buttonText && buttonLink && (
           <a
-            href={buttonLink || "#"}
+            href={buttonLink}
+            className='bg-orange-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-orange-600 transition'
+          >
+            {buttonText}
+          </a>
+        )}
+        {buttonText && onButtonClick && (
+          <a
+            onClick={onButtonClick}
             className='bg-orange-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-orange-600 transition'
           >
             {buttonText}

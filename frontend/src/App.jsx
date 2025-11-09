@@ -10,6 +10,8 @@ import NotFoundPage from "./pages/NotFoundPage";
 import EshopPage from "./pages/EshopPage";
 import HistoryPage from "./pages/HistoryPage";
 import CoursesPage from "./pages/CoursesPage";
+import ActionsPage from "./pages/ActionsPage";
+import ActionDetailPage from "./pages/ActionDetailPage";
 
 const App = () => {
   const routes = [
@@ -21,6 +23,8 @@ const App = () => {
     { path: "/eshop", element: <EshopPage /> },
     { path: "/historie", element: <HistoryPage /> },
     { path: "/kurzy", element: <CoursesPage /> },
+    { path: "/akce", element: <ActionsPage /> },
+    { path: "/akce/:id", element: <ActionDetailPage /> },
   ];
 
   return (

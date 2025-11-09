@@ -57,20 +57,20 @@ const Gallery = ({ images }) => {
 
             <button
               onClick={prevImage}
-              className='absolute top-1/2 left-2 -translate-y-1/2 text-white text-3xl font-bold hover:text-yellow-400'
+              className='absolute top-1/2 left-2 -translate-y-1/2 text-yellow-500 text-3xl font-bold hover:text-yellow-600'
             >
               &#10094;
             </button>
             <button
               onClick={nextImage}
-              className='absolute top-1/2 right-2 -translate-y-1/2 text-white text-3xl font-bold hover:text-yellow-400'
+              className='absolute top-1/2 right-2 -translate-y-1/2 text-yellow-500 text-3xl font-bold hover:text-yellow-600'
             >
               &#10095;
             </button>
 
             <button
               onClick={closeModal}
-              className='absolute top-2 right-2 text-white text-2xl font-bold hover:text-yellow-400'
+              className='absolute top-2 right-2 text-yellow-500 text-2xl font-bold hover:text-yellow-600'
             >
               &times;
             </button>

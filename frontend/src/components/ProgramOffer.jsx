@@ -10,27 +10,33 @@ const ProgramOffer = () => {
         </h2>
 
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10'>
-          <div className='bg-white rounded-2xl shadow-md p-16 hover:shadow-xl transition-shadow'>
-            <Calendar className='w-10 h-10 text-[#f5a623] mb-4 mx-auto' />
-            <h3 className='text-xl font-semibold mb-2'>Akce</h3>
-            <p className='text-gray-600'>
-              Přehled budoucích i aktuálních akcí Divadeliéru.
-            </p>
-          </div>
-          <div className='bg-white rounded-2xl shadow-md p-16 hover:shadow-xl transition-shadow'>
-            <Clapperboard className='w-10 h-10 text-[#f5a623] mb-4 mx-auto' />
-            <h3 className='text-xl font-semibold mb-2'>Kurzy</h3>
-            <p className='text-gray-600'>
-              Přehled individuálních i skupinových hereckých kurzů.
-            </p>
-          </div>
-          <div className='bg-white rounded-2xl shadow-md p-16 hover:shadow-xl transition-shadow'>
-            <ShoppingCart className='w-10 h-10 text-[#f5a623] mb-4 mx-auto' />
-            <h3 className='text-xl font-semibold mb-2'>E-shop</h3>
-            <p className='text-gray-600'>
-              Podpoř Divadeliér a vystavující umělce v našem e-shopu.
-            </p>
-          </div>
+          <a href='/akce'>
+            <div className='bg-white rounded-2xl shadow-md p-16 hover:shadow-xl transition-shadow'>
+              <Calendar className='w-10 h-10 text-[#f5a623] mb-4 mx-auto' />
+              <h3 className='text-xl font-semibold mb-2'>Akce</h3>
+              <p className='text-gray-600'>
+                Přehled budoucích i aktuálních akcí Divadeliéru.
+              </p>
+            </div>
+          </a>
+          <a href='/kurzy'>
+            <div className='bg-white rounded-2xl shadow-md p-16 hover:shadow-xl transition-shadow'>
+              <Clapperboard className='w-10 h-10 text-[#f5a623] mb-4 mx-auto' />
+              <h3 className='text-xl font-semibold mb-2'>Kurzy</h3>
+              <p className='text-gray-600'>
+                Přehled individuálních i skupinových hereckých kurzů.
+              </p>
+            </div>
+          </a>
+          <a href='/eshop'>
+            <div className='bg-white rounded-2xl shadow-md p-16 hover:shadow-xl transition-shadow'>
+              <ShoppingCart className='w-10 h-10 text-[#f5a623] mb-4 mx-auto' />
+              <h3 className='text-xl font-semibold mb-2'>E-shop</h3>
+              <p className='text-gray-600'>
+                Podpoř Divadeliér a vystavující umělce v našem e-shopu.
+              </p>
+            </div>
+          </a>
         </div>
       </div>
     </section>

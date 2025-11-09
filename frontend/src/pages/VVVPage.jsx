@@ -44,7 +44,7 @@ const VVVPage = () => {
       <section className='max-w-6xl mx-auto py-20 px-6 md:px-12'>
         <h2 className='text-3xl font-bold mb-6'>Následující výstavy</h2>
         <div className='flex flex-col gap-6'>
-          {!loadingExhibitions && exhibitions.length > 5 && (
+          {!loadingExhibitions && exhibitions.length > 5 ? (
             <>
               <div className='overflow-x-auto flex space-x-6 py-8 no-scrollbar'>
                 <div className='absolute top-0 right-0 h-full w-16 bg-gradient-to-l pointer-events-none' />
@@ -72,6 +72,10 @@ const VVVPage = () => {
                 </div>
               </div>
             </>
+          ) : (
+            <div className='flex justify-center items-center h-48'>
+              <div className='animate-spin rounded-full h-12 w-12 border-t-4 border-[#f5a623] border-solid'></div>
+            </div>
           )}
         </div>
         <button
