@@ -1,45 +1,46 @@
 import React from "react";
+import Section from "./Section";
 import { Calendar, Clapperboard, ShoppingCart } from "lucide-react";
+
+const cards = [
+  {
+    href: "/akce",
+    title: "Akce",
+    description: "Přehled budoucích i aktuálních akcí Divadeliéru.",
+    Icon: Calendar,
+  },
+  {
+    href: "/kurzy",
+    title: "Kurzy",
+    description: "Přehled individuálních i skupinových hereckých kurzů.",
+    Icon: Clapperboard,
+  },
+  {
+    href: "/eshop",
+    title: "E-shop",
+    description: "Podpoř Divadeliér a vystavující umělce v našem e-shopu.",
+    Icon: ShoppingCart,
+  },
+];
 
 const ProgramOffer = () => {
   return (
-    <section className='bg-gray-50 py-20 px-6 md:px-12 border-t border-gray-200'>
-      <div className='max-w-6xl mx-auto text-center'>
-        <h2 className='text-3xl md:text-4xl font bold mb-12'>
-          Program & Nabídka
-        </h2>
-
-        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10'>
-          <a href='/akce'>
+    <Section>
+      <h2 className='text-center text-3xl md:text-4xl font-bold text-gray-900 mb-6'>
+        Program & Nabídka
+      </h2>
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10'>
+        {cards.map(({ href, title, description, Icon }) => (
+          <a key={href} href={href}>
             <div className='bg-white rounded-2xl shadow-md p-16 hover:shadow-xl transition-shadow'>
-              <Calendar className='w-10 h-10 text-[#f5a623] mb-4 mx-auto' />
-              <h3 className='text-xl font-semibold mb-2'>Akce</h3>
-              <p className='text-gray-600'>
-                Přehled budoucích i aktuálních akcí Divadeliéru.
-              </p>
+              <Icon className='w-10 h-10 text-[#f5a623] mb-4 mx-auto' />
+              <h3 className='text-xl font-semibold mb-2'>{title}</h3>
+              <p className='text-gray-600'>{description}</p>
             </div>
           </a>
-          <a href='/kurzy'>
-            <div className='bg-white rounded-2xl shadow-md p-16 hover:shadow-xl transition-shadow'>
-              <Clapperboard className='w-10 h-10 text-[#f5a623] mb-4 mx-auto' />
-              <h3 className='text-xl font-semibold mb-2'>Kurzy</h3>
-              <p className='text-gray-600'>
-                Přehled individuálních i skupinových hereckých kurzů.
-              </p>
-            </div>
-          </a>
-          <a href='/eshop'>
-            <div className='bg-white rounded-2xl shadow-md p-16 hover:shadow-xl transition-shadow'>
-              <ShoppingCart className='w-10 h-10 text-[#f5a623] mb-4 mx-auto' />
-              <h3 className='text-xl font-semibold mb-2'>E-shop</h3>
-              <p className='text-gray-600'>
-                Podpoř Divadeliér a vystavující umělce v našem e-shopu.
-              </p>
-            </div>
-          </a>
-        </div>
+        ))}
       </div>
-    </section>
+    </Section>
   );
 };
 

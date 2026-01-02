@@ -4,7 +4,8 @@ import { useState } from "react";
 import Hero from "../components/Hero.jsx";
 import Placeholder from "../assets/images/placeholder.png";
 import { motion } from "framer-motion";
-import { ArrowRight, Megaphone } from "lucide-react";
+import { ArrowRight, CalendarSearchIcon, Megaphone } from "lucide-react";
+import Section from "../components/Section.jsx";
 
 const VVVPage = () => {
   const [exhibitions, setExhibitions] = useState([]);
@@ -20,7 +21,7 @@ const VVVPage = () => {
   }, []);
 
   return (
-    <div className='bg-gray-50 text-gray-800 min-h-screen'>
+    <>
       <Hero
         title='VVV – Výstavy ve výloze'
         subtitle='Aktuální výstava na dosah'
@@ -41,8 +42,11 @@ const VVVPage = () => {
           </div>
         }
       />
-      <section className='max-w-6xl mx-auto py-20 px-6 md:px-12'>
-        <h2 className='text-3xl font-bold mb-6'>Následující výstavy</h2>
+      <Section border={true}>
+        <div className='flex items-center mb-8'>
+          <CalendarSearchIcon className='w-8 h-8 text-[#f5a623] mr-3' />
+          <h2 className='text-3xl font-bold'>Následující výstavy</h2>
+        </div>
         <div className='flex flex-col gap-6'>
           {!loadingExhibitions && exhibitions.length > 5 ? (
             <>
@@ -87,9 +91,8 @@ const VVVPage = () => {
         >
           Přejít na kompletní plán výstav
         </button>
-      </section>
-      <div className='border-t border-gray-200 my-12'></div>
-      <section className='max-w-6xl mx-auto py-20 px-6 md:px-12'>
+      </Section>
+      <Section border={true}>
         <div className='flex flex-col md:flex-row items-center justify-between'>
           <div className='md:w-2/3'>
             <h2 className='text-3xl font-bold mb-4'>
@@ -114,9 +117,8 @@ const VVVPage = () => {
             />
           </div>
         </div>
-      </section>
-      <div className='border-t border-gray-200 my-12'></div>
-      <section className='max-w-6xl mx-auto py-20 px-6 md:px-12'>
+      </Section>
+      <Section border={true}>
         <div className='flex items-center mb-8'>
           <Megaphone className='w-8 h-8 text-[#f5a623] mr-3' />
           <h2 className='text-3xl font-bold'>Kontaktujte nás</h2>
@@ -175,12 +177,8 @@ const VVVPage = () => {
             </p>
           </div>
         </div>
-      </section>
-      <div className='border-t border-gray-200 my-12'></div>
-      <section
-        className='max-w-6xl mx-auto py-20 px-6 md:px-12'
-        id='fullExhibitionPlan'
-      >
+      </Section>
+      <Section id='fullExhibitionPlan'>
         <h2 className='text-3xl font-bold mb-6'>Kompletní výstavní plán</h2>
 
         {loadingExhibitions ? (
@@ -216,8 +214,8 @@ const VVVPage = () => {
             ))}
           </div>
         )}
-      </section>
-    </div>
+      </Section>
+    </>
   );
 };
 

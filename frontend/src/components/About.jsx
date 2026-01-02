@@ -1,10 +1,11 @@
 import React from "react";
 import { motion } from "framer-motion";
+import Section from "./Section";
 import AboutImage from "../assets/images/about.webp";
 
 const About = () => {
   return (
-    <section className='bg-gray-50 py-20 px-6 md:px-20'>
+    <Section>
       <div className='max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-24'>
         <motion.div
           initial={{ x: -150, opacity: 0 }}
@@ -42,7 +43,7 @@ const About = () => {
           ></img>
         </motion.div>
       </div>
-    </section>
+    </Section>
   );
 };
 

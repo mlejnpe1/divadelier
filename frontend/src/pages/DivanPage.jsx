@@ -2,6 +2,8 @@ import React from "react";
 import Hero from "../components/Hero";
 import Gallery from "../components/Gallery";
 import ImageRotator from "../components/ImageRotator";
+import Section from "../components/Section";
+import { FileSignature, ScrollTextIcon, Signature } from "lucide-react";
 
 const images = Object.values(
   import.meta.glob("../assets/images/divan/*.{jpg,png,jpeg}", {
@@ -30,13 +32,18 @@ Jak jsme si tak navzájem blbnuli a hecovali se, že jako přeci nebudeme zkouš
 „…protože nás je víc než postav ve scénáři, a abyste se nehádali kdo toho textu má víc a kdo míň, zahrají si všechny holky všechny ženský role a všichni kluci zase všechny mužský role, a basta…“.
 
 No a tak jsme začali…
+
+Historii Divanu si můžete prohlédnout na historických webových stránkách.
+
+
 `;
 
   return (
     <div>
       <Hero
         title='Divan'
-        subtitle='Amatérský soubor složený z nadšených dospělých lidí do divadelní práce.'
+        subtitle='Skupina dospělých divadelních nadšenců, která skrze vedení Adély Pellarové objevuje a rozvíjí herecké dovednosti a tvoří divadelní představení.'
+        description='Termíny schůzek: Pátek 19.00 – 21.00'
         children={
           <ImageRotator
             images={heroImages}
@@ -44,19 +51,52 @@ No a tak jsme začali…
             className='w-3/4 md:w-full h-80 md:h-96'
           />
         }
+        onButtonClick={() => {
+          const el = document.getElementById("joinSection");
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+        }}
+        buttonText={"Chci se přidat"}
       />
 
-      <section className='py-16 px-6 md:px-20 max-w-4xl mx-auto'>
+      <Section border={true}>
+        <div className='flex items-center mb-8'>
+          <ScrollTextIcon className='w-8 h-8 text-[#f5a623] mr-3' />
+          <h2 className='text-3xl font-bold'>Jak to celé vzniklo</h2>
+        </div>
         <p className='text-gray-700 text-lg md:text-xl whitespace-pre-line'>
           {introText}
         </p>
-      </section>
+        <a
+          href='https://www.divan.tode.cz/'
+          className='bg-orange-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-orange-600 transition'
+        >
+          Historické stránky
+        </a>
+      </Section>
 
-      <section className='py-16 px-6 md:px-20'>
-        <h2 className='text-3xl font-bold mb-8 text-gray-900 text-center'>
-          Galerie Divan
-        </h2>
-        <Gallery images={images} />
+      <Section id='joinSection' border={true}>
+        <div className='flex items-center mb-8'>
+          <Signature className='w-8 h-8 text-[#f5a623] mr-3' />
+          <h2 className='text-3xl font-bold'>Chci se přidat</h2>
+        </div>
+        <p className='text-gray-700 text-lg md:text-xl whitespace-pre-line'>
+          Chcete-li se přidat, tak bližší informace získáte u Adély Pellarové, v
+          současné chvíli nepřibíráme, máme rozpracované představení, ale při
+          tvorbě další hry to možné bude.
+        </p>
+        <br></br>
+        <p className='text-gray-700 text-lg md:text-xl whitespace-pre-line'>
+          Termíny schůzek: Pátek 19.00 – 21.00
+        </p>
+      </Section>
+
+      <section className='pt-20 px-6 md:px-12 pb-20'>
+        <div className='max-w-6xl mx-auto'>
+          <h2 className='text-3xl font-bold mb-8 text-gray-900 text-center'>
+            Galerie Divan
+          </h2>
+          <Gallery images={images} />
+        </div>
       </section>
     </div>
   );
