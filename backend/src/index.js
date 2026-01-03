@@ -6,9 +6,10 @@ import exhibitionRoutes from "./routes/exhibitionRoutes.js";
 import meetingRoutes from "./routes/meetingRoutes.js";
 import newsRoutes from "./routes/newsRoutes.js";
 import shopItemRoutes from "./routes/shopItemRoutes.js";
-import userRoutes from "./routes/userRoutes.js";
 import specialRoutes from "./routes/specialRoutes.js";
+import authRoutes from "./routes/auth.routes.js";
 import { connectDB } from "./config/db.js";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
@@ -25,16 +26,19 @@ app.use(
         return callback(new Error("Not allowed by CORS"));
       }
     },
+    credentials: true,
   })
 );
 
 app.use(express.json());
+app.use(cookieParser());
+
+app.use("/api/auth", authRoutes);
 
 app.use("/api/exhibitions", exhibitionRoutes);
 app.use("/api/meetings", meetingRoutes);
 app.use("/api/news", newsRoutes);
 app.use("/api/shopItems", shopItemRoutes);
-app.use("/api/users", userRoutes);
 app.use("/api/specials", specialRoutes);
 
 await connectDB();

@@ -12,10 +12,12 @@ import HistoryPage from "./pages/HistoryPage";
 import CoursesPage from "./pages/CoursesPage";
 import ActionsPage from "./pages/ActionsPage";
 import ActionDetailPage from "./pages/ActionDetailPage";
+import LoginPage from "./pages/LoginPage";
 
 const App = () => {
   const routes = [
     { path: "/", element: <LandingPage /> },
+    { path: "/login", element: <LoginPage /> },
     { path: "/kontakt", element: <ContactPage /> },
     { path: "/drZdiv", element: <DrZdivPage /> },
     { path: "/divan", element: <DivanPage /> },

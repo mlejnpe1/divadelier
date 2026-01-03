@@ -1,13 +1,37 @@
 import { useState } from "react";
 import Logo from "../assets/images/logos/logo.webp";
-import { ChevronDown, ChevronUp, Menu, X, UserRoundPen } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Menu,
+  X,
+  UserRoundPen,
+  User2,
+  LogOut,
+} from "lucide-react";
+import { useAuth } from "../hooks/useAuth";
+import { useNavigate } from "react-router";
 
 export default function Navbar() {
+  const { user, loading } = useAuth();
   const [openDropdown, setOpenDropdown] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleDropdown = (menu) => {
     setOpenDropdown(openDropdown === menu ? null : menu);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+      navigate("/login");
+    } catch (err) {
+      console.error("Chyba při odhlášení: ", err);
+    }
   };
 
   const menuItems = [
@@ -38,6 +62,32 @@ export default function Navbar() {
       ],
     },
   ];
+
+  const UserMenu = () => {
+    if (loading) return null;
+
+    if (!user) {
+      return (
+        <a href='/login'>
+          <div className='px-4 py-3 flex justify-end'>
+            <UserRoundPen className='w-6 h-6 text-gray-700 hover:text-[#f5a623] cursor-pointer' />
+          </div>
+        </a>
+      );
+    }
+
+    return (
+      <div className='flex items-center justify-end space-x-2 px-4 py-3'>
+        <span className='text-gray-700 font-medium'>
+          {console.log(user)}
+          {user.first_name} {user.second_name}
+        </span>
+        <button onClick={handleLogout} className='focus:outline-none'>
+          <LogOut className='w-6 h-6 text-gray-700 hover:text-[#f5a623] cursor-pointer' />
+        </button>
+      </div>
+    );
+  };
 
   return (
     <nav className='bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50'>
@@ -78,7 +128,8 @@ export default function Navbar() {
                 )}
               </div>
             ))}
-            <UserRoundPen className='w-6 h-6 text-gray-700 hover:text-[#f5a623] cursor-pointer' />
+
+            <UserMenu />
           </div>
 
           <div className='md:hidden flex items-center'>
@@ -126,9 +177,8 @@ export default function Navbar() {
               )}
             </div>
           ))}
-          <div className='px-4 py-3 flex justify-end'>
-            <UserRoundPen className='w-6 h-6 text-gray-700 hover:text-[#f5a623] cursor-pointer' />
-          </div>
+
+          <UserMenu />
         </div>
       )}
     </nav>
