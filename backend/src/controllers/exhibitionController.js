@@ -12,6 +12,10 @@ export async function getAllExhibitions(_, res) {
 
 export async function getExhibitionById(req, res) {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(404).json({ message: "Exhibition not found." });
+    }
+
     const exhibition = await Exhibition.findById(req.params.id);
     if (!exhibition)
       return res.status(404).json({ message: "Exhibition not found." });

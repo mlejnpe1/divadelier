@@ -1,33 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import Hero from "../components/Hero";
+import { useFetch } from "../hooks/useFetch";
 
 const EshopPage = () => {
-  const [items, setItems] = React.useState([]);
-  const [loadingItems, setLoadingItems] = React.useState(true);
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
   const [activeTab, setActiveTab] = useState("all");
   const [sortBy, setSortBy] = useState("title");
 
-  const sortedItems = [...items].sort((a, b) => {
-    if (sortBy === "title") return a.title.localeCompare(b.title);
-    if (sortBy === "price") return a.price - b.price;
-    return 0;
-  });
-
-  useEffect(() => {
-    let endpoint = `${API_URL}/api/shopitems`;
+  const path = useMemo(() => {
+    let endpoint = `/api/shopitems`;
     if (activeTab === "divadelier") endpoint += "?shop_id=0";
     if (activeTab === "vvv") endpoint += "?shop_id=1";
-
-    fetch(endpoint)
-      .then((res) => res.json())
-      .then((data) => setItems(data))
-      .catch((err) => console.error(err))
-      .finally(() => setLoadingItems(false));
+    return endpoint;
   }, [activeTab]);
 
-  console.log(items);
+  const { data, loading, error } = useFetch(path);
+
+  const items = data || [];
+
+  const sortedItems = useMemo(() => {
+    return [...items].sort((a, b) => {
+      if (sortBy === "title") return a.title.localeCompare(b.title);
+      if (sortBy === "price") return a.price - b.price;
+      return 0;
+    });
+  }, [items, sortBy]);
 
   return (
     <div className='bg-gray-50 text-gray-800 min-h-screen'>
@@ -38,12 +34,14 @@ const EshopPage = () => {
           aktuálních výstav ve výloze. Kontaktujte nás, pokud vás něco zaujalo!
         </p>
       </header>
+
       <section className='max-w-6xl mx-auto py-12 px-6 md:px-12 text-center text-gray-600'>
         <p>
           Pro více informací nás kontaktujte na emailu:{" "}
           <a href='mailto:info@divadelier.cz'>info@divadelier.cz</a>
         </p>
       </section>
+
       <section className='max-w-6xl mx-auto py-12 px-6 md:px-12'>
         <div className='flex justify-center mb-12 space-x-4'>
           {[
@@ -64,6 +62,7 @@ const EshopPage = () => {
             </button>
           ))}
         </div>
+
         <div className='flex justify-end mb-6'>
           <label className='mr-2 font-semibold' htmlFor='sort'>
             Řadit podle:
@@ -78,10 +77,13 @@ const EshopPage = () => {
             <option value='price'>Ceny (nejlevnější)</option>
           </select>
         </div>
-        {loadingItems ? (
+
+        {loading ? (
           <div className='flex justify-center py-20'>
             <div className='animate-spin rounded-full h-12 w-12 border-t-4 border-[#f5a623] border-solid'></div>
           </div>
+        ) : error ? (
+          <p className='text-red-500 text-center'>{error}</p>
         ) : sortedItems.length === 0 ? (
           <p className='text-gray-400 text-center'>
             Žádné produkty k zobrazení.

@@ -1,29 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useParams } from "react-router";
 import { ArrowLeft } from "lucide-react";
 import PlaceholderImg from "../assets/images/placeholder.png";
 import Gallery from "../components/Gallery";
 import { motion } from "framer-motion";
+import { useFetch } from "../hooks/useFetch";
 
 const ActionDetailPage = () => {
   const { id } = useParams();
-  const [action, setAction] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  const API_URL = import.meta.env.VITE_API_URL;
-
-  useEffect(() => {
-    fetch(`${API_URL}/api/exhibitions/${id}`)
-      .then((res) => res.json())
-      .then((data) => setAction(data))
-      .catch((err) => console.error("Chyba při načítání akce:", err))
-      .finally(() => setLoading(false));
-  }, [id]);
+  const { data: action, loading, error } = useFetch(`/api/exhibitions/${id}`);
 
   if (loading) {
     return (
       <div className='flex justify-center items-center h-screen'>
         <div className='animate-spin rounded-full h-12 w-12 border-t-4 border-orange-500 border-solid'></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className='flex justify-center items-center h-screen'>
+        <p>Chyba: {error}</p>
       </div>
     );
   }
@@ -65,7 +63,6 @@ const ActionDetailPage = () => {
           Zpět na přehled akcí
         </a>
 
-        {/* Hlavní sekce */}
         <div className='flex flex-col md:flex-row gap-10 mb-16'>
           <motion.img
             //src={action.poster || action.imageUrl}

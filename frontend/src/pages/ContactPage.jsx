@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 const ContactPage = () => {
   return (
     <section className='bg-gray-50 max-w-6xl mx-auto py-20 px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 w-full gap-16'>
-      {/* Information */}
       <div className='flex flex-col w-full space-y-6 min-w-0'>
         <h2 className='text-3xl font-bold text-gray-900 mb-6'>
           Kontaktujte nás
@@ -32,7 +31,6 @@ const ContactPage = () => {
         </ul>
       </div>
 
-      {/* Socials */}
       <div className='w-full text-center space-y-6'>
         <h3 className='text-2xl font-bold text-gray-900'>Sledujte nás</h3>
         <p className='text-gray-600'>Zůstaňte v kontaktu i mimo Divadeliér</p>
@@ -61,7 +59,6 @@ const ContactPage = () => {
         </div>
       </div>
 
-      {/* Iframe */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}

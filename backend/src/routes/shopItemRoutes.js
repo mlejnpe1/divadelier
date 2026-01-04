@@ -9,8 +9,11 @@ import {
 
 const router = express.Router();
 
+//public
 router.get("/", getAllShopItems);
 router.get("/:id", getShopItemById);
+
+//protected
 router.post("/", createShopItem);
 router.put("/:id", updateShopItem);
 router.delete("/:id", deleteShopItem);

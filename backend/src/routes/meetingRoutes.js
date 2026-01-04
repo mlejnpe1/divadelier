@@ -9,8 +9,11 @@ import {
 
 const router = express.Router();
 
+//public
 router.get("/", getAllMeetings);
 router.get("/:id", getMeetingById);
+
+//protected
 router.post("/", createMeeting);
 router.put("/:id", updateMeeting);
 router.delete("/:id", deleteMeeting);

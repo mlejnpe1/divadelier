@@ -1,59 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ArrowRight, Calendar } from "lucide-react";
 import Hero from "../components/Hero";
 import { motion } from "framer-motion";
 import PlaceholderImg from "../assets/images/placeholder.png";
+import { useFetch } from "../hooks/useFetch";
 
 const ActionsPage = () => {
-  const [actions, setActions] = useState([]);
-  const [featuredAction, setFeaturedAction] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const API_URL = import.meta.env.VITE_API_URL;
+  const { data: actions, loading, error } = useFetch("/api/exhibitions");
 
-  useEffect(() => {
-    let mounted = true;
+  const featuredAction = React.useMemo(() => {
+    if (!actions || actions.length === 0) return null;
 
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(`${API_URL}/api/exhibitions`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
+    const today = new Date();
+    const upcoming = actions.filter((a) => new Date(a.date) >= today);
 
-        if (!mounted) return;
-        setActions(data);
+    const chooseClosest = (list) =>
+      list.reduce((prev, curr) => {
+        const prevDiff = Math.abs(new Date(prev.date) - today);
+        const currDiff = Math.abs(new Date(curr.date) - today);
+        return currDiff < prevDiff ? curr : prev;
+      });
 
-        const today = new Date();
-        const upcoming = data.filter((a) => new Date(a.date) >= today);
-
-        const chooseClosest = (list) =>
-          list.reduce((prev, curr) => {
-            const prevDiff = Math.abs(new Date(prev.date) - today);
-            const currDiff = Math.abs(new Date(curr.date) - today);
-            return currDiff < prevDiff ? curr : prev;
-          });
-
-        let closest = null;
-        if (upcoming.length > 0) {
-          closest = chooseClosest(upcoming);
-        } else if (data.length > 0) {
-          closest = chooseClosest(data);
-        }
-
-        setFeaturedAction(closest);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    };
-
-    fetchData();
-
-    return () => {
-      mounted = false;
-    };
-  }, [API_URL]);
+    if (upcoming.length > 0) return chooseClosest(upcoming);
+    return chooseClosest(actions);
+  }, [actions]);
 
   const others = actions && actions.length > 1 ? actions.slice(1) : [];
 
@@ -122,7 +92,6 @@ const ActionsPage = () => {
             </motion.div>
           ))
         )}
-        ;
       </section>
     </div>
   );
