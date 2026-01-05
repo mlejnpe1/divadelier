@@ -24,18 +24,19 @@ export default function ExhibitionCarousel({ items = [], loading }) {
   };
 
   useEffect(() => {
-    updateScrollButtons();
     const carousel = carouselRef.current;
     if (!carousel) return;
 
+    const observer = new ResizeObserver(updateScrollButtons);
+    observer.observe(carousel);
+
     carousel.addEventListener("scroll", updateScrollButtons);
-    window.addEventListener("resize", updateScrollButtons);
 
     return () => {
+      observer.disconnect();
       carousel.removeEventListener("scroll", updateScrollButtons);
-      window.removeEventListener("resize", updateScrollButtons);
     };
-  }, []);
+  }, [items]);
 
   return (
     <div className='relative'>
@@ -75,18 +76,18 @@ export default function ExhibitionCarousel({ items = [], loading }) {
           {canScrollLeft && (
             <button
               onClick={() => scroll("left")}
-              className='absolute top-1/2 left-4 transform -translate-y-1/2 bg-white rounded-full shadow p-2 hover:bg-gray-100 transition z-10'
+              className='absolute top-1/2 left-4 transform -translate-y-1/2 bg-[#f9cc81] rounded-full shadow p-2 hover:bg-[#f5a623] transition z-10'
             >
-              <ArrowLeft className='w-6 h-6 text-gray-400' />
+              <ArrowLeft className='w-6 h-6' />
             </button>
           )}
 
           {canScrollRight && (
             <button
               onClick={() => scroll("right")}
-              className='absolute top-1/2 right-4 transform -translate-y-1/2 bg-white rounded-full shadow p-2 hover:bg-gray-100 transition z-10'
+              className='absolute top-1/2 right-4 transform -translate-y-1/2 bg-[#f9cc81] rounded-full shadow p-2 hover:bg-[#f5a623] transition z-10'
             >
-              <ArrowRight className='w-6 h-6 text-gray-400' />
+              <ArrowRight className='w-6 h-6' />
             </button>
           )}
         </>

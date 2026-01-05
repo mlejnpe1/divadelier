@@ -1,4 +1,5 @@
 import Exhibition from "../models/Exhibition.js";
+import mongoose from "mongoose";
 
 export async function getAllExhibitions(_, res) {
   try {
@@ -57,7 +58,7 @@ export async function updateExhibition(req, res) {
     if (!updatedExhibition)
       return res.status(404).json({ message: "Exhibition not found." });
 
-    res.status(200).json(updateExhibition);
+    res.status(200).json(updatedExhibition);
   } catch (error) {
     console.error("Error in updateExhibition controller.");
     res.status(500).json({ message: "Internal server error." });

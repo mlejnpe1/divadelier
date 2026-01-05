@@ -79,7 +79,6 @@ export default function Navbar() {
     return (
       <div className='flex items-center justify-end space-x-2 px-4 py-3'>
         <span className='text-gray-700 font-medium'>
-          {console.log(user)}
           {user.first_name} {user.second_name}
         </span>
         <button onClick={handleLogout} className='focus:outline-none'>

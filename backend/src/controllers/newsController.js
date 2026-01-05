@@ -46,7 +46,7 @@ export async function updateNews(req, res) {
     if (!updatedNews)
       return res.status(404).json({ message: "News not found." });
 
-    res.status(200).json(updateNews);
+    res.status(200).json(updatedNews);
   } catch (error) {
     console.error("Error in updateNews controller.");
     res.status(500).json({ message: "Internal server error." });

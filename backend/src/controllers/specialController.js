@@ -48,7 +48,7 @@ export async function updateSpecial(req, res) {
     if (!updatedSpecial)
       return res.status(404).json({ message: "Special not found." });
 
-    res.status(200).json(updateSpecial);
+    res.status(200).json(updatedSpecial);
   } catch (error) {
     console.error("Error in updateSpecial controller.");
     res.status(500).json({ message: "Internal server error." });

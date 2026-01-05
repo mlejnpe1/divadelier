@@ -58,7 +58,7 @@ export async function updateShopItem(req, res) {
     if (!updatedShopItem)
       return res.status(404).json({ message: "ShopItem not found." });
 
-    res.status(200).json(updateShopItem);
+    res.status(200).json(updatedShopItem);
   } catch (error) {
     console.error("Error in updateShopItem controller.");
     res.status(500).json({ message: "Internal server error." });

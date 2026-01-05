@@ -49,7 +49,7 @@ export async function updateMeeting(req, res) {
     if (!updatedMeeting)
       return res.status(404).json({ message: "Meeting not found." });
 
-    res.status(200).json(updateMeeting);
+    res.status(200).json(updatedMeeting);
   } catch (error) {
     console.error("Error in updateMeeting controller.");
     res.status(500).json({ message: "Internal server error." });

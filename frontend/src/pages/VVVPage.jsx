@@ -1,18 +1,84 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Hero from "../components/Hero.jsx";
 import Placeholder from "../assets/images/placeholder.png";
 import { motion } from "framer-motion";
-import { ArrowRight, CalendarSearchIcon, Megaphone } from "lucide-react";
+import {
+  CalendarSearchIcon,
+  Megaphone,
+  Edit2,
+  Trash2,
+  Plus,
+} from "lucide-react";
 import Section from "../components/Section.jsx";
 import { useFetch } from "../hooks/useFetch.jsx";
+import { useAuth } from "../hooks/useAuth.jsx";
 import ExhibitionCarousel from "../components/ExhibitionCarousel.jsx";
 
 const VVVPage = () => {
   const { data, loading, error } = useFetch("/api/exhibitions");
-  const exhibitions = data || [];
+  const [exhibitions, setExhibitions] = useState([]);
+  const { user } = useAuth();
+
+  const [editingId, setEditingId] = useState(null);
+  const [editingTitle, setEditingTitle] = useState("");
+  const [editingInfo, setEditingInfo] = useState("");
+  const [editingDate, setEditingDate] = useState("");
 
   const featuredExhibition = exhibitions[0] || null;
-  const nextExhibitions = exhibitions.slice(0, 10);
+  const nextExhibitions = exhibitions.slice(0, 6);
+
+  const api_url = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    if (data) setExhibitions(data);
+  }, [data]);
+
+  const handleDelete = async (id) => {
+    if (!confirm("Opravdu smazat tuto výstavu?")) return;
+
+    try {
+      const res = await fetch(`${api_url}/api/exhibitions/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || `Chyba ${res.status}`);
+      }
+
+      setExhibitions((prev) => prev.filter((exh) => exh._id !== id));
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const handleEdit = async (id) => {
+    try {
+      const res = await fetch(`${api_url}/api/exhibitions/${id}`, {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: editingTitle,
+          information: editingInfo,
+          date: editingDate,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Nepodařilo se aktualizovat výstavu");
+
+      const updatedExh = await res.json();
+      setExhibitions((prev) =>
+        prev.map((exh) => (exh._id === id ? updatedExh : exh))
+      );
+
+      setEditingId(null);
+    } catch (err) {
+      alert(err.message);
+    }
+  };
 
   return (
     <>
@@ -113,12 +179,20 @@ const VVVPage = () => {
       </Section>
 
       <Section id='fullExhibitionPlan' border={true}>
-        <h2 className='text-3xl font-bold mb-6'>Kompletní výstavní plán</h2>
+        <div className='flex justify-between items-center mb-6'>
+          <h2 className='text-3xl font-bold'>Kompletní výstavní plán</h2>
+          {user && (
+            <button className='bg-[#f5a623] text-white px-4 py-2 rounded-full font-semibold shadow hover:shadow-md hover:scale-105 transition'>
+              Přidat výstavu
+            </button>
+          )}
+        </div>
+
         {loading ? (
           <div className='flex justify-center items-center h-48'>
             <div className='animate-spin rounded-full h-12 w-12 border-t-4 border-[#f5a623] border-solid'></div>
           </div>
-        ) : exhibitions.length === 0 ? (
+        ) : exhibitions?.length === 0 ? (
           <p className='text-gray-400'>Žádné výstavy k zobrazení</p>
         ) : (
           <div className='space-y-6'>
@@ -137,11 +211,67 @@ const VVVPage = () => {
                   className='rounded-md w-full md:w-48 h-48 object-cover flex-shrink-0'
                 />
                 <div className='flex-1'>
-                  <h3 className='text-xl font-bold mb-2'>{exh.title}</h3>
-                  <p className='text-gray-700 mb-1'>{exh.information}</p>
-                  <p className='text-gray-400 text-sm'>
-                    Od: {new Date(exh.startDate).toLocaleDateString("cs-CZ")}
-                  </p>
+                  {editingId === exh._id ? (
+                    <>
+                      <input
+                        type='text'
+                        value={editingTitle}
+                        onChange={(e) => setEditingTitle(e.target.value)}
+                        className='border border-gray-300 rounded px-2 py-1 w-full mb-2'
+                      />
+                      <textarea
+                        value={editingInfo}
+                        onChange={(e) => setEditingInfo(e.target.value)}
+                        className='border border-gray-300 rounded px-2 py-1 w-full'
+                      />
+                      <input
+                        type='date'
+                        value={editingDate}
+                        onChange={(e) => setEditingDate(e.target.value)}
+                        className='border border-gray-300 rounded px-2 py-1 w-full mb-2'
+                      />
+                      <div className='mt-2 flex space-x-2'>
+                        <button
+                          className='bg-green-500 text-white px-3 py-1 rounded'
+                          onClick={() => handleEdit(exh._id)}
+                        >
+                          Uložit
+                        </button>
+                        <button
+                          onClick={() => setEditingId(null)}
+                          className='bg-gray-300 px-3 py-1 rounded'
+                        >
+                          Zrušit
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <h3 className='text-xl font-bold mb-2'>{exh.title}</h3>
+                      <p className='text-gray-700 mb-1'>{exh.information}</p>
+                      <p className='text-gray-400 text-sm'>
+                        Od:{" "}
+                        {new Date(exh.startDate).toLocaleDateString("cs-CZ")}
+                      </p>
+
+                      {user && (
+                        <div className='mt-6 flex space-x-2'>
+                          <Edit2
+                            className='cursor-pointer text-blue-600 hover:bg-blue-200 rounded-md'
+                            onClick={() => {
+                              setEditingId(exh._id);
+                              setEditingTitle(exh.title);
+                              setEditingInfo(exh.information);
+                            }}
+                          />
+                          <Trash2
+                            className='cursor-pointer text-red-600 hover:bg-red-200 rounded-md'
+                            onClick={() => handleDelete(exh._id)}
+                          />
+                        </div>
+                      )}
+                    </>
+                  )}
                 </div>
               </motion.div>
             ))}

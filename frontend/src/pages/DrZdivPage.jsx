@@ -1,23 +1,28 @@
 import React from "react";
 import Hero from "../components/Hero";
 import Section from "../components/Section";
-import { useState, useEffect } from "react";
 import { Megaphone, Calendar, DownloadIcon, Spotlight } from "lucide-react";
 import { motion } from "framer-motion";
 import handleDownload from "../utils/handleDownload";
+import { useFetch } from "../hooks/useFetch";
 
 const DrZdivPage = () => {
-  const [meetings, setMeetings] = useState([]);
-  const [news, setNews] = useState([]);
-  const [loadingMeetings, setLoadingMeetings] = useState(true);
-  const [loadingNews, setLoadingNews] = useState(true);
+  const {
+    data: meetingsdata,
+    loading: loadingMeetings,
+    error: errorMeetings,
+  } = useFetch("/api/meetings");
+  const {
+    data: newsdata,
+    loading: loadingNews,
+    error: errorNews,
+  } = useFetch("/api/news");
 
-  const gradientBackgrounds = [
-    "from-purple-500/70 via-pink-500/50 to-yellow-300/30",
-    "from-green-500/70 via-teal-500/50 to-blue-300/30",
-    "from-red-500/70 via-orange-400/50 to-yellow-200/30",
-    "from-indigo-600/70 via-purple-500/50 to-pink-300/30",
-  ];
+  const news = newsdata || [];
+  const meetings = meetingsdata || [];
+  const latestNews = [...news].sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  )[0];
 
   const about = [
     { text: "Přinášíme nové nápady a divadelní tvorbu pro všechny generace." },
@@ -31,24 +36,6 @@ const DrZdivPage = () => {
       text: "Děti v Dr. ZDIVu objevoují nejen sebe, ale i celý proces vzniku divadelního představení.",
     },
   ];
-
-  const API_URL = import.meta.env.VITE_API_URL;
-
-  useEffect(() => {
-    fetch(`${API_URL}/api/meetings`)
-      .then((res) => res.json())
-      .then((data) => setMeetings(data))
-      .catch((err) => console.error(err))
-      .finally(() => setLoadingMeetings(false));
-
-    fetch(`${API_URL}/api/news`)
-      .then((res) => res.json())
-      .then((data) => setNews(data))
-      .catch((err) => console.error(err))
-      .finally(() => setLoadingNews(false));
-  }, []);
-
-  const latestNews = news[0];
 
   return (
     <>
@@ -129,11 +116,6 @@ const DrZdivPage = () => {
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                <div
-                  className={`absolute inset-0 bg-gradient-to-t ${
-                    gradientBackgrounds[index % gradientBackgrounds.length]
-                  }`}
-                />
                 <div className='relative p-6 flex flex-col justify-end h-64'>
                   <h3 className='text-xl md:text-2xl font-bold text-black'>
                     {meeting.title}
@@ -184,7 +166,7 @@ const DrZdivPage = () => {
           <Megaphone className='w-8 h-8 text-[#f5a623] mr-3' />
           <h2 className='text-3xl font-bold'>Aktuality</h2>
         </div>
-        <div className='space-y-6'>
+        <div className='space-y-6' id='newsSection'>
           {loadingNews ? (
             <div className='animate-spin rounded-full h-12 w-12 border-t-4 border-[#f5a623] border-solid'></div>
           ) : (
