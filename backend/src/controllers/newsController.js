@@ -66,3 +66,17 @@ export async function deleteNews(req, res) {
     res.status(500).json({ message: "Internal server error." });
   }
 }
+
+export async function getNearestNews(req, res) {
+  try {
+    const nearest = await News.findOne().sort({ createdAt: -1 });
+
+    if (!nearest)
+      return res.status(404).json({ message: "No upcoming news found." });
+
+    res.status(200).json(nearest);
+  } catch (error) {
+    console.error("Error in getNearestNews Controller.", error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+}

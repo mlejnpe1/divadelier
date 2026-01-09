@@ -4,6 +4,7 @@ import {
   deleteExhibition,
   getAllExhibitions,
   getExhibitionById,
+  getFeaturedExhibition,
   updateExhibition,
 } from "../controllers/exhibitionController.js";
 import { auth } from "../middleware/auth.js";
@@ -12,6 +13,7 @@ const router = express.Router();
 
 //public
 router.get("/", getAllExhibitions);
+router.get("/featured", getFeaturedExhibition);
 router.get("/:id", getExhibitionById);
 
 //protected

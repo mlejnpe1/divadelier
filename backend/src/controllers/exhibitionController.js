@@ -3,10 +3,10 @@ import mongoose from "mongoose";
 
 export async function getAllExhibitions(_, res) {
   try {
-    const exhibitions = await Exhibition.find().sort({ createdAt: -1 });
+    const exhibitions = await Exhibition.find().sort({ date: -1 });
     res.status(200).json(exhibitions);
   } catch (error) {
-    console.error("Error in getAllExhibition Controller.");
+    console.error("Error in getAllExhibition Controller.", error);
     res.status(500).json({ message: "Internal server error." });
   }
 }
@@ -76,5 +76,28 @@ export async function deleteExhibition(req, res) {
   } catch (error) {
     console.error("Error in deleteExhibition controller.");
     res.status(500).json({ message: "Internal server error." });
+  }
+}
+
+export async function getFeaturedExhibition(req, res) {
+  try {
+    const now = new Date();
+
+    let exhibition = await Exhibition.findOne({
+      startDate: { $gte: now },
+    }).sort({ startDate: 1 });
+
+    if (!exhibition) {
+      exhibition = await Exhibition.findOne().sort({ createdAt: -1 });
+    }
+
+    if (!exhibition) {
+      return res.status(404).json({ message: "Exhibition not found." });
+    }
+
+    return res.status(200).json(exhibition);
+  } catch (error) {
+    console.error("Error in getFeaturedExhibition Controller.", error);
+    return res.status(500).json({ message: "Internal server error." });
   }
 }

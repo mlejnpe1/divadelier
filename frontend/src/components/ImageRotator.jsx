@@ -9,6 +9,8 @@ const ImageRotator = ({
 }) => {
   const [index, setIndex] = useState(0);
 
+  const [paused, setPaused] = useState(false);
+
   useEffect(() => {
     if (!images || images.length === 0) return;
 
@@ -30,10 +32,12 @@ const ImageRotator = ({
           key={images[index]}
           src={images[index]}
           alt={`Slide ${index + 1}`}
-          initial={{ x: -100, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: 100, opacity: 0 }}
-          transition={{ duration: 1 }}
+          loading='eager'
+          decoding='async'
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.8 }}
           className='absolute inset-0 w-full h-full object-cover'
         />
       </AnimatePresence>

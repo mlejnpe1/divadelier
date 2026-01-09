@@ -21,8 +21,7 @@ const heroImages = Object.values(
   })
 );
 
-const DivanPage = () => {
-  const introText = `
+const INTRO_TEXT = `
 Jednoho dne v létě roku 2015 se domluvilo pár kamarádek, kamarádů a známých, slovo dalo slovo. Navíc se ke všemu přičetla ochota Adélky podělit se s námi ostatními o svoje zkušenosti a pedagogické schopnosti okolo divadla a jeho režie, a vést nás.
 
 Tak se stalo, že jsme se začali pravidelně scházet, nadšeně dělat Adélčiny cvičení a úkoly, jejichž smysl jsme zpočátku sice všichni nechápali, ale o to víc jsme se vyblbnuli . Líbila se nám všem ta úžasná možnost vychutnávat si naplno všelijaké to pitvoření se a přehánění, znovu v sobě objevovat možná někdy pozapomenutou dětskou hravost a poškádlit si svá ega coby úctyhodných dospěláků, rodičů a občanů.
@@ -38,6 +37,7 @@ Historii Divanu si můžete prohlédnout na historických webových stránkách.
 
 `;
 
+const DivanPage = () => {
   return (
     <div>
       <Hero
@@ -64,10 +64,12 @@ Historii Divanu si můžete prohlédnout na historických webových stránkách.
           <h2 className='text-3xl font-bold'>Jak to celé vzniklo</h2>
         </div>
         <p className='text-gray-700 text-lg md:text-xl whitespace-pre-line'>
-          {introText}
+          {INTRO_TEXT}
         </p>
         <a
           href='https://www.divan.tode.cz/'
+          target='_blank'
+          rel='noopener noreferrer'
           className='bg-orange-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-orange-600 transition'
         >
           Historické stránky
@@ -84,8 +86,7 @@ Historii Divanu si můžete prohlédnout na historických webových stránkách.
           současné chvíli nepřibíráme, máme rozpracované představení, ale při
           tvorbě další hry to možné bude.
         </p>
-        <br></br>
-        <p className='text-gray-700 text-lg md:text-xl whitespace-pre-line'>
+        <p className='text-gray-700 text-lg md:text-xl whitespace-pre-line mt-6'>
           Termíny schůzek: Pátek 19.00 – 21.00
         </p>
       </Section>
