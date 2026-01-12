@@ -2,17 +2,20 @@ import mongoose from "mongoose";
 
 const exhibitionSchema = new mongoose.Schema(
   {
-    title: {
-      type: String,
-      required: true,
-    },
-    information: {
-      type: String,
-      required: true,
-    },
-    date: {
-      type: Date,
-      required: true,
+    title: { type: String, required: true, trim: true },
+    information: { type: String, required: true, trim: true },
+    date: { type: Date, required: true },
+    images: [
+      {
+        url: { type: String, required: true, trim: true },
+        alt: { type: String, trim: true, default: "" },
+      },
+    ],
+    author: {
+      name: { type: String, trim: true, default: "" },
+      bio: { type: String, trim: true, default: "" },
+      photo: { type: String, trim: true, default: "" },
+      website: { type: String, trim: true, default: "" },
     },
   },
   {

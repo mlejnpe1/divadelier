@@ -29,3 +29,6 @@ dist-ssr
 
 # Secret not to be commited
 /backend/src/scripts/
+
+# Nodemon setup ignore
+/backend/nodemon.json

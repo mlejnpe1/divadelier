@@ -29,38 +29,80 @@ export async function getExhibitionById(req, res) {
 
 export async function createExhibition(req, res) {
   try {
-    const { title, information, date } = req.body;
-    const exhibition = new Exhibition({ title, information, date });
-    if (req.file) {
-      exhibition.image.data = req.file.buffer;
-      exhibition.image.contentType = req.file.mimetype;
-    }
-    const savedExhibition = await exhibition.save();
-    res.status(201).json(savedExhibition);
+    const { title, information, date, images = [], author = {} } = req.body;
+
+    if (!title?.trim())
+      return res.status(400).json({ message: "Chybí title." });
+    if (!information?.trim())
+      return res.status(400).json({ message: "Chybí information." });
+    if (!date) return res.status(400).json({ message: "Chybí date." });
+
+    const doc = await Exhibition.create({
+      title: title.trim(),
+      information: information.trim(),
+      date,
+      images: Array.isArray(images)
+        ? images
+            .filter((x) => x?.url)
+            .map((x) => ({
+              url: String(x.url).trim(),
+              alt: String(x.alt || "").trim(),
+            }))
+        : [],
+      author: {
+        name: String(author?.name || "").trim(),
+        bio: String(author?.bio || "").trim(),
+        photo: String(author?.photo || "").trim(),
+        website: String(author?.website || "").trim(),
+      },
+    });
+
+    res.status(201).json(doc);
   } catch (error) {
-    console.error("Error in createExhibition controller.");
+    console.error("Error in createExhibition Controller.", error);
     res.status(500).json({ message: "Internal server error." });
   }
 }
 
 export async function updateExhibition(req, res) {
   try {
-    const { title, information, date } = req.body;
-    const updatedExhibition = await Exhibition.findByIdAndUpdate(
-      req.params.id,
-      {
-        title,
-        information,
-        date,
-      },
-      { new: true }
-    );
-    if (!updatedExhibition)
-      return res.status(404).json({ message: "Exhibition not found." });
+    const { title, information, date, images, author } = req.body;
 
-    res.status(200).json(updatedExhibition);
+    const update = {};
+    if (title !== undefined) update.title = String(title).trim();
+    if (information !== undefined)
+      update.information = String(information).trim();
+    if (date !== undefined) update.date = date;
+
+    if (images !== undefined) {
+      update.images = Array.isArray(images)
+        ? images
+            .filter((x) => x?.url)
+            .map((x) => ({
+              url: String(x.url).trim(),
+              alt: String(x.alt || "").trim(),
+            }))
+        : [];
+    }
+
+    if (author !== undefined) {
+      update.author = {
+        name: String(author?.name || "").trim(),
+        bio: String(author?.bio || "").trim(),
+        photo: String(author?.photo || "").trim(),
+        website: String(author?.website || "").trim(),
+      };
+    }
+
+    const doc = await Exhibition.findByIdAndUpdate(req.params.id, update, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!doc) return res.status(404).json({ message: "Exhibition not found." });
+    res.status(200).json(doc);
   } catch (error) {
-    console.error("Error in updateExhibition controller.");
+    console.error("Error in updateExhibition Controller.", error);
     res.status(500).json({ message: "Internal server error." });
   }
 }

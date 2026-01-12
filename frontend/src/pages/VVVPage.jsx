@@ -19,7 +19,13 @@ import { toastAction } from "../utils/toastAction.jsx";
 import { confirmToast } from "../utils/confirmToast.jsx";
 import { apiFetch } from "../utils/api.js";
 
-const EMPTY_EXHIBITION_DRAFT = { title: "", information: "", date: "" };
+const EMPTY_EXHIBITION_DRAFT = {
+  title: "",
+  information: "",
+  date: "",
+  images: [],
+  author: { name: "", bio: "", photo: "", website: "" },
+};
 
 const VVVPage = () => {
   const { data: featuredExhibitionData, loading: loadingFeaturedExhibition } =
@@ -84,6 +90,13 @@ const VVVPage = () => {
       title: exh.title || "",
       information: exh.information || "",
       date: exh.date ? new Date(exh.date).toISOString().slice(0, 10) : "",
+      images: Array.isArray(exh.images) ? exh.images : [],
+      author: {
+        name: exh.author?.name || "",
+        bio: exh.author?.bio || "",
+        photo: exh.author?.photo || "",
+        website: exh.author?.website || "",
+      },
     });
     setShowCreateExhibition(true);
     scrollToPlan();
@@ -143,7 +156,13 @@ const VVVPage = () => {
               : "/api/exhibitions",
             {
               method: isEdit ? "PUT" : "POST",
-              body: { title, information, date },
+              body: {
+                title,
+                information,
+                date,
+                images: draftExhibition.images || [],
+                author: draftExhibition.author || {},
+              },
             }
           ),
         {
@@ -170,6 +189,24 @@ const VVVPage = () => {
   };
 
   const nextExhibitions = useMemo(() => exhibitions.slice(0, 6), [exhibitions]);
+
+  const [newImageUrl, setNewImageUrl] = useState("");
+  const [newImageAlt, setNewImageAlt] = useState("");
+
+  const handleImages = () => {
+    const url = newImageUrl.trim();
+    const alt = newImageAlt.trim();
+
+    if (!url) return toast.error("Zadej URL obrázku.");
+
+    setDraftExhibition((d) => ({
+      ...d,
+      images: [...(d.images || []), { url, alt }],
+    }));
+
+    setNewImageUrl("");
+    setNewImageAlt("");
+  };
 
   return (
     <>
@@ -360,6 +397,136 @@ const VVVPage = () => {
               placeholder='Informace...'
               className='w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f5a623]'
             />
+            <div className='space-y-2'>
+              <p className='font-semibold'>Autor</p>
+
+              <input
+                value={draftExhibition.author.name}
+                onChange={(e) =>
+                  setDraftExhibition((d) => ({
+                    ...d,
+                    author: { ...d.author, name: e.target.value },
+                  }))
+                }
+                placeholder='Jméno autora'
+                className='border rounded-lg px-4 py-2 w-full'
+              />
+
+              <input
+                value={draftExhibition.author.photo}
+                onChange={(e) =>
+                  setDraftExhibition((d) => ({
+                    ...d,
+                    author: { ...d.author, photo: e.target.value },
+                  }))
+                }
+                placeholder='URL fotky autora (zatím ručně)'
+                className='border rounded-lg px-4 py-2 w-full'
+              />
+
+              <textarea
+                value={draftExhibition.author.bio}
+                onChange={(e) =>
+                  setDraftExhibition((d) => ({
+                    ...d,
+                    author: { ...d.author, bio: e.target.value },
+                  }))
+                }
+                placeholder='Medailonek autora'
+                rows={3}
+                className='border rounded-lg px-4 py-2 w-full'
+              />
+
+              <input
+                value={draftExhibition.author.website}
+                onChange={(e) =>
+                  setDraftExhibition((d) => ({
+                    ...d,
+                    author: { ...d.author, website: e.target.value },
+                  }))
+                }
+                placeholder='Web autora (volitelné)'
+                className='border rounded-lg px-4 py-2 w-full'
+              />
+            </div>
+            <div className='space-y-3'>
+              <p className='font-semibold text-gray-900'>Fotky výstavy</p>
+
+              <div className='grid md:grid-cols-3 gap-2'>
+                <input
+                  value={newImageUrl}
+                  onChange={(e) => setNewImageUrl(e.target.value)}
+                  placeholder='URL obrázku (zatím ručně)'
+                  className='md:col-span-2 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f5a623]'
+                />
+                <input
+                  value={newImageAlt}
+                  onChange={(e) => setNewImageAlt(e.target.value)}
+                  placeholder='Popisek (alt)'
+                  className='border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f5a623]'
+                />
+              </div>
+
+              <button
+                type='button'
+                onClick={handleImages}
+                className='inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition'
+              >
+                Přidat fotku
+              </button>
+
+              {(draftExhibition.images || []).length > 0 && (
+                <div className='space-y-2'>
+                  {draftExhibition.images.map((img, idx) => (
+                    <div key={idx} className='flex gap-2 items-center'>
+                      <span className='text-sm text-gray-500 w-6'>
+                        {idx + 1}.
+                      </span>
+
+                      <input
+                        value={img.url}
+                        onChange={(e) => {
+                          const v = e.target.value;
+                          setDraftExhibition((d) => {
+                            const next = [...d.images];
+                            next[idx] = { ...next[idx], url: v };
+                            return { ...d, images: next };
+                          });
+                        }}
+                        className='flex-1 border rounded-lg px-3 py-2'
+                      />
+
+                      <input
+                        value={img.alt || ""}
+                        onChange={(e) => {
+                          const v = e.target.value;
+                          setDraftExhibition((d) => {
+                            const next = [...d.images];
+                            next[idx] = { ...next[idx], alt: v };
+                            return { ...d, images: next };
+                          });
+                        }}
+                        placeholder='alt'
+                        className='w-48 border rounded-lg px-3 py-2'
+                      />
+
+                      <button
+                        type='button'
+                        onClick={() =>
+                          setDraftExhibition((d) => ({
+                            ...d,
+                            images: d.images.filter((_, i) => i !== idx),
+                          }))
+                        }
+                        className='px-3 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100'
+                      >
+                        Smazat
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </form>
         )}
 
