@@ -18,32 +18,33 @@ import toast from "react-hot-toast";
 import { toastAction } from "../utils/toastAction.jsx";
 import { confirmToast } from "../utils/confirmToast.jsx";
 import { apiFetch } from "../utils/api.js";
+import ExhibitionForm from "../components/ExhibitionForm.jsx";
+import ExhibitionList from "../components/ExhibitionList.jsx";
 
 const EMPTY_EXHIBITION_DRAFT = {
   title: "",
   information: "",
   date: "",
+  coverImage: { url: "", alt: "" },
   images: [],
   author: { name: "", bio: "", photo: "", website: "" },
 };
 
 const VVVPage = () => {
-  const { data: featuredExhibitionData, loading: loadingFeaturedExhibition } =
-    useFetch("/api/exhibitions/featured");
   const [featuredExhibition, setFeaturedExhibition] = useState(null);
-
-  useEffect(() => {
-    if (featuredExhibitionData !== undefined) {
-      setFeaturedExhibition(featuredExhibitionData);
-    }
-  }, [featuredExhibitionData]);
+  const [loadingFeaturedExhibition, setLoadingFeaturedExhibition] =
+    useState(true);
 
   const refreshFeaturedExhibition = async () => {
+    setLoadingFeaturedExhibition(true);
     try {
-      setFeaturedExhibition(useFetch("/api/exhibitions/featured"));
+      const featured = await apiFetch("/api/exhibitions/featured");
+      setFeaturedExhibition(featured);
     } catch (e) {
       if (String(e.message).includes("404")) setFeaturedExhibition(null);
       else console.error(e);
+    } finally {
+      setLoadingFeaturedExhibition(false);
     }
   };
 
@@ -55,6 +56,8 @@ const VVVPage = () => {
   const [exhibitions, setExhibitions] = useState([]);
 
   useEffect(() => {
+    refreshFeaturedExhibition();
+
     if (exhibitionsData) setExhibitions(exhibitionsData);
   }, [exhibitionsData]);
 
@@ -90,6 +93,10 @@ const VVVPage = () => {
       title: exh.title || "",
       information: exh.information || "",
       date: exh.date ? new Date(exh.date).toISOString().slice(0, 10) : "",
+      coverImage: {
+        url: exh.coverImage?.url || "",
+        alt: exh.coverImage?.alt || "",
+      },
       images: Array.isArray(exh.images) ? exh.images : [],
       author: {
         name: exh.author?.name || "",
@@ -133,16 +140,51 @@ const VVVPage = () => {
     await refreshFeaturedExhibition();
   };
 
+  function validateExhibitionDraft(draft) {
+    if (!draft.title?.trim()) return "Zadej název výstavy.";
+    if (!draft.information?.trim()) return "Zadej popis výstavy.";
+    if (!draft.date) return "Zadej datum výstavy.";
+
+    if (!draft.coverImage?.url?.trim()) {
+      return "Úvodní (titulní) fotka je povinná.";
+    }
+
+    const invalidImage = draft.images.find((img) => !img?.url?.trim());
+    if (invalidImage) {
+      return "Každá fotografie musí mít vyplněnou URL.";
+    }
+
+    return null;
+  }
+
   const handleSaveExhibition = async (e) => {
     e?.preventDefault?.();
 
-    const title = draftExhibition.title.trim();
-    const information = draftExhibition.information.trim();
-    const date = (draftExhibition.date || "").trim();
+    const error = validateExhibitionDraft(draftExhibition);
+    if (error) {
+      toast.error(error);
+      return;
+    }
 
-    if (!title) return toast.error("Zadej název výstavy.");
-    if (!information) return toast.error("Zadej informace.");
-    if (!date) return toast.error("Zadej datum zahájení.");
+    const payload = {
+      title: draftExhibition.title.trim(),
+      information: draftExhibition.information.trim(),
+      date: draftExhibition.date,
+
+      coverImage: {
+        url: draftExhibition.coverImage.url.trim(),
+        alt: draftExhibition.coverImage.alt?.trim() || "",
+      },
+
+      images: draftExhibition.images.map((img) => ({
+        url: img.url.trim(),
+        alt: img.alt?.trim() || "",
+      })),
+
+      author: draftExhibition.author || {},
+    };
+
+    console.log(payload);
 
     setCreatingExhibition(true);
     try {
@@ -156,13 +198,7 @@ const VVVPage = () => {
               : "/api/exhibitions",
             {
               method: isEdit ? "PUT" : "POST",
-              body: {
-                title,
-                information,
-                date,
-                images: draftExhibition.images || [],
-                author: draftExhibition.author || {},
-              },
+              body: payload,
             }
           ),
         {
@@ -222,7 +258,7 @@ const VVVPage = () => {
             </div>
           ) : (
             <img
-              src={featuredExhibition?.imageUrl || Placeholder}
+              src={featuredExhibition?.coverImage?.url || Placeholder}
               alt={featuredExhibition?.title || "Aktuální výstava"}
               className='rounded-xl shadow-lg w-full object-cover h-64 md:h-96'
               loading='eager'
@@ -333,201 +369,19 @@ const VVVPage = () => {
         </div>
 
         {user && showCreateExhibition && (
-          <form
+          <ExhibitionForm
+            isEdit={Boolean(editingExhibitionId)}
+            draft={draftExhibition}
+            setDraft={setDraftExhibition}
+            creating={creatingExhibition}
+            onClose={closeForm}
             onSubmit={handleSaveExhibition}
-            className='bg-white rounded-xl shadow p-4 mb-6 space-y-3'
-          >
-            <div className='flex items-center justify-between gap-3'>
-              <p className='font-semibold text-gray-900'>
-                {isFormEdit ? "Upravit výstavu" : "Přidat výstavu"}
-              </p>
-
-              <div className='flex gap-2'>
-                <button
-                  type='button'
-                  onClick={closeForm}
-                  className='flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-800 transition'
-                >
-                  <X size={18} />
-                  Zrušit
-                </button>
-
-                <button
-                  type='submit'
-                  disabled={creatingExhibition}
-                  className='bg-[#f5a623] text-white px-4 py-2 rounded-lg font-semibold shadow hover:shadow-md hover:scale-105 transition disabled:opacity-60 disabled:hover:scale-100'
-                >
-                  {creatingExhibition ? "Ukládám..." : "Uložit"}
-                </button>
-              </div>
-            </div>
-
-            <div className='grid md:grid-cols-2 gap-3'>
-              <input
-                value={draftExhibition.title}
-                onChange={(e) =>
-                  setDraftExhibition((d) => ({ ...d, title: e.target.value }))
-                }
-                placeholder='Název'
-                className='border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f5a623]'
-              />
-
-              <input
-                type='date'
-                value={draftExhibition.date}
-                onChange={(e) =>
-                  setDraftExhibition((d) => ({
-                    ...d,
-                    date: e.target.value,
-                  }))
-                }
-                className='border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f5a623]'
-              />
-            </div>
-
-            <textarea
-              value={draftExhibition.information}
-              onChange={(e) =>
-                setDraftExhibition((d) => ({
-                  ...d,
-                  information: e.target.value,
-                }))
-              }
-              rows={3}
-              placeholder='Informace...'
-              className='w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f5a623]'
-            />
-            <div className='space-y-2'>
-              <p className='font-semibold'>Autor</p>
-
-              <input
-                value={draftExhibition.author.name}
-                onChange={(e) =>
-                  setDraftExhibition((d) => ({
-                    ...d,
-                    author: { ...d.author, name: e.target.value },
-                  }))
-                }
-                placeholder='Jméno autora'
-                className='border rounded-lg px-4 py-2 w-full'
-              />
-
-              <input
-                value={draftExhibition.author.photo}
-                onChange={(e) =>
-                  setDraftExhibition((d) => ({
-                    ...d,
-                    author: { ...d.author, photo: e.target.value },
-                  }))
-                }
-                placeholder='URL fotky autora (zatím ručně)'
-                className='border rounded-lg px-4 py-2 w-full'
-              />
-
-              <textarea
-                value={draftExhibition.author.bio}
-                onChange={(e) =>
-                  setDraftExhibition((d) => ({
-                    ...d,
-                    author: { ...d.author, bio: e.target.value },
-                  }))
-                }
-                placeholder='Medailonek autora'
-                rows={3}
-                className='border rounded-lg px-4 py-2 w-full'
-              />
-
-              <input
-                value={draftExhibition.author.website}
-                onChange={(e) =>
-                  setDraftExhibition((d) => ({
-                    ...d,
-                    author: { ...d.author, website: e.target.value },
-                  }))
-                }
-                placeholder='Web autora (volitelné)'
-                className='border rounded-lg px-4 py-2 w-full'
-              />
-            </div>
-            <div className='space-y-3'>
-              <p className='font-semibold text-gray-900'>Fotky výstavy</p>
-
-              <div className='grid md:grid-cols-3 gap-2'>
-                <input
-                  value={newImageUrl}
-                  onChange={(e) => setNewImageUrl(e.target.value)}
-                  placeholder='URL obrázku (zatím ručně)'
-                  className='md:col-span-2 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f5a623]'
-                />
-                <input
-                  value={newImageAlt}
-                  onChange={(e) => setNewImageAlt(e.target.value)}
-                  placeholder='Popisek (alt)'
-                  className='border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f5a623]'
-                />
-              </div>
-
-              <button
-                type='button'
-                onClick={handleImages}
-                className='inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition'
-              >
-                Přidat fotku
-              </button>
-
-              {(draftExhibition.images || []).length > 0 && (
-                <div className='space-y-2'>
-                  {draftExhibition.images.map((img, idx) => (
-                    <div key={idx} className='flex gap-2 items-center'>
-                      <span className='text-sm text-gray-500 w-6'>
-                        {idx + 1}.
-                      </span>
-
-                      <input
-                        value={img.url}
-                        onChange={(e) => {
-                          const v = e.target.value;
-                          setDraftExhibition((d) => {
-                            const next = [...d.images];
-                            next[idx] = { ...next[idx], url: v };
-                            return { ...d, images: next };
-                          });
-                        }}
-                        className='flex-1 border rounded-lg px-3 py-2'
-                      />
-
-                      <input
-                        value={img.alt || ""}
-                        onChange={(e) => {
-                          const v = e.target.value;
-                          setDraftExhibition((d) => {
-                            const next = [...d.images];
-                            next[idx] = { ...next[idx], alt: v };
-                            return { ...d, images: next };
-                          });
-                        }}
-                        placeholder='alt'
-                        className='w-48 border rounded-lg px-3 py-2'
-                      />
-
-                      <button
-                        type='button'
-                        onClick={() =>
-                          setDraftExhibition((d) => ({
-                            ...d,
-                            images: d.images.filter((_, i) => i !== idx),
-                          }))
-                        }
-                        className='px-3 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100'
-                      >
-                        Smazat
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </form>
+            newImageUrl={newImageUrl}
+            setNewImageUrl={setNewImageUrl}
+            newImageAlt={newImageAlt}
+            setNewImageAlt={setNewImageAlt}
+            onAddImage={handleImages}
+          />
         )}
 
         {exhibitionsLoading ? (
@@ -538,46 +392,13 @@ const VVVPage = () => {
           <p className='text-gray-400'>Žádné výstavy k zobrazení</p>
         ) : (
           <div className='space-y-6'>
-            {exhibitions.map((exh, index) => (
-              <motion.div
-                key={exh._id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.6, delay: index * 0.05 }}
-                className='bg-white rounded-xl shadow-lg p-6 flex flex-col md:flex-row gap-6 items-start'
-              >
-                <img
-                  src={exh.imageUrl || Placeholder}
-                  alt={exh.title}
-                  className='rounded-md w-full md:w-48 h-48 object-cover flex-shrink-0'
-                  loading='lazy'
-                  decoding='async'
-                />
-                <div className='flex-1'>
-                  <h3 className='text-xl font-bold mb-2'>{exh.title}</h3>
-                  <p className='text-gray-700 mb-1'>{exh.information}</p>
-                  {exh.date && (
-                    <p className='text-gray-400 text-sm'>
-                      Od: {new Date(exh.date).toLocaleDateString("cs-CZ")}
-                    </p>
-                  )}
-
-                  {user && (
-                    <div className='mt-6 flex space-x-2'>
-                      <Edit2
-                        className='cursor-pointer text-blue-600 hover:bg-blue-200 rounded-md'
-                        onClick={() => openEditExhibition(exh)}
-                      />
-                      <Trash2
-                        className='cursor-pointer text-red-600 hover:bg-red-200 rounded-md'
-                        onClick={() => handleDeleteExhibition(exh._id)}
-                      />
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            ))}
+            <ExhibitionList
+              exhibitions={exhibitions}
+              loading={exhibitionsLoading}
+              user={user}
+              onEdit={openEditExhibition}
+              onDelete={handleDeleteExhibition}
+            />
           </div>
         )}
       </Section>

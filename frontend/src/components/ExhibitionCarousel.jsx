@@ -60,14 +60,14 @@ export default function ExhibitionCarousel({ items = [], loading }) {
                 }`}
               >
                 <img
-                  src={exh.imageUrl || Placeholder}
-                  alt={exh.title}
+                  src={exh.coverImage?.url || Placeholder}
+                  alt={exh.coverImage?.alt || ""}
                   className='rounded-md w-full h-2/3 object-cover mb-2'
                 />
                 <h4 className='font-bold text-lg'>{exh.title}</h4>
                 <p className='text-gray-600 text-sm'>{exh.information}</p>
                 <p className='text-gray-400 text-xs mt-1'>
-                  {new Date(exh.startDate).toLocaleDateString("cs-CZ")}
+                  {new Date(exh.date).toLocaleDateString("cs-CZ")}
                 </p>
               </div>
             ))}

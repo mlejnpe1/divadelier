@@ -29,7 +29,14 @@ export async function getExhibitionById(req, res) {
 
 export async function createExhibition(req, res) {
   try {
-    const { title, information, date, images = [], author = {} } = req.body;
+    const {
+      title,
+      information,
+      date,
+      coverImage = {},
+      images = [],
+      author = {},
+    } = req.body;
 
     if (!title?.trim())
       return res.status(400).json({ message: "Chybí title." });
@@ -37,18 +44,27 @@ export async function createExhibition(req, res) {
       return res.status(400).json({ message: "Chybí information." });
     if (!date) return res.status(400).json({ message: "Chybí date." });
 
+    const coverUrl = String(coverImage?.url || "").trim();
+    if (!coverUrl)
+      return res.status(400).json({ message: "Chybí coverImage.url." });
+
+    const cleanedImages = images
+      .map((x) => ({
+        url: String(x?.url || "").trim(),
+        alt: String(x?.alt || "").trim(),
+      }))
+      .filter((x) => x.url);
+
+    if (cleanedImages.length === 0) {
+      return res.status(400).json({ message: "Každá fotka musí mít url." });
+    }
+
     const doc = await Exhibition.create({
       title: title.trim(),
       information: information.trim(),
       date,
-      images: Array.isArray(images)
-        ? images
-            .filter((x) => x?.url)
-            .map((x) => ({
-              url: String(x.url).trim(),
-              alt: String(x.alt || "").trim(),
-            }))
-        : [],
+      coverImage: { url: coverUrl, alt: String(coverImage?.alt || "").trim() },
+      images: cleanedImages,
       author: {
         name: String(author?.name || "").trim(),
         bio: String(author?.bio || "").trim(),
@@ -66,13 +82,20 @@ export async function createExhibition(req, res) {
 
 export async function updateExhibition(req, res) {
   try {
-    const { title, information, date, images, author } = req.body;
+    const { title, information, date, coverImage, images, author } = req.body;
 
     const update = {};
     if (title !== undefined) update.title = String(title).trim();
     if (information !== undefined)
       update.information = String(information).trim();
     if (date !== undefined) update.date = date;
+
+    if (coverImage !== undefined) {
+      update.coverImage = {
+        url: String(coverImage?.url || "").trim(),
+        alt: String(coverImage?.alt || "").trim(),
+      };
+    }
 
     if (images !== undefined) {
       update.images = Array.isArray(images)
@@ -124,13 +147,18 @@ export async function deleteExhibition(req, res) {
 export async function getFeaturedExhibition(req, res) {
   try {
     const now = new Date();
+    const startOfToday = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
 
     let exhibition = await Exhibition.findOne({
-      startDate: { $gte: now },
-    }).sort({ startDate: 1 });
+      date: { $gte: startOfToday },
+    }).sort({ date: 1 });
 
     if (!exhibition) {
-      exhibition = await Exhibition.findOne().sort({ createdAt: -1 });
+      exhibition = await Exhibition.findOne().sort({ date: -1 });
     }
 
     if (!exhibition) {

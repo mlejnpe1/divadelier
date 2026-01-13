@@ -5,9 +5,13 @@ const exhibitionSchema = new mongoose.Schema(
     title: { type: String, required: true, trim: true },
     information: { type: String, required: true, trim: true },
     date: { type: Date, required: true },
+    coverImage: {
+      url: { type: String, required: true, trim: true },
+      alt: { type: String, trim: true, default: "" },
+    },
     images: [
       {
-        url: { type: String, required: true, trim: true },
+        url: { type: String, trim: true, default: "" },
         alt: { type: String, trim: true, default: "" },
       },
     ],

@@ -13,6 +13,7 @@ import CoursesPage from "./pages/CoursesPage";
 import ActionsPage from "./pages/ActionsPage";
 import ActionDetailPage from "./pages/ActionDetailPage";
 import LoginPage from "./pages/LoginPage";
+import ExhibitionDetailPage from "./components/ExhibitionDetailPage";
 
 const App = () => {
   const routes = [
@@ -27,6 +28,7 @@ const App = () => {
     { path: "/kurzy", element: <CoursesPage /> },
     { path: "/akce", element: <ActionsPage /> },
     { path: "/akce/:id", element: <ActionDetailPage /> },
+    { path: "/vvv/:id", element: <ExhibitionDetailPage /> },
   ];
 
   return (
