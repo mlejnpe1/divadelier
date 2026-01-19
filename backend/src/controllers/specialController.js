@@ -2,7 +2,9 @@ import Special from "../models/Special.js";
 
 export async function getAllSpecials(_, res) {
   try {
-    const specials = await Special.find().sort({ name: 1 });
+    const specials = await Special.find()
+      .collation({ locale: "cs", strength: 1 })
+      .sort({ name: 1 });
     res.status(200).json(specials);
   } catch (error) {
     console.error("Error in getAllSpecial Controller.");
