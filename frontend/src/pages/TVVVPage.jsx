@@ -11,7 +11,7 @@ import { apiFetch } from "../utils/api.js";
 import { confirmToast } from "../utils/confirmToast.jsx";
 import Pagination from "../components/Pagiantion.jsx";
 import { useListControls } from "../hooks/useListControls.jsx";
-import ListToolbar from "../components/SpecialsToolBar.jsx";
+import ListToolbar from "../components/ListToolbar.jsx";
 
 const EMPTY_SPECIAL_DRAFT = { name: "", information: "", link: "" };
 
