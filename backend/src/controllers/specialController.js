@@ -2,8 +2,8 @@ import Special from "../models/Special.js";
 
 export async function getAllSpecials(_, res) {
   try {
-    const special = await Special.find().sort({ createdAt: -1 });
-    res.status(200).json(special);
+    const specials = await Special.find().sort({ name: 1 });
+    res.status(200).json(specials);
   } catch (error) {
     console.error("Error in getAllSpecial Controller.");
     res.status(500).json({ message: "Internal server error." });
@@ -24,8 +24,8 @@ export async function getSpecialById(req, res) {
 
 export async function createSpecial(req, res) {
   try {
-    const { name, link } = req.body;
-    const special = new Special({ name, link });
+    const { name, information, link } = req.body;
+    const special = new Special({ name, information, link });
     const savedSpecial = await special.save();
     res.status(201).json(savedSpecial);
   } catch (error) {
@@ -36,14 +36,15 @@ export async function createSpecial(req, res) {
 
 export async function updateSpecial(req, res) {
   try {
-    const { name, link } = req.body;
+    const { name, information, link } = req.body;
     const updatedSpecial = await Special.findByIdAndUpdate(
       req.params.id,
       {
         name,
+        information,
         link,
       },
-      { new: true }
+      { new: true },
     );
     if (!updatedSpecial)
       return res.status(404).json({ message: "Special not found." });

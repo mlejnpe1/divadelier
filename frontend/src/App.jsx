@@ -14,6 +14,7 @@ import ActionsPage from "./pages/ActionsPage";
 import ActionDetailPage from "./pages/ActionDetailPage";
 import LoginPage from "./pages/LoginPage";
 import ExhibitionDetailPage from "./components/ExhibitionDetailPage";
+import TVVVPage from "./pages/TVVVPage";
 
 const App = () => {
   const routes = [
@@ -23,6 +24,7 @@ const App = () => {
     { path: "/drZdiv", element: <DrZdivPage /> },
     { path: "/divan", element: <DivanPage /> },
     { path: "/vvv", element: <VVVPage /> },
+    { path: "/tvvv", element: <TVVVPage /> },
     { path: "/eshop", element: <EshopPage /> },
     { path: "/historie", element: <HistoryPage /> },
     { path: "/kurzy", element: <CoursesPage /> },
@@ -36,7 +38,7 @@ const App = () => {
       {routes.map(({ path, element }) => (
         <Route key={path} path={path} element={<Layout>{element}</Layout>} />
       ))}
-      <Route path='*' element={<NotFoundPage />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };

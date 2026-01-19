@@ -6,6 +6,9 @@ const specialSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    information: {
+      type: String,
+    },
     link: {
       type: String,
       required: true,
@@ -13,7 +16,7 @@ const specialSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const Special = new mongoose.model("Special", specialSchema);
