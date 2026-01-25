@@ -12,6 +12,7 @@ import { confirmToast } from "../utils/confirmToast.jsx";
 import Pagination from "../components/Pagiantion.jsx";
 import { useListControls } from "../hooks/useListControls.jsx";
 import ListToolbar from "../components/ListToolbar.jsx";
+import toast from "react-hot-toast";
 
 const EMPTY_SPECIAL_DRAFT = { name: "", information: "", link: "" };
 
@@ -30,6 +31,12 @@ const TVVVPage = () => {
   const [draft, setDraft] = useState(EMPTY_SPECIAL_DRAFT);
 
   const isEdit = Boolean(editingId);
+
+  const controls = useListControls(specials, {
+    pageSize: 8,
+    getSortValue: (s) => s.name,
+    searchFields: [(s) => s.name, (s) => s.information, (s) => s.link],
+  });
 
   const openCreate = () => {
     setEditingId(null);
@@ -104,8 +111,8 @@ const TVVVPage = () => {
       setCreating(false);
     }
 
-    setQuery("");
-    setPage(1);
+    controls.setQuery("");
+    controls.setPage(1);
   };
 
   const onDelete = async (id) => {
@@ -129,14 +136,8 @@ const TVVVPage = () => {
     setSpecials((prev) => prev.filter((s) => s._id !== id));
     if (editingId === id) close();
 
-    setPage((p) => Math.max(1, Math.min(p, pageCount)));
+    controls.setPage((p) => Math.max(1, Math.min(p, pageCount)));
   };
-
-  const controls = useListControls(specials, {
-    pageSize: 8,
-    getSortValue: (s) => s.name,
-    searchFields: [(s) => s.name, (s) => s.information, (s) => s.link],
-  });
 
   return (
     <div className="bg-gray-50 text-gray-800 min-h-screen">
