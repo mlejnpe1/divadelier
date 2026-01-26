@@ -20,14 +20,25 @@ import { toastAction } from "../utils/toastAction";
 import { apiFetch } from "../utils/api";
 import MeetingsList from "../components/MeetingsList";
 import MeetingForm from "../components/MeetingForm";
+import NewsForm from "../components/NewsForm";
+import NewsList from "../components/NewsList";
+import { useListControls } from "../hooks/useListControls";
+import ListToolbar from "../components/ListToolbar";
+import Pagination from "../components/Pagiantion";
 
 const EMPTY_MEETING_DRAFT = { title: "", information: "", day_in_week: "" };
 
 const DrZdivPage = () => {
   const { data: nearestNewsData, loading: loadingNearestNews } =
     useFetch("/api/news/nearest");
-
+  const [showNewsForm, setShowNewsForm] = useState(false);
   const [nearestNews, setNearestNews] = useState(null);
+
+  const openCreateNews = () => setShowNewsForm(true);
+  const closeCreateNews = () => {
+    setShowNewsForm(false);
+    setNewsText("");
+  };
 
   useEffect(() => {
     if (nearestNewsData !== undefined) setNearestNews(nearestNewsData);
@@ -43,12 +54,18 @@ const DrZdivPage = () => {
   };
 
   const { data: newsdata, loading: loadingNews } = useFetch("/api/news");
-
   const { user } = useAuth();
 
   const [news, setNews] = useState(newsdata || []);
   const [creatingNews, setCreatingNews] = useState(false);
   const [newsText, setNewsText] = useState("");
+  const newsControls = useListControls(news, {
+    pageSize: 6,
+    getSortValue: (n) => n.createdAt,
+    searchFields: [(n) => n.information],
+  });
+
+  const pagedNews = [...newsControls.items].reverse();
 
   useEffect(() => {
     if (newsdata) setNews(newsdata);
@@ -78,6 +95,9 @@ const DrZdivPage = () => {
       setNews((prev) => [created, ...prev]);
       setNewsText("");
       setNearestNews(created);
+      setShowNewsForm(false);
+      newsControls.setQuery("");
+      newsControls.setPage(1);
     } finally {
       setCreatingNews(false);
     }
@@ -99,6 +119,9 @@ const DrZdivPage = () => {
     });
 
     setNews((prev) => prev.filter((n) => n._id !== id));
+    newsControls.setPage((p) =>
+      Math.max(1, Math.min(p, newsControls.pageCount)),
+    );
 
     if (nearestNews?._id === id) setNearestNews(null);
     await refreshNearestNews();
@@ -245,7 +268,7 @@ const DrZdivPage = () => {
               <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-[#f5a623] border-solid"></div>
             </div>
           ) : nearestNews ? (
-            <div className="bg-white rounded-xl shadow-lg p-6 max-w-sm w-full h-">
+            <div className="bg-white rounded-xl shadow-lg p-6 max-w-sm w-full">
               <div className="flex items-center mb-8">
                 <Megaphone className="w-8 h-8 text-[#f5a623] mr-3" />
                 <h2 className="text-3xl font-bold">Aktualita</h2>
@@ -359,66 +382,55 @@ const DrZdivPage = () => {
         <p>Kurzovné činí 1700,-Kč za pololetí.</p>
       </Section>
       <Section>
-        <div className="flex items-center mb-8">
-          <Megaphone className="w-8 h-8 text-[#f5a623] mr-3" />
-          <h2 className="text-3xl font-bold">Aktuality</h2>
-        </div>
-        <div className="space-y-6" id="newsSection">
+        <div className="flex items-center justify-between mb-8 gap-4">
+          <div className="flex items-center">
+            <Megaphone className="w-8 h-8 text-[#f5a623] mr-3" />
+            <h2 className="text-3xl font-bold">Aktuality</h2>
+          </div>
+
           {user && (
-            <form
-              onSubmit={handleCreateNews}
-              className="bg-white rounded-xl shadow p-4 mb-6 space-y-3"
+            <button
+              onClick={openCreateNews}
+              className="flex items-center gap-2 bg-[#f5a623] text-white px-4 py-2 rounded-full font-semibold shadow hover:shadow-md hover:scale-105 transition"
             >
-              <div className="flex items-center justify-between">
-                <p className="font-semibold text-gray-900">Přidat aktualitu</p>
-                <button
-                  type="submit"
-                  disabled={creatingNews}
-                  className="bg-[#f5a623] text-white px-4 py-2 rounded-full font-semibold shadow hover:shadow-md hover:scale-105 transition disabled:opacity-60 disabled:hover:scale-100"
-                >
-                  {creatingNews ? "Přidávám..." : "Přidat"}
-                </button>
-              </div>
-
-              <textarea
-                value={newsText}
-                onChange={(e) => setNewsText(e.target.value)}
-                rows={3}
-                placeholder="Text aktuality..."
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f5a623]"
-              />
-            </form>
-          )}
-          {loadingNews ? (
-            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-[#f5a623] border-solid"></div>
-          ) : (
-            news.map((n, index) => (
-              <motion.div
-                key={n._id}
-                className="relative bg-white rounded-xl shadow p-6"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
-                <p className="text-gray-700">{n.information}</p>
-
-                <div className="mt-3 flex items-center justify-between">
-                  <p className="text-sm text-gray-500">
-                    {new Date(n.createdAt).toLocaleDateString("cs-CZ")}
-                  </p>
-
-                  {user && (
-                    <Trash2
-                      className="cursor-pointer text-red-600 hover:bg-red-200 rounded-md"
-                      onClick={() => handleDeleteNews(n._id)}
-                    />
-                  )}
-                </div>
-              </motion.div>
-            ))
+              <Plus size={18} />
+              Přidat aktualitu
+            </button>
           )}
         </div>
+
+        {user && showNewsForm && (
+          <NewsForm
+            value={newsText}
+            onChange={setNewsText}
+            creating={creatingNews}
+            onSubmit={handleCreateNews}
+            onClose={closeCreateNews}
+          />
+        )}
+
+        {loadingNews ? (
+          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-[#f5a623] border-solid" />
+        ) : (
+          <>
+            <ListToolbar
+              query={newsControls.query}
+              setQuery={newsControls.setQuery}
+              totalCount={newsControls.totalCount}
+              filteredCount={newsControls.filteredCount}
+            />
+            <NewsList
+              news={[...newsControls.items].reverse()}
+              user={user}
+              onDelete={handleDeleteNews}
+            />
+            <Pagination
+              page={newsControls.page}
+              pageCount={newsControls.pageCount}
+              onPageChange={newsControls.setPage}
+            />
+          </>
+        )}
       </Section>
     </>
   );
