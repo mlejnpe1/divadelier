@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import Hero from "../components/Hero";
-import Section from "../components/Section";
+import Hero from "../components/layout/Hero";
+import Section from "../components/layout/Section";
 import {
   Megaphone,
   Calendar,
@@ -18,13 +18,13 @@ import toast from "react-hot-toast";
 import { confirmToast } from "../utils/confirmToast";
 import { toastAction } from "../utils/toastAction";
 import { apiFetch } from "../utils/api";
-import MeetingsList from "../components/MeetingsList";
-import MeetingForm from "../components/MeetingForm";
-import NewsForm from "../components/NewsForm";
-import NewsList from "../components/NewsList";
+import MeetingsList from "../components/meetings/MeetingsList";
+import MeetingForm from "../components/meetings/MeetingForm";
+import NewsForm from "../components/news/NewsForm";
+import NewsList from "../components/news/NewsList";
 import { useListControls } from "../hooks/useListControls";
-import ListToolbar from "../components/ListToolbar";
-import Pagination from "../components/Pagiantion";
+import ListToolbar from "../components/layout/ListToolbar";
+import Pagination from "../components/layout/Pagiantion";
 
 const EMPTY_MEETING_DRAFT = { title: "", information: "", day_in_week: "" };
 
@@ -268,18 +268,37 @@ const DrZdivPage = () => {
               <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-[#f5a623] border-solid"></div>
             </div>
           ) : nearestNews ? (
-            <div className="bg-white rounded-xl shadow-lg p-6 max-w-sm w-full">
-              <div className="flex items-center mb-8">
-                <Megaphone className="w-8 h-8 text-[#f5a623] mr-3" />
-                <h2 className="text-3xl font-bold">Aktualita</h2>
+            <div
+              className="bg-gradient-to-br from-white to-gray-50 
+                rounded-2xl shadow-xl p-7 max-w-sm w-full 
+                border border-gray-100 hover:shadow-2xl 
+                flex flex-col justify-center items-start
+                transition duration-300"
+            >
+              <div className="flex items-center mb-6">
+                <div
+                  className="flex items-center justify-center 
+                    w-12 h-12 rounded-full 
+                    bg-[#f5a623]/20 mr-4"
+                >
+                  <Megaphone className="w-7 h-7 text-[#f5a623]" />
+                </div>
+                <h2 className="text-2xl font-extrabold text-gray-900">
+                  Aktualita
+                </h2>
               </div>
-              <p className="text-gray-700 mb-2">{nearestNews.information}</p>
+              <p className="text-gray-600 text-base leading-relaxed mb-6">
+                {nearestNews.information}
+              </p>
               <button
                 onClick={() => {
                   const el = document.getElementById("newsSection");
                   if (el) el.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="bg-[#f5a623] text-white px-6 py-2 mt-3 rounded-full font-semibold shadow hover:shadow-md hover:scale-105 transform transition duration-300"
+                className="w-auto bg-[#f5a623] text-white 
+               px-6 py-3 rounded-xl font-semibold
+               flex items-center justify-center gap-2 self-center
+               hover:bg-[#e49415] transition-all duration-300"
               >
                 Zobrazit všechny aktuality
               </button>
@@ -381,7 +400,7 @@ const DrZdivPage = () => {
         </div>
         <p>Kurzovné činí 1700,-Kč za pololetí.</p>
       </Section>
-      <Section>
+      <Section id="newsSection">
         <div className="flex items-center justify-between mb-8 gap-4">
           <div className="flex items-center">
             <Megaphone className="w-8 h-8 text-[#f5a623] mr-3" />

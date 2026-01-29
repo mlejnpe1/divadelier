@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import Placeholder from "../assets/images/placeholder.png";
+import Placeholder from "../../assets/images/placeholder.png";
 
 export default function ExhibitionCarousel({ items = [], loading }) {
   const carouselRef = useRef(null);
@@ -55,23 +55,31 @@ export default function ExhibitionCarousel({ items = [], loading }) {
             {items.map((exh, idx) => (
               <div
                 key={exh._id}
-                className={`flex-shrink-0 bg-white rounded-xl shadow-lg p-4 transition-transform duration-300 hover:scale-105 cursor-pointer ${
-                  idx === 0 ? "w-80 h-96" : "w-60 h-80"
-                }`}
+                className={`flex-shrink-0 bg-white rounded-2xl shadow-lg p-4 cursor-pointer
+              transition-transform duration-300 hover:scale-105
+              overflow-hidden flex flex-col ${idx === 0 ? "w-80" : "w-60"}`}
                 onClick={() => (window.location.href = `/vvv/${exh._id}`)}
               >
                 <img
                   src={exh.coverImage?.url || Placeholder}
                   alt={exh.coverImage?.alt || ""}
-                  className="rounded-md w-full h-2/3 object-cover mb-2"
+                  className="rounded-xl w-full aspect-[4/3] object-cover"
                 />
-                <h4 className="font-bold text-lg">{exh.title}</h4>
-                <p className="text-gray-600 text-sm">
-                  {String(exh.information).slice(0, 50)}...
-                </p>
-                <p className="text-gray-400 text-xs mt-1">
-                  {new Date(exh.date).toLocaleDateString("cs-CZ")}
-                </p>
+
+                <div className="mt-3 flex flex-col flex-1 min-h-0">
+                  <h4 className="font-extrabold text-lg text-gray-900 leading-tight break-words overflow-hidden h-[3.25rem]">
+                    {exh.title}
+                  </h4>
+
+                  <p className="mt-2 text-gray-600 text-sm leading-snug break-words overflow-hidden h-[2.75rem]">
+                    {String(exh.information || "").slice(0, 80)}
+                    {String(exh.information || "").length > 80 ? "…" : ""}
+                  </p>
+
+                  <p className="text-gray-400 text-xs mt-auto pt-3">
+                    {new Date(exh.date).toLocaleDateString("cs-CZ")}
+                  </p>
+                </div>
               </div>
             ))}
           </div>

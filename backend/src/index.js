@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-
+import actionRoutes from "./routes/actionRoutes.js";
 import exhibitionRoutes from "./routes/exhibitionRoutes.js";
 import meetingRoutes from "./routes/meetingRoutes.js";
 import newsRoutes from "./routes/newsRoutes.js";
@@ -10,6 +10,7 @@ import specialRoutes from "./routes/specialRoutes.js";
 import authRoutes from "./routes/auth.routes.js";
 import { connectDB } from "./config/db.js";
 import cookieParser from "cookie-parser";
+import timelineRoutes from "./routes/timelineRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -27,7 +28,7 @@ app.use(
       }
     },
     credentials: true,
-  })
+  }),
 );
 
 app.use(express.json());
@@ -35,11 +36,13 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 
+app.use("/api/actions", actionRoutes);
 app.use("/api/exhibitions", exhibitionRoutes);
 app.use("/api/meetings", meetingRoutes);
 app.use("/api/news", newsRoutes);
 app.use("/api/shopItems", shopItemRoutes);
 app.use("/api/specials", specialRoutes);
+app.use("/api/timeline", timelineRoutes);
 
 await connectDB();
 

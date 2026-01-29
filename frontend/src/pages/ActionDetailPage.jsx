@@ -1,100 +1,74 @@
 import React from "react";
-import { useParams } from "react-router";
+import { useParams, Link } from "react-router";
+import Section from "../components/layout/Section.jsx";
+import Placeholder from "../assets/images/placeholder.png";
+import { useFetch } from "../hooks/useFetch.jsx";
 import { ArrowLeft } from "lucide-react";
-import PlaceholderImg from "../assets/images/placeholder.png";
-import Gallery from "../components/Gallery";
-import { motion } from "framer-motion";
-import { useFetch } from "../hooks/useFetch";
 
 const ActionDetailPage = () => {
   const { id } = useParams();
-  const { data: action, loading, error } = useFetch(`/api/exhibitions/${id}`);
+  const { data: action, loading } = useFetch(`/api/actions/${id}`);
 
   if (loading) {
     return (
-      <div className='flex justify-center items-center h-screen'>
-        <div className='animate-spin rounded-full h-12 w-12 border-t-4 border-orange-500 border-solid'></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className='flex justify-center items-center h-screen'>
-        <p>Chyba: {error}</p>
-      </div>
-    );
-  }
-
-  if (!action || action.message) {
-    return (
-      <div className='text-center mt-20 text-gray-600'>
-        <p>{action?.message || "Akce nenalezena"}</p>
-        <div className='mt-6 text-yellow-500 hover:text-yellow-600 font-semibold'>
-          <ArrowLeft className='inline-block mr-2 w-4 h-4' />
-          <a href='/akce'></a>
+      <Section border={true}>
+        <div className="flex justify-center items-center h-48">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-[#f5a623] border-solid" />
         </div>
-      </div>
+      </Section>
     );
   }
 
-  const photosToShow =
-    action.photos && action.photos.length > 0
-      ? action.photos
-      : [
-          "https://picsum.photos/400/300?random=1",
-          "https://picsum.photos/400/300?random=2",
-          "https://picsum.photos/400/300?random=3",
-          "https://picsum.photos/400/300?random=4",
-          "https://picsum.photos/400/300?random=5",
-          "https://picsum.photos/400/300?random=6",
-          "https://picsum.photos/400/300?random=7",
-          "https://picsum.photos/400/300?random=8",
-        ];
+  if (!action) {
+    return (
+      <Section border={true}>
+        <p className="text-gray-500">Akce nebyla nalezena.</p>
+        <Link to="/akce" className="text-[#f5a623] underline">
+          Zpět na akce
+        </Link>
+      </Section>
+    );
+  }
 
   return (
-    <section className='max-w-6xl mx-auto bg-gray-50 min-h-screen text-gray-800'>
-      <div className=' mx-auto py-6 md:px-12 border-b border-gray-200'>
-        <a
-          href='/akce'
-          className='flex items-center text-yellow-500 mb-8 hover:underline'
-        >
-          <ArrowLeft className='w-5 h-5 mr-2' />
-          Zpět na přehled akcí
-        </a>
+    <Section border={false}>
+      <Link
+        to="/akce"
+        className="inline-flex items-center gap-2 text-gray-700 hover:text-black transition"
+      >
+        <ArrowLeft size={18} />
+        Zpět na akce
+      </Link>
 
-        <div className='flex flex-col md:flex-row gap-10 mb-16'>
-          <motion.img
-            //src={action.poster || action.imageUrl}
-            src={PlaceholderImg}
-            alt={action.title}
-            className='rounded-xl shadow-lg w-full md:w-1/2 object-cover'
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-          />
+      <div className="mt-6 bg-white rounded-xl shadow-lg overflow-hidden">
+        <img
+          src={action.coverImage?.url || Placeholder}
+          alt={action.coverImage?.alt || action.title}
+          className="w-full h-64 md:h-96 object-cover"
+          loading="eager"
+          decoding="async"
+          onError={(e) => {
+            e.currentTarget.src = Placeholder;
+          }}
+        />
 
-          <motion.div
-            className='md:w-1/2 flex flex-col justify-center'
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h1 className='text-4xl font-bold mb-4'>{action.title}</h1>
-            <p className='text-gray-500 text-sm mb-2'>
-              {new Date(action.date).toLocaleDateString("cs-CZ")}
+        <div className="p-6">
+          <h1 className="text-3xl font-bold">{action.title}</h1>
+
+          {action.date && (
+            <p className="text-gray-500 mt-1">
+              Datum: {new Date(action.date).toLocaleDateString("cs-CZ")}
             </p>
-            <p className='text-gray-700 mb-6 leading-relaxed'>
-              {action.information}
+          )}
+
+          {action.description && (
+            <p className="text-gray-700 mt-4 whitespace-pre-line">
+              {action.description}
             </p>
-          </motion.div>
+          )}
         </div>
       </div>
-      <section className='mt-16 mx-auto px-6 md:px-12 mb-20'>
-        <h2 className='text-2xl font-bold mb-6'>Fotky z akce</h2>
-        <Gallery images={photosToShow} />
-      </section>
-    </section>
+    </Section>
   );
 };
 

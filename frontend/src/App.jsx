@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Routes } from "react-router";
 import LandingPage from "./pages/LandingPage";
-import Layout from "./components/Layout";
+import Layout from "./components/layout/Layout";
 import ContactPage from "./pages/ContactPage";
 import DrZdivPage from "./pages/DrZdivPage";
 import DivanPage from "./pages/DivanPage";
@@ -13,7 +13,7 @@ import CoursesPage from "./pages/CoursesPage";
 import ActionsPage from "./pages/ActionsPage";
 import ActionDetailPage from "./pages/ActionDetailPage";
 import LoginPage from "./pages/LoginPage";
-import ExhibitionDetailPage from "./components/ExhibitionDetailPage";
+import ExhibitionDetailPage from "./pages/ExhibitionDetailPage";
 import TVVVPage from "./pages/TVVVPage";
 
 const App = () => {

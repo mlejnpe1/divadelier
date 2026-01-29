@@ -1,19 +1,19 @@
 import React, { useEffect, useMemo, useState } from "react";
-import Hero from "../components/Hero.jsx";
+import Hero from "../components/layout/Hero.jsx";
 import Placeholder from "../assets/images/placeholder.png";
 import { CalendarSearchIcon, Megaphone, Plus } from "lucide-react";
-import Section from "../components/Section.jsx";
+import Section from "../components/layout/Section.jsx";
 import { useFetch } from "../hooks/useFetch.jsx";
 import { useAuth } from "../hooks/useAuth.jsx";
-import ExhibitionCarousel from "../components/ExhibitionCarousel.jsx";
+import ExhibitionCarousel from "../components/exhibitions/ExhibitionCarousel.jsx";
 import toast from "react-hot-toast";
 import { toastAction } from "../utils/toastAction.jsx";
 import { confirmToast } from "../utils/confirmToast.jsx";
 import { apiFetch } from "../utils/api.js";
-import ExhibitionForm from "../components/ExhibitionForm.jsx";
-import ExhibitionList from "../components/ExhibitionList.jsx";
-import ListToolbar from "../components/ListToolbar.jsx";
-import Pagination from "../components/Pagiantion.jsx";
+import ExhibitionForm from "../components/exhibitions/ExhibitionForm.jsx";
+import ExhibitionList from "../components/exhibitions/ExhibitionList.jsx";
+import ListToolbar from "../components/layout/ListToolbar.jsx";
+import Pagination from "../components/layout/Pagiantion.jsx";
 import { useListControls } from "../hooks/useListControls.jsx";
 
 const EMPTY_EXHIBITION_DRAFT = {
@@ -263,6 +263,16 @@ const VVVPage = () => {
     setNewImageAlt("");
   };
 
+  useEffect(() => {
+    if (window.location.hash === "#fullExhibitionPlan") {
+      requestAnimationFrame(() => {
+        document
+          .getElementById("fullExhibitionPlan")
+          ?.scrollIntoView({ behavior: "smooth" });
+      });
+    }
+  }, []);
+
   return (
     <>
       <Hero
@@ -373,9 +383,11 @@ const VVVPage = () => {
         </div>
       </Section>
 
-      <Section id="fullExhibitionPlan" border={true}>
+      <Section border={true}>
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold">Kompletní výstavní plán</h2>
+          <h2 id="fullExhibitionPlan" className="text-3xl font-bold">
+            Kompletní výstavní plán
+          </h2>
           {user && (
             <button
               onClick={openCreateExhibition}

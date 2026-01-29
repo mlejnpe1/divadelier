@@ -1,17 +1,17 @@
 import React, { useEffect, useMemo, useState } from "react";
-import Hero from "../components/Hero.jsx";
-import Section from "../components/Section.jsx";
+import Hero from "../components/layout/Hero.jsx";
+import Section from "../components/layout/Section.jsx";
 import { useFetch } from "../hooks/useFetch.jsx";
 import { useAuth } from "../hooks/useAuth.jsx";
-import SpecialsList from "../components/SpecialList.jsx";
+import SpecialsList from "../components/specials/SpecialList.jsx";
 import { Plus } from "lucide-react";
-import SpecialForm from "../components/SpecialForm.jsx";
+import SpecialForm from "../components/specials/SpecialForm.jsx";
 import { toastAction } from "../utils/toastAction.jsx";
 import { apiFetch } from "../utils/api.js";
 import { confirmToast } from "../utils/confirmToast.jsx";
-import Pagination from "../components/Pagiantion.jsx";
+import Pagination from "../components/layout/Pagiantion.jsx";
 import { useListControls } from "../hooks/useListControls.jsx";
-import ListToolbar from "../components/ListToolbar.jsx";
+import ListToolbar from "../components/layout/ListToolbar.jsx";
 import toast from "react-hot-toast";
 
 const EMPTY_SPECIAL_DRAFT = { name: "", information: "", link: "" };
