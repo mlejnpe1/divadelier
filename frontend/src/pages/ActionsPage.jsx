@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import Hero from "../components/layout/Hero";
 import Section from "../components/layout/Section";
-import { Plus } from "lucide-react";
+import { PartyPopper, Plus } from "lucide-react";
 
 import { useAuth } from "../hooks/useAuth";
 import { useFetch } from "../hooks/useFetch";
+import { useDebouncedValue } from "../hooks/useDebouncedValue";
 
 import ListToolbar from "../components/layout/ListToolbar";
 import Pagination from "../components/layout/Pagiantion";
-import { useListControls } from "../hooks/useListControls";
-
 import TimelineList from "../components/actions/TimelineList";
 import ActionForm from "../components/actions/ActionForm";
 
@@ -20,31 +19,69 @@ import { apiFetch } from "../utils/api";
 
 export default function ActionsPage() {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
-  const { data: featured } = useFetch("/api/timeline/featured");
-  const { data: timelineData, loading } = useFetch("/api/timeline");
-
+  const [featured, setFeatured] = useState(null);
   const [timeline, setTimeline] = useState([]);
+
+  const [actionFormOpen, setActionFormOpen] = useState(false);
+  const [editingAction, setEditingAction] = useState(null);
+
+  const [page, setPage] = useState(1);
+  const [query, setQuery] = useState("");
+  const debouncedQuery = useDebouncedValue(query, 300);
+
+  const limit = 8;
+  const type = "all";
+
+  const timelineUrl = useMemo(() => {
+    const params = new URLSearchParams();
+    params.set("page", String(page));
+    params.set("limit", String(limit));
+    params.set("type", type);
+
+    if (debouncedQuery.trim()) {
+      params.set("q", debouncedQuery.trim());
+    }
+
+    return `/api/timeline?${params.toString()}`;
+  }, [page, debouncedQuery, limit, type]);
+
+  const { data: timelineData, loading } = useFetch(timelineUrl);
+
+  const refreshFeatured = async () => {
+    const fresh = await apiFetch("/api/timeline/featured");
+    setFeatured(fresh || null);
+  };
 
   useEffect(() => {
     setTimeline(timelineData?.items || []);
   }, [timelineData]);
 
-  const controls = useListControls(timeline, {
-    pageSize: 5,
-    getSortValue: (x) => x.title,
-    searchFields: [(x) => x.title, (x) => x.description],
-  });
+  useEffect(() => {
+    refreshFeatured();
+  }, []);
 
-  const [showForm, setShowForm] = useState(false);
+  const buildTimelineUrl = () => {
+    const params = new URLSearchParams();
+    params.set("page", String(page));
+    params.set("limit", String(limit));
+    params.set("type", type);
 
-  const navigate = useNavigate();
-  const [actionFormOpen, setActionFormOpen] = useState(false);
-  const [editingAction, setEditingAction] = useState(null);
+    if (query.trim()) {
+      params.set("q", query.trim());
+    }
+
+    return `/api/timeline?${params.toString()}`;
+  };
 
   const refreshTimeline = async () => {
-    const fresh = await apiFetch("/api/timeline");
+    const fresh = await apiFetch(buildTimelineUrl());
     setTimeline(fresh.items || []);
+  };
+
+  const refreshAll = async () => {
+    await Promise.all([refreshTimeline(), refreshFeatured()]);
   };
 
   const handleDeleteAction = async (id) => {
@@ -54,7 +91,10 @@ export default function ActionsPage() {
       confirmText: "Smazat",
       danger: true,
     });
-    if (!ok) return;
+
+    if (!ok) {
+      return;
+    }
 
     await toastAction(
       () => apiFetch(`/api/actions/${id}`, { method: "DELETE" }),
@@ -65,7 +105,7 @@ export default function ActionsPage() {
       },
     );
 
-    await refreshTimeline();
+    await refreshAll();
   };
 
   const openEditAction = (item) => {
@@ -78,22 +118,8 @@ export default function ActionsPage() {
     setActionFormOpen(true);
   };
 
-  const onSavedAction = async (saved) => {
-    setTimeline((prev) => {
-      const next = Array.isArray(prev) ? [...prev] : [];
-      const idx = next.findIndex(
-        (x) => x.kind === "action" && x._id === saved._id,
-      );
-
-      const normalized = { ...saved, kind: "action" };
-
-      if (idx >= 0) next[idx] = normalized;
-      else next.unshift(normalized);
-
-      return next;
-    });
-
-    await refreshTimeline();
+  const onSavedAction = async () => {
+    await refreshAll();
   };
 
   return (
@@ -108,8 +134,10 @@ export default function ActionsPage() {
 
       <Section border={true}>
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold">Timeline akcí</h2>
-
+          <div className="flex gap-3 items-center">
+            <PartyPopper color="#f5a623" size={32} />
+            <h2 className="text-3xl font-bold">Na jaké akce se můžete těšit</h2>
+          </div>
           {user && (
             <button
               onClick={openCreateAction}
@@ -129,31 +157,36 @@ export default function ActionsPage() {
           />
         )}
 
-        {!loading && (
-          <>
-            <ListToolbar
-              query={controls.query}
-              setQuery={controls.setQuery}
-              totalCount={controls.totalCount}
-              filteredCount={controls.filteredCount}
-            />
+        <ListToolbar
+          query={query}
+          setQuery={(v) => {
+            setPage(1);
+            setQuery(v);
+          }}
+        />
 
-            <TimelineList
-              items={controls.items}
-              user={user}
-              onEditAction={(item) => openEditAction(item)}
-              onDeleteAction={(id) => handleDeleteAction(id)}
-              onEditExhibition={() => navigate("/vvv#fullExhibitionPlan")}
-              onDeleteExhibition={() => navigate("/vvv#fullExhibitionPlan")}
-            />
+        <div className="relative">
+          {loading && (
+            <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] flex items-start justify-end p-2 z-10">
+              <span className="text-sm text-gray-500">Načítám…</span>
+            </div>
+          )}
 
-            <Pagination
-              page={controls.page}
-              pageCount={controls.pageCount}
-              onPageChange={controls.setPage}
-            />
-          </>
-        )}
+          <TimelineList
+            items={timeline}
+            user={user}
+            onEditAction={(item) => openEditAction(item)}
+            onDeleteAction={(id) => handleDeleteAction(id)}
+            onEditExhibition={() => navigate("/vvv#fullExhibitionPlan")}
+            onDeleteExhibition={() => navigate("/vvv#fullExhibitionPlan")}
+          />
+        </div>
+
+        <Pagination
+          page={timelineData?.page ?? page}
+          pageCount={timelineData?.pageCount ?? 1}
+          onPageChange={(p) => setPage(p)}
+        />
       </Section>
     </>
   );

@@ -1,20 +1,9 @@
 import React from "react";
 import { Search, X } from "lucide-react";
 
-export default function ListToolbar({
-  query,
-  setQuery,
-  totalCount,
-  filteredCount,
-}) {
+export default function ListToolbar({ query, setQuery }) {
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-5">
-      <div className="flex items-center gap-2 text-sm text-gray-600">
-        <span>
-          Zobrazuji <b>{filteredCount}</b> z <b>{totalCount}</b>
-        </span>
-      </div>
-
+    <div className="flex flex-col gap-3 mb-5">
       <div className="relative w-full md:w-96">
         <Search
           className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"

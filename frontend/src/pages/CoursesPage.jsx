@@ -4,7 +4,7 @@ import PlaceholderImg from "../assets/images/placeholder.png";
 
 const courses = [
   {
-    title: "Dr. Zdiv",
+    title: "Dr. ZDIV",
     description:
       "Autorský kurz herectví vedený zkušenými lektory z Divadeliéru. Objevte svůj hlas, tělo i emoce v bezpečném tvůrčím prostoru.",
     image: PlaceholderImg,
@@ -25,7 +25,7 @@ const courses = [
 
 const CoursesPage = () => {
   return (
-    <div className='bg-gray-50 text-gray-800 min-h-screen'>
+    <div className="bg-gray-50 text-gray-800 min-h-screen">
       {courses.map((course, index) => (
         <CourseCard
           key={index}

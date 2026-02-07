@@ -7,7 +7,6 @@ export default function Pagination({ page, pageCount, onPageChange }) {
   const canPrev = page > 1;
   const canNext = page < pageCount;
 
-  // jednoduché okno stránek okolo aktuální
   const pages = [];
   const start = Math.max(1, page - 2);
   const end = Math.min(pageCount, page + 2);

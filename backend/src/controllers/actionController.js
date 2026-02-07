@@ -1,4 +1,4 @@
-import Action from "../models/Actions.js";
+import Action from "../models/Action.js";
 import mongoose from "mongoose";
 
 export async function getAllActions(_, res) {
