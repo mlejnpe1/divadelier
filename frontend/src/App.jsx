@@ -16,6 +16,7 @@ import LoginPage from "./pages/LoginPage";
 import ExhibitionDetailPage from "./pages/ExhibitionDetailPage";
 import TVVVPage from "./pages/TVVVPage";
 import RentalPage from "./pages/RentalPage";
+import BackToTop from "./components/layout/BackToTop";
 
 const App = () => {
   const routes = [
@@ -36,12 +37,15 @@ const App = () => {
   ];
 
   return (
-    <Routes>
-      {routes.map(({ path, element }) => (
-        <Route key={path} path={path} element={<Layout>{element}</Layout>} />
-      ))}
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+    <>
+      <Routes>
+        {routes.map(({ path, element }) => (
+          <Route key={path} path={path} element={<Layout>{element}</Layout>} />
+        ))}
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+      <BackToTop showAfter={400} />
+    </>
   );
 };
 

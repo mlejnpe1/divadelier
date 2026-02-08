@@ -16,6 +16,7 @@ import ActionForm from "../components/actions/ActionForm";
 import { confirmToast } from "../utils/confirmToast";
 import { toastAction } from "../utils/toastAction";
 import { apiFetch } from "../utils/api";
+import ScrollHint from "../components/layout/ScrollHint";
 
 export default function ActionsPage() {
   const { user } = useAuth();
@@ -131,7 +132,9 @@ export default function ActionsPage() {
         buttonText="Výstavy ve výloze"
         onButtonClick={() => navigate("/vvv#fullExhibitionPlan")}
       />
-
+      <div className="relative">
+        <ScrollHint variant="overlay" />
+      </div>
       <Section border={true}>
         <div className="flex justify-between items-center mb-6">
           <div className="flex gap-3 items-center">

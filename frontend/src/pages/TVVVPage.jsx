@@ -13,6 +13,7 @@ import Pagination from "../components/layout/Pagiantion.jsx";
 import { useListControls } from "../hooks/useListControls.jsx";
 import ListToolbar from "../components/layout/ListToolbar.jsx";
 import toast from "react-hot-toast";
+import ScrollHint from "../components/layout/ScrollHint.jsx";
 
 const EMPTY_SPECIAL_DRAFT = { name: "", information: "", link: "" };
 
@@ -150,6 +151,9 @@ const TVVVPage = () => {
           if (el) el.scrollIntoView({ behavior: "smooth" });
         }}
       />
+      <div className="relative">
+        <ScrollHint variant="overlay" />
+      </div>
 
       <Section border={true}>
         <p className="text-gray-700">

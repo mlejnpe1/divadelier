@@ -16,6 +16,7 @@ import ListToolbar from "../components/layout/ListToolbar.jsx";
 import Pagination from "../components/layout/Pagiantion.jsx";
 import { useDebouncedValue } from "../hooks/useDebouncedValue";
 import ContactSection from "../components/ContactSection.jsx";
+import ScrollHint from "../components/layout/ScrollHint.jsx";
 
 const EMPTY_EXHIBITION_DRAFT = {
   title: "",
@@ -259,24 +260,27 @@ const VVVPage = () => {
         title="VVV – Výstavy ve výloze"
         subtitle="Aktuální výstava na dosah"
         description="Prohlédněte si umělecká díla přímo z výlohy. Objevte novinky, plán výstav a možnost zakoupení obrazů."
-      >
-        <div className="w-full max-w-3xl mx-auto mt-6">
-          {loadingFeaturedExhibition ? (
-            <div className="flex justify-center items-center h-64 md:h-96">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-[#f5a623] border-solid" />
-            </div>
-          ) : (
-            <img
-              src={featuredExhibition?.coverImage?.url || Placeholder}
-              alt={featuredExhibition?.title || "Aktuální výstava"}
-              className="rounded-xl shadow-lg w-full object-cover h-64 md:h-96"
-              loading="eager"
-              decoding="async"
-            />
-          )}
-        </div>
-      </Hero>
-
+        children={
+          <div className="w-full max-w-3xl mx-auto mt-6">
+            {loadingFeaturedExhibition ? (
+              <div className="flex justify-center items-center h-64 md:h-96">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-[#f5a623] border-solid" />
+              </div>
+            ) : (
+              <img
+                src={featuredExhibition?.coverImage?.url || Placeholder}
+                alt={featuredExhibition?.title || "Aktuální výstava"}
+                className="rounded-xl shadow-lg w-full object-cover h-64 md:h-96"
+                loading="eager"
+                decoding="async"
+              />
+            )}
+          </div>
+        }
+      />
+      <div className="relative">
+        <ScrollHint variant="overlay" />
+      </div>
       <Section border={true}>
         <div className="flex items-center mb-8">
           <CalendarSearchIcon className="w-8 h-8 text-[#f5a623] mr-3" />

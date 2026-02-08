@@ -28,8 +28,10 @@ export default function RentalPage() {
           const el = document.getElementById("informationSection");
           if (el) el.scrollIntoView({ behavior: "smooth" });
         }}
-      ></Hero>
-
+      />
+      <div className="relative">
+        <ScrollHint variant="overlay" />
+      </div>
       <Section id="informationSection" border={true}>
         <h2 className="text-3xl font-bold mb-6">Na co se prostor hodí</h2>
 

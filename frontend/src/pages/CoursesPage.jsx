@@ -7,6 +7,7 @@ import LecturerPhoto from "../assets/images/adela.webp";
 import InquiryModal from "../components/InquiryModal.jsx";
 import toast from "react-hot-toast";
 import { apiFetch } from "../utils/api.js";
+import ScrollHint from "../components/layout/ScrollHint.jsx";
 
 function mailto(subject, body = "") {
   const s = encodeURIComponent(subject);
@@ -169,7 +170,9 @@ export default function CoursesPage() {
           if (el) el.scrollIntoView({ behavior: "smooth" });
         }}
       />
-
+      <div className="relative">
+        <ScrollHint variant="overlay" />
+      </div>
       <InquiryModal
         open={inquiryOpen}
         onClose={() => setInquiryOpen(false)}
@@ -258,14 +261,21 @@ export default function CoursesPage() {
           </div>
         </div>
       </Section>
-
+      <div className="relative">
+        <ScrollHint variant="overlay" />
+      </div>
       {SECTIONS.map((section) => (
         <Section key={section.id} border={true}>
-          <div id={section.id} className="scroll-mt-24">
-            <h2 className="text-3xl font-bold">{section.title}</h2>
-            <p className="text-gray-700 mt-2">{section.subtitle}</p>
+          <div id={section.id} className="scroll-mt-20 md:scroll-mt-24">
+            <h2 className="text-2xl sm:text-3xl font-bold leading-tight">
+              {section.title}
+            </h2>
 
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <p className="text-gray-700 mt-2 text-sm sm:text-base max-w-prose">
+              {section.subtitle}
+            </p>
+
+            <div className="mt-5 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6">
               {section.items.map((c) => (
                 <CourseItemCard
                   key={c.title}

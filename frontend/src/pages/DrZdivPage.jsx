@@ -25,6 +25,7 @@ import NewsList from "../components/news/NewsList";
 import { useListControls } from "../hooks/useListControls";
 import ListToolbar from "../components/layout/ListToolbar";
 import Pagination from "../components/layout/Pagiantion";
+import ScrollHint from "../components/layout/ScrollHint";
 
 const EMPTY_MEETING_DRAFT = { title: "", information: "", day_in_week: "" };
 
@@ -64,8 +65,6 @@ const DrZdivPage = () => {
     getSortValue: (n) => n.createdAt,
     searchFields: [(n) => n.information],
   });
-
-  const pagedNews = [...newsControls.items].reverse();
 
   useEffect(() => {
     if (newsdata) setNews(newsdata);
@@ -308,6 +307,9 @@ const DrZdivPage = () => {
           )
         }
       />
+      <div className="relative">
+        <ScrollHint variant="overlay" />
+      </div>
       <Section border={true}>
         <div className="flex items-center mb-8">
           <Spotlight className="w-9 h-9 text-[#f5a623] mr-3" />
@@ -371,7 +373,10 @@ const DrZdivPage = () => {
         )}
       </Section>
 
-      <Section border={true}>
+      <Section id="signin" border={true}>
+        <div className="relative">
+          <ScrollHint variant="overlay" target="signin" />
+        </div>
         <div className="flex items-center mb-8">
           <h2 className="text-3xl font-bold">Přihlášení a informace o kurzu</h2>
         </div>

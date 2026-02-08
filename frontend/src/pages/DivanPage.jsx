@@ -4,6 +4,7 @@ import Gallery from "../components/layout/Gallery";
 import ImageRotator from "../components/layout/ImageRotator";
 import Section from "../components/layout/Section";
 import { FileSignature, ScrollTextIcon, Signature } from "lucide-react";
+import ScrollHint from "../components/layout/ScrollHint";
 
 const images = Object.values(
   import.meta.glob("../assets/images/divan/*.{jpg,png,jpeg}", {
@@ -57,7 +58,9 @@ const DivanPage = () => {
         }}
         buttonText={"Chci se přidat"}
       />
-
+      <div className="relative">
+        <ScrollHint variant="overlay" />
+      </div>
       <Section border={true}>
         <div className="flex items-center mb-8">
           <ScrollTextIcon className="w-8 h-8 text-[#f5a623] mr-3" />
