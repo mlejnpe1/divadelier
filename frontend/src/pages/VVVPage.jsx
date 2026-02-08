@@ -14,7 +14,8 @@ import ExhibitionForm from "../components/exhibitions/ExhibitionForm.jsx";
 import ExhibitionList from "../components/exhibitions/ExhibitionList.jsx";
 import ListToolbar from "../components/layout/ListToolbar.jsx";
 import Pagination from "../components/layout/Pagiantion.jsx";
-import { useListControls } from "../hooks/useListControls.jsx";
+import { useDebouncedValue } from "../hooks/useDebouncedValue";
+import ContactSection from "../components/ContactSection.jsx";
 
 const EMPTY_EXHIBITION_DRAFT = {
   title: "",
@@ -26,9 +27,30 @@ const EMPTY_EXHIBITION_DRAFT = {
 };
 
 const VVVPage = () => {
+  const { user } = useAuth();
   const [featuredExhibition, setFeaturedExhibition] = useState(null);
   const [loadingFeaturedExhibition, setLoadingFeaturedExhibition] =
     useState(true);
+  const [planPage, setPlanPage] = useState(1);
+  const [planQuery, setPlanQuery] = useState("");
+  const planLimit = 5;
+  const debouncedPlanQuery = useDebouncedValue(planQuery, 300);
+
+  const planUrl = useMemo(() => {
+    const params = new URLSearchParams();
+    params.set("page", String(planPage));
+    params.set("limit", String(planLimit));
+    if (debouncedPlanQuery.trim()) {
+      params.set("q", debouncedPlanQuery.trim());
+    }
+    return `/api/exhibitions?${params.toString()}`;
+  }, [planPage, planLimit, debouncedPlanQuery]);
+
+  const { data: planData, loading: planLoading } = useFetch(planUrl);
+  const [carouselRefresh, setCarouselRefresh] = useState(0);
+  const { data: carouselData, loading: carouselLoading } = useFetch(
+    `/api/exhibitions/carousel?limit=6&r=${carouselRefresh}`,
+  );
 
   const refreshFeaturedExhibition = async () => {
     setLoadingFeaturedExhibition(true);
@@ -43,43 +65,9 @@ const VVVPage = () => {
     }
   };
 
-  const { data: exhibitionsData, loading: exhibitionsLoading } =
-    useFetch("/api/exhibitions");
-
-  const { user } = useAuth();
-  const [exhibitions, setExhibitions] = useState([]);
-
   useEffect(() => {
     refreshFeaturedExhibition();
-
-    if (exhibitionsData) setExhibitions(exhibitionsData);
-  }, [exhibitionsData]);
-
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
-
-  const carouselExhibitions = useMemo(() => {
-    const arr = Array.isArray(exhibitions) ? [...exhibitions] : [];
-
-    const upcoming = arr
-      .filter((e) => e?.date && new Date(e.date) >= now)
-      .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-    if (upcoming.length === 0) {
-      return arr
-        .filter((e) => e?.date)
-        .sort((a, b) => new Date(b.date) - new Date(a.date))
-        .slice(0, 6);
-    }
-
-    return upcoming.slice(0, 6);
-  }, [exhibitions]);
-
-  const exhibitionControls = useListControls(exhibitions, {
-    pageSize: 5,
-    getSortValue: (e) => new Date(e.date || 0),
-    searchFields: [(e) => e.title, (e) => e.information, (e) => e.author?.name],
-  });
+  }, []);
 
   const [editingExhibitionId, setEditingExhibitionId] = useState(null);
   const [draftExhibition, setDraftExhibition] = useState(
@@ -151,12 +139,11 @@ const VVVPage = () => {
       },
     );
 
-    setExhibitions((prev) => prev.filter((e) => e._id !== id));
-
-    if (editingExhibitionId === id) closeForm();
-
+    closeForm();
     await refreshFeaturedExhibition();
-    exhibitionControls.resetControls();
+    setPlanQuery("");
+    setPlanPage(1);
+    setCarouselRefresh((x) => x + 1);
   };
 
   function validateExhibitionDraft(draft) {
@@ -203,13 +190,11 @@ const VVVPage = () => {
       author: draftExhibition.author || {},
     };
 
-    console.log(payload);
-
     setCreatingExhibition(true);
     try {
       const isEdit = Boolean(editingExhibitionId);
 
-      const saved = await toastAction(
+      await toastAction(
         () =>
           apiFetch(
             isEdit
@@ -229,20 +214,15 @@ const VVVPage = () => {
         },
       );
 
-      setExhibitions((prev) =>
-        isEdit
-          ? prev.map((x) => (x._id === saved._id ? saved : x))
-          : [saved, ...prev],
-      );
-
       closeForm();
 
       await refreshFeaturedExhibition();
+      setPlanQuery("");
+      setPlanPage(1);
+      setCarouselRefresh((x) => x + 1);
     } finally {
       setCreatingExhibition(false);
     }
-
-    exhibitionControls.resetControls();
   };
 
   const [newImageUrl, setNewImageUrl] = useState("");
@@ -303,8 +283,8 @@ const VVVPage = () => {
           <h2 className="text-3xl font-bold">Následující výstavy</h2>
         </div>
         <ExhibitionCarousel
-          items={carouselExhibitions}
-          loading={exhibitionsLoading}
+          items={carouselData?.items || []}
+          loading={carouselLoading}
         />
       </Section>
 
@@ -342,45 +322,7 @@ const VVVPage = () => {
       </Section>
 
       <Section border={true}>
-        <div className="flex items-center mb-8">
-          <Megaphone className="w-8 h-8 text-[#f5a623] mr-3" />
-          <h2 className="text-3xl font-bold">Kontaktujte nás</h2>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-lg p-6 space-y-6">
-          <form
-            className="flex flex-col gap-4"
-            onSubmit={(e) => {
-              e.preventDefault();
-              toast("Zatím není napojeno na API 🙂", { icon: "ℹ️" });
-            }}
-          >
-            <input
-              type="text"
-              placeholder="Vaše jméno"
-              required
-              className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f5a623]"
-            />
-            <input
-              type="email"
-              placeholder="Váš email"
-              required
-              className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f5a623]"
-            />
-            <textarea
-              placeholder="Vaše zpráva"
-              rows={4}
-              required
-              className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f5a623]"
-            />
-            <button
-              type="submit"
-              className="mt-8 mx-auto bg-[#f5a623] text-white px-6 py-2 rounded-full font-semibold shadow hover:shadow-md hover:scale-105 transform transition duration-300"
-            >
-              Odeslat zprávu
-            </button>
-          </form>
-        </div>
+        <ContactSection page="Výstavy ve výloze" />
       </Section>
 
       <Section border={true}>
@@ -415,36 +357,35 @@ const VVVPage = () => {
           />
         )}
 
-        {exhibitionsLoading ? (
-          <div className="flex justify-center items-center h-48">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-[#f5a623] border-solid" />
-          </div>
-        ) : exhibitions.length === 0 ? (
-          <p className="text-gray-400">Žádné výstavy k zobrazení</p>
-        ) : (
-          <div className="space-y-6">
-            <ListToolbar
-              query={exhibitionControls.query}
-              setQuery={exhibitionControls.setQuery}
-              totalCount={exhibitionControls.totalCount}
-              filteredCount={exhibitionControls.filteredCount}
-            />
+        <ListToolbar
+          query={planQuery}
+          setQuery={(v) => {
+            setPlanPage(1);
+            setPlanQuery(v);
+          }}
+        />
 
-            <ExhibitionList
-              exhibitions={exhibitionControls.items}
-              loading={exhibitionsLoading}
-              user={user}
-              onEdit={openEditExhibition}
-              onDelete={handleDeleteExhibition}
-            />
+        <div className="relative">
+          {planLoading && (
+            <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] flex items-start justify-end p-2 z-10">
+              <span className="text-sm text-gray-500">Načítám…</span>
+            </div>
+          )}
 
-            <Pagination
-              page={exhibitionControls.page}
-              pageCount={exhibitionControls.pageCount}
-              onPageChange={exhibitionControls.setPage}
-            />
-          </div>
-        )}
+          <ExhibitionList
+            exhibitions={planData?.items || []}
+            loading={planLoading}
+            user={user}
+            onEdit={openEditExhibition}
+            onDelete={handleDeleteExhibition}
+          />
+
+          <Pagination
+            page={planData?.page ?? planPage}
+            pageCount={planData?.pageCount || 1}
+            onPageChange={(p) => setPlanPage(p)}
+          />
+        </div>
       </Section>
     </>
   );

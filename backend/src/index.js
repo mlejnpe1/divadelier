@@ -11,6 +11,8 @@ import authRoutes from "./routes/auth.routes.js";
 import { connectDB } from "./config/db.js";
 import cookieParser from "cookie-parser";
 import timelineRoutes from "./routes/timelineRoutes.js";
+import inquiriesRoutes from "./routes/inquiries.js";
+import contactRoutes from "./routes/contactRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -43,6 +45,8 @@ app.use("/api/news", newsRoutes);
 app.use("/api/shopItems", shopItemRoutes);
 app.use("/api/specials", specialRoutes);
 app.use("/api/timeline", timelineRoutes);
+app.use("/api/inquiries", inquiriesRoutes);
+app.use("/api/contact", contactRoutes);
 
 await connectDB();
 

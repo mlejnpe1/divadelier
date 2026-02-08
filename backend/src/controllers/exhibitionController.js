@@ -1,13 +1,42 @@
 import Exhibition from "../models/Exhibition.js";
 import mongoose from "mongoose";
 
-export async function getAllExhibitions(_, res) {
+export async function getAllExhibitions(req, res) {
   try {
-    const exhibitions = await Exhibition.find().sort({ date: -1 });
-    res.status(200).json(exhibitions);
+    const q = String(req.query.q || "").trim();
+    const page = Math.max(1, parseInt(req.query.page || "1", 10));
+    const limit = Math.max(
+      1,
+      Math.min(50, parseInt(req.query.limit || "5", 10)),
+    );
+
+    const filter = {};
+    if (q) {
+      const rx = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+      filter.$or = [{ title: rx }, { information: rx }, { "author.name": rx }];
+    }
+
+    const total = await Exhibition.countDocuments(filter);
+
+    const pageCount = Math.max(1, Math.ceil(total / limit));
+    const safePage = Math.min(page, pageCount);
+
+    const items = await Exhibition.find(filter)
+      .sort({ date: -1, _id: 1 })
+      .skip((safePage - 1) * limit)
+      .limit(limit)
+      .lean();
+
+    return res.status(200).json({
+      items,
+      total,
+      page: safePage,
+      limit,
+      pageCount,
+    });
   } catch (error) {
     console.error("Error in getAllExhibition Controller.", error);
-    res.status(500).json({ message: "Internal server error." });
+    return res.status(500).json({ message: "Internal server error." });
   }
 }
 
@@ -150,7 +179,7 @@ export async function getFeaturedExhibition(req, res) {
     const startOfToday = new Date(
       now.getFullYear(),
       now.getMonth(),
-      now.getDate()
+      now.getDate(),
     );
 
     let exhibition = await Exhibition.findOne({
@@ -168,6 +197,45 @@ export async function getFeaturedExhibition(req, res) {
     return res.status(200).json(exhibition);
   } catch (error) {
     console.error("Error in getFeaturedExhibition Controller.", error);
+    return res.status(500).json({ message: "Internal server error." });
+  }
+}
+
+export async function getCarouselExhibitions(req, res) {
+  try {
+    const limit = Math.max(
+      1,
+      Math.min(20, parseInt(req.query.limit || "6", 10)),
+    );
+
+    const now = new Date();
+    const startOfToday = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+    );
+
+    const upcoming = await Exhibition.find({
+      date: { $gte: startOfToday },
+    })
+      .sort({ date: 1, _id: 1 })
+      .limit(limit)
+      .lean();
+
+    if (upcoming.length > 0) {
+      return res.status(200).json({ items: upcoming });
+    }
+
+    const recentPast = await Exhibition.find({
+      date: { $exists: true, $ne: null },
+    })
+      .sort({ date: -1, _id: 1 })
+      .limit(limit)
+      .lean();
+
+    return res.status(200).json({ items: recentPast });
+  } catch (error) {
+    console.error("Error in getCarouselExhibitions Controller.", error);
     return res.status(500).json({ message: "Internal server error." });
   }
 }
