@@ -3,11 +3,9 @@ import Section from "../components/layout/Section.jsx";
 import Hero from "../components/layout/Hero.jsx";
 import CourseItemCard from "../components/courses/CourseItemCard.jsx";
 import Accordion from "../components/courses/Accordion.jsx";
-import { Mail, Sparkles } from "lucide-react";
 import LecturerPhoto from "../assets/images/adela.webp";
-import CourseInquiryModal from "../components/courses/CourseInquiryModal.jsx";
+import InquiryModal from "../components/InquiryModal.jsx";
 import toast from "react-hot-toast";
-import { useFetch } from "../hooks/useFetch.jsx";
 import { apiFetch } from "../utils/api.js";
 
 function mailto(subject, body = "") {
@@ -146,6 +144,19 @@ export default function CoursesPage() {
   const [inquiryOpen, setInquiryOpen] = useState(false);
   const [selectedCourseTitle, setSelectedCourseTitle] = useState("");
 
+  const handleSubmit = async (payload) => {
+    await apiFetch("/api/inquiries", {
+      method: "POST",
+      body: {
+        ...payload,
+        subject: `Poptávka – Poptávka kurzu`,
+        source: "course",
+      },
+    });
+
+    toast.success("Děkujeme! Poptávka odeslána.");
+  };
+
   return (
     <>
       <Hero
@@ -159,18 +170,15 @@ export default function CoursesPage() {
         }}
       />
 
-      <CourseInquiryModal
+      <InquiryModal
         open={inquiryOpen}
-        courseTitle={selectedCourseTitle}
         onClose={() => setInquiryOpen(false)}
-        onSubmit={async (payload) => {
-          await apiFetch("/api/inquiries", {
-            method: "POST",
-            body: payload,
-          });
-
-          toast.success("Děkujeme! Poptávka odeslána.");
-        }}
+        onSubmit={handleSubmit}
+        title="Nezávazná přihláška"
+        subtitle="Ozveme se vám s detaily ke kurzu."
+        contextLabel="Vybraný kurz"
+        contextValue={selectedCourseTitle}
+        contextType="course"
       />
 
       <Section id="offerSection" border={true}>

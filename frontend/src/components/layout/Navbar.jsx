@@ -6,7 +6,6 @@ import {
   Menu,
   X,
   UserRoundPen,
-  User2,
   LogOut,
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";

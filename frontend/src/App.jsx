@@ -15,6 +15,7 @@ import ActionDetailPage from "./pages/ActionDetailPage";
 import LoginPage from "./pages/LoginPage";
 import ExhibitionDetailPage from "./pages/ExhibitionDetailPage";
 import TVVVPage from "./pages/TVVVPage";
+import RentalPage from "./pages/RentalPage";
 
 const App = () => {
   const routes = [
@@ -31,6 +32,7 @@ const App = () => {
     { path: "/akce", element: <ActionsPage /> },
     { path: "/akce/:id", element: <ActionDetailPage /> },
     { path: "/vvv/:id", element: <ExhibitionDetailPage /> },
+    { path: "/pronajem", element: <RentalPage /> },
   ];
 
   return (

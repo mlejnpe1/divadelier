@@ -32,7 +32,7 @@ const Footer = () => {
       title: "O Divadeliéru",
       links: [
         { label: "Historie", href: "/historie" },
-        { label: "Pronájem", href: "#" },
+        { label: "Pronájem", href: "/pronajem" },
         { label: "Kontakt", href: "/kontakt" },
       ],
     },
