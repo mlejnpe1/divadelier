@@ -37,7 +37,12 @@ export default function Navbar() {
     {
       title: "Domovská scéna",
       submenu: [
-        { label: "Divadlo Di", href: "https://divadlodi.cz" },
+        {
+          label: "Divadlo DI",
+          href: "https://divadlodi.cz",
+          target: "_blank",
+          rel: "noopener noreferrer",
+        },
         { label: "Dr. ZDIV", href: "/drZdiv" },
         { label: "Divan", href: "/divan" },
         { label: "VVV", href: "/vvv" },
@@ -117,6 +122,8 @@ export default function Navbar() {
                       <a
                         key={sub.label}
                         href={sub.href}
+                        target={sub.target}
+                        rel={sub.rel}
                         className="block px-4 py-2 text-gray-700 hover:bg-[#f5a623] hover:text-white rounded-lg"
                       >
                         {sub.label}
@@ -166,6 +173,8 @@ export default function Navbar() {
                     <a
                       key={sub.label}
                       href={sub.href}
+                      target={sub.target}
+                      rel={sub.rel}
                       className="block py-2 text-gray-700 hover:text-[#f5a623]"
                     >
                       {sub.label}

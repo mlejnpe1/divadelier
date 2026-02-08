@@ -13,7 +13,12 @@ const Footer = () => {
     {
       title: "Naše scéna",
       links: [
-        { label: "Divadlo Di", href: "https://divadlodi.cz" },
+        {
+          label: "Divadlo Di",
+          href: "https://divadlodi.cz",
+          target: "_blank",
+          rel: "noopener noreferrer",
+        },
         { label: "Dr. ZDIV", href: "/drZdiv" },
         { label: "Divan", href: "/divan" },
         { label: "VVV", href: "/vvv" },
@@ -74,6 +79,8 @@ const Footer = () => {
                   <a
                     key={linkIdx}
                     href={link.href}
+                    target={link.target}
+                    rel={link.rel}
                     className="text-gray-800 hover:text-[#f5a623] font-medium"
                   >
                     {link.label}
