@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import HeroBG from "../assets/images/HeroBG1.webp";
+import HeroBG1 from "../assets/images/heroBG1.webp";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -41,7 +41,7 @@ export default function LoginPage() {
     <div
       className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6"
       style={{
-        backgroundImage: `url(${HeroBG})`,
+        backgroundImage: `url(${HeroBG1})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
