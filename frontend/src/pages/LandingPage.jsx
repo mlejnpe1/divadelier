@@ -4,10 +4,7 @@ import About from "../components/About";
 import ProgramOffer from "../components/ProgramOffer";
 import ImageRotator from "../components/layout/ImageRotator";
 import ScrollHint from "../components/layout/ScrollHint";
-<<<<<<< HEAD
-=======
 import { Link } from "react-router";
->>>>>>> 0464d06 (landingpage + navabr popup change)
 
 const heroImages = Object.values(
   import.meta.glob("../assets/images/hero-landingPage/*.{jpg,png,jpeg,webp}", {
@@ -23,9 +20,6 @@ const LandingPage = () => {
       <Hero
         title={<>Vítejte v Divadeliéru</>}
         subtitle="Prkna, která znamenají svět."
-<<<<<<< HEAD
-        description="Divadlo Di, Dr.Zdiv, Divan, TV VV, Výstavy ve výloze, přednášky, koncerty a další kulturní akce..."
-=======
         description={
           <>
             <Link
@@ -58,7 +52,6 @@ const LandingPage = () => {
             </Link>
           </>
         }
->>>>>>> 0464d06 (landingpage + navabr popup change)
         children={
           <ImageRotator
             images={heroImages}
