@@ -32,6 +32,7 @@ export default function ScrollHint({
   label = "Pokračovat níže",
   double = true,
   variant = "overlay", // "overlay" | "inline"
+  color = "dark", // "dark" | "light"
   className = "",
   iconClassName = "",
 }) {
@@ -61,11 +62,16 @@ export default function ScrollHint({
     });
   };
 
+  const colorClasses =
+    color === "light"
+      ? "text-white/80 hover:text-white"
+      : "text-gray-700/80 hover:text-gray-900";
+
   const base =
-    "select-none text-gray-700/80 hover:text-gray-900 transition " +
+    `select-none transition pointer-events-auto ${colorClasses} ` +
     "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#f5a623] rounded-xl";
 
-  const overlayPos = "absolute left-1/2 -translate-x-1/2 bottom-6";
+  const overlayPos = "absolute left-1/2 -translate-x-1/2 bottom-6 z-30";
 
   const inlinePos = "inline-flex";
 

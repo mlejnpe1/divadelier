@@ -15,53 +15,61 @@ const heroImages = Object.values(
 );
 
 const LandingPage = () => {
+  const heroLinkClass =
+    "underline underline-offset-4 transition duration-200 hover:text-orange-200";
+
   return (
     <>
       <Hero
-        title={<>Vítejte v Divadeliéru</>}
+        title={
+          <>
+            Vítejte v
+            <br />
+            Divadeliéru
+          </>
+        }
         subtitle="Prkna, která znamenají svět."
         description={
           <>
-            <Link
-              to="https://divadlodi.cz"
+            <a
+              href="https://divadlodi.cz"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-[#000]"
+              className={heroLinkClass}
             >
               Divadlo Di
-            </Link>
+            </a>
             {", "}
-            <Link to="/drZdiv" className="hover:text-[#000]">
+            <Link to="/drZdiv" className={heroLinkClass}>
               Dr.Zdiv
             </Link>
             {", "}
-            <Link to="/divan" className="hover:text-[#000]">
+            <Link to="/divan" className={heroLinkClass}>
               Divan
             </Link>
             {", "}
-            <Link to="/tvvv" className="hover:text-[#000]">
+            <Link to="/tvvv" className={heroLinkClass}>
               TV VV
             </Link>
             {", "}
-            <Link to="/vvv" className="hover:text-[#000]">
+            <Link to="/vvv" className={heroLinkClass}>
               Výstavy ve výloze
             </Link>
             {", "}
-            <Link to="/akce" className="hover:text-[#000]">
-              {" přednášky, koncerty a další kulturní akce..."}
+            <Link to="/akce" className={heroLinkClass}>
+              přednášky, koncerty a další kulturní akce...
             </Link>
           </>
         }
-        children={
-          <ImageRotator
-            images={heroImages}
-            interval={4000}
-            className="w-3/4 md:w-full h-80 md:h-96"
-          />
-        }
-      />
+      >
+        <ImageRotator
+          images={heroImages}
+          interval={4000}
+          className="w-full h-[320px] md:h-[480px] lg:h-[560px]"
+        />
+      </Hero>
       <div className="relative">
-        <ScrollHint variant="overlay" />
+        <ScrollHint variant="overlay" color="light" />
       </div>
       <About />
       <ProgramOffer />

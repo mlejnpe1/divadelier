@@ -308,7 +308,7 @@ const DrZdivPage = () => {
         }
       />
       <div className="relative">
-        <ScrollHint variant="overlay" />
+        <ScrollHint variant="overlay" color="light" />
       </div>
       <Section border={true}>
         <div className="flex items-center mb-8">

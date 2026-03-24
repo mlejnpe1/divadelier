@@ -30,7 +30,7 @@ export default function RentalPage() {
         }}
       />
       <div className="relative">
-        <ScrollHint variant="overlay" />
+        <ScrollHint variant="overlay" color="light" />
       </div>
       <Section id="informationSection" border={true}>
         <h2 className="text-3xl font-bold mb-6">Na co se prostor hodí</h2>

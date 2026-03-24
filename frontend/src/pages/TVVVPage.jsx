@@ -152,7 +152,7 @@ const TVVVPage = () => {
         }}
       />
       <div className="relative">
-        <ScrollHint variant="overlay" />
+        <ScrollHint variant="overlay" color="light" />
       </div>
 
       <Section border={true}>

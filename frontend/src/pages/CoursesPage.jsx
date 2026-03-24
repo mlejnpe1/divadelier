@@ -22,13 +22,6 @@ function scrollToId(id) {
 }
 
 export default function CoursesPage() {
-  const signupHref = useMemo(() => {
-    return mailto(
-      "Přihláška na kurz",
-      "Dobrý den,\n\nmám zájem o kurz:\n- Název kurzu:\n- Jméno účastníka:\n- Věk (pokud dítě):\n- Telefon:\n\nDěkuji.",
-    );
-  }, []);
-
   const customHref = useMemo(() => {
     return mailto(
       "Kurz na míru",
@@ -171,7 +164,7 @@ export default function CoursesPage() {
         }}
       />
       <div className="relative">
-        <ScrollHint variant="overlay" />
+        <ScrollHint variant="overlay" color="light" />
       </div>
       <InquiryModal
         open={inquiryOpen}

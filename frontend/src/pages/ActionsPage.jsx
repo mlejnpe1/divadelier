@@ -133,7 +133,7 @@ export default function ActionsPage() {
         onButtonClick={() => navigate("/vvv#fullExhibitionPlan")}
       />
       <div className="relative">
-        <ScrollHint variant="overlay" />
+        <ScrollHint variant="overlay" color="light" />
       </div>
       <Section border={true}>
         <div className="flex justify-between items-center mb-6">
