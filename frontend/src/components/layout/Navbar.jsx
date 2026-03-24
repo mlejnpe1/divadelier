@@ -9,7 +9,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router";
 
 export default function Navbar() {
   const { user, loading } = useAuth();
@@ -18,7 +18,20 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   const toggleDropdown = (menu) => {
-    setOpenDropdown(openDropdown === menu ? null : menu);
+    if (openDropdown === menu) {
+      setOpenDropdown(null);
+    } else {
+      setOpenDropdown(menu);
+    }
+  };
+
+  const closeMobileMenu = () => {
+    setMobileOpen(false);
+    setOpenDropdown(null);
+  };
+
+  const isExternalLink = (href) => {
+    return href.startsWith("http");
   };
 
   const handleLogout = async () => {
@@ -27,6 +40,7 @@ export default function Navbar() {
         method: "POST",
         credentials: "include",
       });
+      closeMobileMenu();
       navigate("/login");
     } catch (err) {
       console.error("Chyba při odhlášení: ", err);
@@ -67,127 +81,270 @@ export default function Navbar() {
     },
   ];
 
-  const UserMenu = () => {
-    if (loading) return null;
+  const UserMenu = ({ mobile = false }) => {
+    if (loading) {
+      return null;
+    }
 
     if (!user) {
+      if (mobile) {
+        return (
+          <Link
+            to="/login"
+            onClick={closeMobileMenu}
+            className="flex items-center justify-between rounded-2xl border border-white/20 bg-white/50 px-4 py-4 text-sm font-medium text-gray-800 transition hover:bg-white/70"
+          >
+            <span>Přihlášení</span>
+            <UserRoundPen className="h-5 w-5 text-[#f5a623]" />
+          </Link>
+        );
+      }
+
       return (
-        <a href="/login">
-          <div className="px-4 py-3 flex justify-end">
-            <UserRoundPen className="w-6 h-6 text-gray-700 hover:text-[#f5a623] cursor-pointer" />
-          </div>
+        <a href="/login" className="flex items-center justify-end">
+          <UserRoundPen className="h-5 w-5 text-gray-700 transition hover:text-[#f5a623]" />
         </a>
       );
     }
 
+    if (mobile) {
+      return (
+        <div className="rounded-3xl border border-white/20 bg-white/50 p-4 shadow-sm">
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <div>
+              <p className="text-xs uppercase tracking-[0.18em] text-gray-500">
+                Přihlášen
+              </p>
+              <p className="text-sm font-semibold text-gray-800">
+                {user.first_name} {user.second_name}
+              </p>
+            </div>
+
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/70">
+              <UserRoundPen className="h-5 w-5 text-[#c98512]" />
+            </div>
+          </div>
+
+          <button
+            onClick={handleLogout}
+            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#f5a623] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#e19812]"
+          >
+            <LogOut className="h-4 w-4" />
+            Odhlásit se
+          </button>
+        </div>
+      );
+    }
+
     return (
-      <div className="flex items-center justify-end space-x-2 px-4 py-3">
-        <span className="text-gray-700 font-medium">
+      <div className="flex items-center justify-end gap-3">
+        <span className="text-sm font-medium text-gray-800">
           {user.first_name} {user.second_name}
         </span>
-        <button onClick={handleLogout} className="focus:outline-none">
-          <LogOut className="w-6 h-6 text-gray-700 hover:text-[#f5a623] cursor-pointer" />
+        <button
+          onClick={handleLogout}
+          className="rounded-full p-2 text-gray-700 transition hover:bg-white/50 hover:text-[#f5a623]"
+        >
+          <LogOut className="h-5 w-5" />
         </button>
       </div>
     );
   };
 
   return (
-    <nav className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          <div className="flex-shrink-0 flex items-center">
-            <a href="/">
-              <img src={Logo} alt="Logo" className="h-12 w-auto" />
-            </a>
-          </div>
+    <>
+      <nav className="sticky top-0 z-50 border-b border-white/20 bg-white/65 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
+            <div className="flex shrink-0 items-center">
+              <a href="/" className="flex items-center">
+                <img src={Logo} alt="Logo" className="h-12 w-auto" />
+              </a>
+            </div>
 
-          <div className="hidden md:flex space-x-6 items-center">
-            {menuItems.map((item) => (
-              <div key={item.title} className="relative">
-                <button
-                  onClick={() => toggleDropdown(item.title)}
-                  className="flex items-center space-x-1 text-gray-800 hover:text-[#f5a623] font-medium"
-                >
-                  <span>{item.title}</span>
-                  {openDropdown === item.title ? (
-                    <ChevronUp className="w-4 h-4" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4" />
-                  )}
-                </button>
-                {openDropdown === item.title && (
-                  <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg animate-fadeIn">
-                    {item.submenu.map((sub) => (
-                      <a
-                        key={sub.label}
-                        href={sub.href}
-                        target={sub.target}
-                        rel={sub.rel}
-                        className="block px-4 py-2 text-gray-700 hover:bg-[#f5a623] hover:text-white rounded-lg"
-                      >
-                        {sub.label}
-                      </a>
-                    ))}
+            <div className="hidden items-center gap-2 md:flex">
+              {menuItems.map((item) => {
+                const isOpen = openDropdown === item.title;
+
+                return (
+                  <div
+                    key={item.title}
+                    className="relative"
+                    onMouseEnter={() => {
+                      setOpenDropdown(item.title);
+                    }}
+                    onMouseLeave={() => {
+                      setOpenDropdown(null);
+                    }}
+                  >
+                    <button
+                      onClick={() => toggleDropdown(item.title)}
+                      className={`flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium transition ${
+                        isOpen
+                          ? "text-[#c98512]"
+                          : "text-gray-800 hover:text-[#f5a623]"
+                      }`}
+                    >
+                      <span>{item.title}</span>
+                      {isOpen ? (
+                        <ChevronUp className="h-4 w-4" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4" />
+                      )}
+                    </button>
+
+                    {isOpen && (
+                      <>
+                        <div className="absolute left-0 top-full h-3 w-full" />
+
+                        <div className="absolute left-0 top-full w-56 overflow-hidden rounded-2xl border border-white/30 bg-white/75 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.14)] backdrop-blur-xl">
+                          {item.submenu.map((sub) => {
+                            if (isExternalLink(sub.href)) {
+                              return (
+                                <a
+                                  key={sub.label}
+                                  href={sub.href}
+                                  target={sub.target}
+                                  rel={sub.rel}
+                                  className="block rounded-xl px-4 py-2.5 text-sm text-gray-700 transition hover:bg-[#f5a623] hover:text-white"
+                                >
+                                  {sub.label}
+                                </a>
+                              );
+                            }
+
+                            return (
+                              <Link
+                                key={sub.label}
+                                to={sub.href}
+                                className="block rounded-xl px-4 py-2.5 text-sm text-gray-700 transition hover:bg-[#f5a623] hover:text-white"
+                              >
+                                {sub.label}
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      </>
+                    )}
                   </div>
-                )}
+                );
+              })}
+
+              <div className="ml-3">
+                <UserMenu />
               </div>
-            ))}
+            </div>
 
-            <UserMenu />
-          </div>
-
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="text-gray-800 hover:text-[#f5a623]"
-            >
-              {mobileOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200 shadow-md animate-fadeIn">
-          {menuItems.map((item) => (
-            <div key={item.title} className="border-b border-gray-100">
+            <div className="flex items-center md:hidden">
               <button
-                onClick={() => toggleDropdown(item.title)}
-                className="w-full flex justify-between items-center px-4 py-3 text-gray-800 hover:bg-gray-50 font-medium"
+                onClick={() => setMobileOpen((prev) => !prev)}
+                className="rounded-full p-2 text-gray-800 transition hover:bg-white/50 hover:text-[#f5a623]"
+                aria-label={mobileOpen ? "Zavřít menu" : "Otevřít menu"}
               >
-                {item.title}
-                {openDropdown === item.title ? (
-                  <ChevronUp className="w-4 h-4" />
+                {mobileOpen ? (
+                  <X className="h-6 w-6" />
                 ) : (
-                  <ChevronDown className="w-4 h-4" />
+                  <Menu className="h-6 w-6" />
                 )}
               </button>
-              {openDropdown === item.title && (
-                <div className="px-6 pb-2">
-                  {item.submenu.map((sub) => (
-                    <a
-                      key={sub.label}
-                      href={sub.href}
-                      target={sub.target}
-                      rel={sub.rel}
-                      className="block py-2 text-gray-700 hover:text-[#f5a623]"
-                    >
-                      {sub.label}
-                    </a>
-                  ))}
-                </div>
-              )}
             </div>
-          ))}
-
-          <UserMenu />
+          </div>
         </div>
+      </nav>
+
+      {mobileOpen && (
+        <>
+          <button
+            type="button"
+            aria-label="Zavřít mobilní menu"
+            onClick={closeMobileMenu}
+            className="fixed inset-0 z-40 bg-black/35 backdrop-blur-[2px] md:hidden"
+          />
+
+          <div className="fixed inset-x-0 top-16 z-50 max-h-[calc(100vh-4rem)] overflow-y-auto px-2 pb-2 md:hidden">
+            <div className="overflow-hidden rounded-[2rem] border border-white/25 bg-white/75 shadow-[0_24px_60px_rgba(0,0,0,0.18)] backdrop-blur-2xl">
+              <div className="border-b border-white/20 px-5 py-4">
+                <p className="text-xs font-medium uppercase tracking-[0.22em] text-gray-500">
+                  Menu
+                </p>
+              </div>
+
+              <div className="space-y-3 p-4">
+                {menuItems.map((item) => {
+                  const isOpen = openDropdown === item.title;
+
+                  return (
+                    <div
+                      key={item.title}
+                      className="overflow-hidden rounded-3xl border border-white/20 bg-white/45"
+                    >
+                      <button
+                        onClick={() => toggleDropdown(item.title)}
+                        className={`flex w-full items-center justify-between px-5 py-4 text-left transition ${
+                          isOpen ? "bg-white/35" : "hover:bg-white/35"
+                        }`}
+                      >
+                        <div>
+                          <p className="text-base font-semibold text-gray-800">
+                            {item.title}
+                          </p>
+                        </div>
+
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/65">
+                          {isOpen ? (
+                            <ChevronUp className="h-4 w-4 text-[#c98512]" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4 text-gray-600" />
+                          )}
+                        </div>
+                      </button>
+
+                      {isOpen && (
+                        <div className="border-t border-white/15 px-3 pb-3 pt-2">
+                          <div className="space-y-1">
+                            {item.submenu.map((sub) => {
+                              const itemClassName =
+                                "flex items-center rounded-2xl px-4 py-3 text-sm font-medium text-gray-700 transition hover:bg-[#f5a623] hover:text-white";
+
+                              if (isExternalLink(sub.href)) {
+                                return (
+                                  <a
+                                    key={sub.label}
+                                    href={sub.href}
+                                    target={sub.target}
+                                    rel={sub.rel}
+                                    onClick={closeMobileMenu}
+                                    className={itemClassName}
+                                  >
+                                    {sub.label}
+                                  </a>
+                                );
+                              }
+
+                              return (
+                                <Link
+                                  key={sub.label}
+                                  to={sub.href}
+                                  onClick={closeMobileMenu}
+                                  className={itemClassName}
+                                >
+                                  {sub.label}
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+
+                <UserMenu mobile />
+              </div>
+            </div>
+          </div>
+        </>
       )}
-    </nav>
+    </>
   );
 }

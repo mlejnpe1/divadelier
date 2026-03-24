@@ -20,7 +20,7 @@ const Hero = ({
       }}
     >
       {/* Background overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#5a3900]/85 via-[#8a5a11]/65 to-[#f4efe8]/55" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#5a3900]/65 via-[#8a5a11]65 to-[#f4efe8]/25" />
       {/* Decorative glow */}
       <div className="pointer-events-none absolute right-[-6rem] top-1/2 h-[26rem] w-[26rem] -translate-y-1/2 rounded-full bg-orange-300/20 blur-3xl" />
       <div className="pointer-events-none absolute left-[-4rem] bottom-[-4rem] h-56 w-56 rounded-full bg-amber-200/10 blur-3xl" />
@@ -30,7 +30,7 @@ const Hero = ({
         <div className="w-full md:w-[46%]">
           <div className="max-w-3xl text-center md:text-left">
             {subtitle && (
-              <p className="mb-5 text-sm font-medium uppercase tracking-[0.22em] text-orange-300">
+              <p className="mb-6 text-sm font-semibold uppercase tracking-[0.3em] text-orange-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
                 {subtitle}
               </p>
             )}

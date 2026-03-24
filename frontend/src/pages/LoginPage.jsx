@@ -39,7 +39,7 @@ export default function LoginPage() {
 
   return (
     <div
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6"
       style={{
         backgroundImage: `url(${HeroBG})`,
         backgroundSize: "cover",
