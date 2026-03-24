@@ -196,8 +196,7 @@ export default function Navbar() {
                     {isOpen && (
                       <>
                         <div className="absolute left-0 top-full h-3 w-full" />
-
-                        <div className="absolute left-0 top-full w-56 overflow-hidden rounded-2xl border border-white/30 bg-white/75 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.14)] backdrop-blur-xl">
+                        <div className="absolute left-0 top-full w-56 overflow-hidden rounded-2xl border border-white/60 bg-white/95 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.14)] backdrop-blur-md">
                           {item.submenu.map((sub) => {
                             if (isExternalLink(sub.href)) {
                               return (
