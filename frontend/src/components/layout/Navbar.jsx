@@ -153,11 +153,11 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 border-b border-white/20 bg-white/65 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl">
+      <nav className="sticky top-0 z-50 border-b border-white/20 bg-white/85 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-xl">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex shrink-0 items-center">
-              <a href="/" className="flex items-center">
+              <a href="/" className="flex items-center bg-white rounded-xl">
                 <img src={Logo} alt="Logo" className="h-12 w-auto" />
               </a>
             </div>
