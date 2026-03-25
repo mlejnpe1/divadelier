@@ -8,7 +8,7 @@ export default function NewsList({ news, user, onDelete }) {
   }
 
   return (
-    <div className="space-y-6" id="newsSection">
+    <div className="space-y-7" id="newsSection">
       {news.map((n, index) => (
         <motion.div
           key={n._id}

@@ -7,6 +7,7 @@ export function useListControls(
     pageSize = 8,
     searchFields = [],
     getSortValue = (x) => x?.name ?? "",
+    sortDirection = "asc",
     locale = "cs",
     initialQuery = "",
     initialPage = 1,
@@ -19,17 +20,29 @@ export function useListControls(
 
   const sorted = useMemo(() => {
     const arr = Array.isArray(items) ? [...items] : [];
-    arr.sort((a, b) =>
-      String(getSortValue(a) || "").localeCompare(
-        String(getSortValue(b) || ""),
-        locale,
-        {
+    const direction = sortDirection === "desc" ? -1 : 1;
+
+    arr.sort((a, b) => {
+      const left = getSortValue(a);
+      const right = getSortValue(b);
+
+      if (typeof left === "number" && typeof right === "number") {
+        return (left - right) * direction;
+      }
+
+      if (left instanceof Date && right instanceof Date) {
+        return (left.getTime() - right.getTime()) * direction;
+      }
+
+      return (
+        String(left || "").localeCompare(String(right || ""), locale, {
           sensitivity: "base",
-        },
-      ),
-    );
+        }) * direction
+      );
+    });
+
     return arr;
-  }, [items, getSortValue, locale]);
+  }, [items, getSortValue, locale, sortDirection]);
 
   const filtered = useMemo(() => {
     const q = debouncedQuery.trim().toLowerCase();
