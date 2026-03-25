@@ -41,7 +41,7 @@ const LandingPage = () => {
             </a>
             {", "}
             <Link to="/drZdiv" className={heroLinkClass}>
-              Dr.Zdiv
+              Dr. ZDIV
             </Link>
             {", "}
             <Link to="/divan" className={heroLinkClass}>

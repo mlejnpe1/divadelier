@@ -18,7 +18,7 @@ const About = () => {
           </h2>
           <p className="text-lg text-gray-700 leading-relaxed mb-4">
             Divadeliér je otevřený prostor pro divadelní tvorbu, koncerty,
-            přednášky i výstavy.
+            přednášky, výstavy, kurzy i promítání.
           </p>
           <p className="text-lg text-gray-700 leading-relaxed mb-4">
             Přinášíme živou kulturu do srdce města a dáváme prostor začínajícím
