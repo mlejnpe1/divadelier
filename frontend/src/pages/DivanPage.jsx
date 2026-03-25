@@ -73,7 +73,7 @@ const DivanPage = () => {
           href="https://www.divan.tode.cz/"
           target="_blank"
           rel="noopener noreferrer"
-          className="bg-orange-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-orange-600 transition"
+          className="inline-flex items-center gap-2 rounded-full bg-[#f5a623] px-4 py-2 font-semibold text-white transition hover:scale-[1.02] hover:bg-[#e39a1b]"
         >
           Historické stránky
         </a>
