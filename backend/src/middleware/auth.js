@@ -12,7 +12,7 @@ export const auth = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     const user = await User.findById(decoded.id).select(
-      "_id email first_name second_name"
+      "_id email first_name second_name admin"
     );
 
     if (!user) {

@@ -6,25 +6,28 @@ const exhibitionSchema = new mongoose.Schema(
     information: { type: String, required: true, trim: true },
     date: { type: Date, required: true },
     coverImage: {
-      url: { type: String, required: true, trim: true },
+      url: { type: String, trim: true, default: "" },
       alt: { type: String, trim: true, default: "" },
+      key: { type: String, trim: true, default: "" },
     },
     images: [
       {
         url: { type: String, trim: true, default: "" },
         alt: { type: String, trim: true, default: "" },
+        key: { type: String, trim: true, default: "" },
       },
     ],
     author: {
       name: { type: String, trim: true, default: "" },
       bio: { type: String, trim: true, default: "" },
       photo: { type: String, trim: true, default: "" },
+      photoKey: { type: String, trim: true, default: "" },
       website: { type: String, trim: true, default: "" },
     },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const Exhibition = new mongoose.model("Exhibition", exhibitionSchema);
