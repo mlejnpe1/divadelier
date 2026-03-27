@@ -57,14 +57,16 @@ export default function ContactSection({
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-lg">
+      <div className="relative overflow-hidden rounded-[1.9rem] border border-[#ffd799]/24 bg-[linear-gradient(145deg,rgba(255,248,236,0.84),rgba(255,234,196,0.45))] backdrop-blur-xl">
+        <div className="pointer-events-none absolute -left-8 top-4 h-24 w-24 rounded-full bg-[#f5a623]/18 blur-3xl" />
+        <div className="pointer-events-none absolute right-0 top-0 h-24 w-24 rounded-full bg-white/35 blur-3xl" />
         {note ? (
-          <div className="border-b bg-gray-50 p-6">
-            <p className="text-sm text-gray-600">{note}</p>
+          <div className="relative border-b border-[#ffd799]/20 bg-[rgba(255,248,236,0.46)] p-6">
+            <p className="text-sm leading-relaxed text-[#6c5133]">{note}</p>
           </div>
         ) : null}
 
-        <form className="flex flex-col gap-4 p-6" onSubmit={handleSubmit}>
+        <form className="relative flex flex-col gap-4 p-6" onSubmit={handleSubmit}>
           <input
             type="text"
             name="company"
@@ -79,14 +81,14 @@ export default function ContactSection({
               type="text"
               placeholder="Vaše jméno"
               required
-              className="rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f5a623]"
+              className="rounded-[1.2rem] border border-[#ffd799]/24 bg-white/55 px-4 py-3 text-[#4a2c14] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-[#f5a623]"
             />
             <input
               name="email"
               type="email"
               placeholder="Váš e-mail"
               required
-              className="rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f5a623]"
+              className="rounded-[1.2rem] border border-[#ffd799]/24 bg-white/55 px-4 py-3 text-[#4a2c14] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-[#f5a623]"
             />
           </div>
 
@@ -95,7 +97,7 @@ export default function ContactSection({
             placeholder="Vaše zpráva"
             rows={5}
             required
-            className="rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f5a623]"
+            className="rounded-[1.2rem] border border-[#ffd799]/24 bg-white/55 px-4 py-3 text-[#4a2c14] shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-[#f5a623]"
           />
 
           <div className="flex items-center justify-end pt-2">

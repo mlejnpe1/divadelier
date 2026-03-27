@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Hero from "../components/layout/Hero.jsx";
 import Placeholder from "../assets/images/placeholder.png";
-import { CalendarSearchIcon, Megaphone, Plus } from "lucide-react";
+import { CalendarSearchIcon, Plus } from "lucide-react";
 import Section from "../components/layout/Section.jsx";
 import { useFetch } from "../hooks/useFetch.jsx";
 import { useAuth } from "../hooks/useAuth.jsx";
@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 import { toastAction } from "../utils/toastAction.jsx";
 import { confirmToast } from "../utils/confirmToast.jsx";
 import { apiFetch } from "../utils/api.js";
-import ExhibitionForm from "../components/exhibitions/ExhibitionForm.jsx";
+import ExhibitionFormModal from "../components/exhibitions/ExhibitionFormModal.jsx";
 import ExhibitionList from "../components/exhibitions/ExhibitionList.jsx";
 import ListToolbar from "../components/layout/ListToolbar.jsx";
 import Pagination from "../components/layout/Pagiantion.jsx";
@@ -23,9 +23,9 @@ const EMPTY_EXHIBITION_DRAFT = {
   title: "",
   information: "",
   date: "",
-  coverImage: { url: "", alt: "" },
+  coverImage: { url: "", alt: "", key: "" },
   images: [],
-  author: { name: "", bio: "", photo: "", website: "" },
+  author: { name: "", bio: "", photo: "", photoKey: "", website: "" },
 };
 
 const VVVPage = () => {
@@ -35,6 +35,14 @@ const VVVPage = () => {
     useState(true);
   const [planPage, setPlanPage] = useState(1);
   const [planQuery, setPlanQuery] = useState("");
+  const [editingExhibitionId, setEditingExhibitionId] = useState(null);
+  const [draftExhibition, setDraftExhibition] = useState(
+    EMPTY_EXHIBITION_DRAFT,
+  );
+  const [creatingExhibition, setCreatingExhibition] = useState(false);
+  const [showCreateExhibition, setShowCreateExhibition] = useState(false);
+  const [carouselRefresh, setCarouselRefresh] = useState(0);
+
   const planLimit = 5;
   const debouncedPlanQuery = useDebouncedValue(planQuery, 300);
 
@@ -49,7 +57,6 @@ const VVVPage = () => {
   }, [planPage, planLimit, debouncedPlanQuery]);
 
   const { data: planData, loading: planLoading } = useFetch(planUrl);
-  const [carouselRefresh, setCarouselRefresh] = useState(0);
   const { data: carouselData, loading: carouselLoading } = useFetch(
     `/api/exhibitions/carousel?limit=6&r=${carouselRefresh}`,
   );
@@ -60,8 +67,11 @@ const VVVPage = () => {
       const featured = await apiFetch("/api/exhibitions/featured");
       setFeaturedExhibition(featured);
     } catch (e) {
-      if (String(e.message).includes("404")) setFeaturedExhibition(null);
-      else console.error(e);
+      if (String(e.message).includes("404")) {
+        setFeaturedExhibition(null);
+      } else {
+        console.error(e);
+      }
     } finally {
       setLoadingFeaturedExhibition(false);
     }
@@ -71,28 +81,12 @@ const VVVPage = () => {
     refreshFeaturedExhibition();
   }, []);
 
-  const [editingExhibitionId, setEditingExhibitionId] = useState(null);
-  const [draftExhibition, setDraftExhibition] = useState(
-    EMPTY_EXHIBITION_DRAFT,
-  );
-  const [creatingExhibition, setCreatingExhibition] = useState(false);
-  const [showCreateExhibition, setShowCreateExhibition] = useState(false);
-
   const resetDraftExhibition = () => setDraftExhibition(EMPTY_EXHIBITION_DRAFT);
-
-  const scrollToPlan = () => {
-    requestAnimationFrame(() => {
-      document
-        .getElementById("fullExhibitionPlan")
-        ?.scrollIntoView({ behavior: "smooth" });
-    });
-  };
 
   const openCreateExhibition = () => {
     setEditingExhibitionId(null);
     resetDraftExhibition();
     setShowCreateExhibition(true);
-    scrollToPlan();
   };
 
   const openEditExhibition = (exh) => {
@@ -104,17 +98,24 @@ const VVVPage = () => {
       coverImage: {
         url: exh.coverImage?.url || "",
         alt: exh.coverImage?.alt || "",
+        key: exh.coverImage?.key || "",
       },
-      images: Array.isArray(exh.images) ? exh.images : [],
+      images: Array.isArray(exh.images)
+        ? exh.images.map((img) => ({
+            url: img?.url || "",
+            alt: img?.alt || "",
+            key: img?.key || "",
+          }))
+        : [],
       author: {
         name: exh.author?.name || "",
         bio: exh.author?.bio || "",
         photo: exh.author?.photo || "",
+        photoKey: exh.author?.photoKey || "",
         website: exh.author?.website || "",
       },
     });
     setShowCreateExhibition(true);
-    scrollToPlan();
   };
 
   const closeForm = () => {
@@ -125,8 +126,8 @@ const VVVPage = () => {
 
   const handleDeleteExhibition = async (id) => {
     const ok = await confirmToast({
-      message: "Opravdu chcete smazat tuto výstavu?",
-      description: "Tuto akci nelze vrátit zpět.",
+      message: "Opravdu chcete smazat tuto vystavu?",
+      description: "Tuto akci nelze vratit zpet.",
       confirmText: "Smazat",
       danger: true,
     });
@@ -135,9 +136,9 @@ const VVVPage = () => {
     await toastAction(
       () => apiFetch(`/api/exhibitions/${id}`, { method: "DELETE" }),
       {
-        loading: "Mažu výstavu...",
-        success: "Výstava smazána.",
-        error: "Nepodařilo se smazat výstavu.",
+        loading: "Mazu vystavu...",
+        success: "Vystava smazana.",
+        error: "Nepodarilo se smazat vystavu.",
       },
     );
 
@@ -149,17 +150,13 @@ const VVVPage = () => {
   };
 
   function validateExhibitionDraft(draft) {
-    if (!draft.title?.trim()) return "Zadej název výstavy.";
-    if (!draft.information?.trim()) return "Zadej popis výstavy.";
-    if (!draft.date) return "Zadej datum výstavy.";
-
-    if (!draft.coverImage?.url?.trim()) {
-      return "Úvodní (titulní) fotka je povinná.";
-    }
+    if (!draft.title?.trim()) return "Zadej nazev vystavy.";
+    if (!draft.information?.trim()) return "Zadej popis vystavy.";
+    if (!draft.date) return "Zadej datum vystavy.";
 
     const invalidImage = draft.images.find((img) => !img?.url?.trim());
     if (invalidImage) {
-      return "Každá fotografie musí mít vyplněnou URL.";
+      return "Nektera galerie fotka neni nahrana spravne.";
     }
 
     return null;
@@ -171,24 +168,26 @@ const VVVPage = () => {
     const error = validateExhibitionDraft(draftExhibition);
     if (error) {
       toast.error(error);
-      return;
+      return false;
     }
 
     const payload = {
       title: draftExhibition.title.trim(),
       information: draftExhibition.information.trim(),
       date: draftExhibition.date,
-
       coverImage: {
         url: draftExhibition.coverImage.url.trim(),
-        alt: draftExhibition.coverImage.alt?.trim() || "",
+        alt: draftExhibition.coverImage.url.trim()
+          ? draftExhibition.coverImage.alt?.trim() ||
+            `${draftExhibition.title.trim()} - titulni fotka`
+          : "",
+        key: draftExhibition.coverImage.key?.trim() || "",
       },
-
-      images: draftExhibition.images.map((img) => ({
+      images: draftExhibition.images.map((img, index) => ({
         url: img.url.trim(),
-        alt: img.alt?.trim() || "",
+        alt: img.alt?.trim() || `Fotka ${index + 1}`,
+        key: img.key?.trim() || "",
       })),
-
       author: draftExhibition.author || {},
     };
 
@@ -208,83 +207,86 @@ const VVVPage = () => {
             },
           ),
         {
-          loading: isEdit ? "Ukládám změny..." : "Přidávám výstavu...",
-          success: isEdit ? "Výstava aktualizována." : "Výstava přidána.",
+          loading: isEdit ? "Ukladam zmeny..." : "Pridavam vystavu...",
+          success: isEdit ? "Vystava aktualizovana." : "Vystava pridana.",
           error: isEdit
-            ? "Chyba při ukládání."
-            : "Nepodařilo se přidat výstavu.",
+            ? "Chyba pri ukladani."
+            : "Nepodarilo se pridat vystavu.",
         },
       );
-
-      closeForm();
 
       await refreshFeaturedExhibition();
       setPlanQuery("");
       setPlanPage(1);
       setCarouselRefresh((x) => x + 1);
+      return true;
     } finally {
       setCreatingExhibition(false);
     }
   };
 
-  const [newImageUrl, setNewImageUrl] = useState("");
-  const [newImageAlt, setNewImageAlt] = useState("");
-
-  const handleImages = () => {
-    const url = newImageUrl.trim();
-    const alt = newImageAlt.trim();
-
-    if (!url) return toast.error("Zadej URL obrázku.");
-
-    setDraftExhibition((d) => ({
-      ...d,
-      images: [...(d.images || []), { url, alt }],
-    }));
-
-    setNewImageUrl("");
-    setNewImageAlt("");
-  };
-
-  useEffect(() => {
-    if (window.location.hash === "#fullExhibitionPlan") {
-      requestAnimationFrame(() => {
-        document
-          .getElementById("fullExhibitionPlan")
-          ?.scrollIntoView({ behavior: "smooth" });
-      });
-    }
-  }, []);
-
   return (
     <>
       <Hero
-        title="VVV – Výstavy ve výloze"
+        title="VVV - Výstavy ve výloze"
         subtitle="Aktuální výstava na dosah"
-        description="Prohlédněte si umělecká díla přímo z výlohy. Objevte novinky, plán výstav a možnost zakoupení obrazů."
+        description="Prohlédněte si umělecká díla přímo z výlohy. Objevte novinky, plán vystav a možnost zakoupení obrazu."
+        buttonText="Prohlédnout výstavní plán"
+        onButtonClick={() => {
+          const el = document.getElementById("exhibitionsSection");
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+        }}
         children={
-          <div className="w-full max-w-3xl mx-auto mt-6">
+          <div className="mx-auto mt-6 w-full max-w-3xl">
+            <div className="mb-4 flex flex-row justify-evenly items-center gap-3">
+              <h2 className="text-sm font-semibold uppercase tracking-[0.3em] text-gray-700">
+                Aktuální výstava
+              </h2>
+              {featuredExhibition?.date ? (
+                <div className="rounded-full border border-white/60 bg-white/72 p-2 text-sm font-medium text-gray-700 shadow-[0_10px_24px_rgba(15,23,42,0.08)] backdrop-blur-md">
+                  Od:{" "}
+                  {new Date(featuredExhibition.date).toLocaleDateString(
+                    "cs-CZ",
+                  )}
+                </div>
+              ) : null}
+            </div>
+
             {loadingFeaturedExhibition ? (
-              <div className="flex justify-center items-center h-64 md:h-96">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-[#f5a623] border-solid" />
+              <div className="flex h-64 items-center justify-center md:h-96">
+                <div className="h-12 w-12 animate-spin rounded-full border-t-4 border-[#f5a623] border-solid" />
               </div>
             ) : (
-              <img
-                src={featuredExhibition?.coverImage?.url || Placeholder}
-                alt={featuredExhibition?.title || "Aktuální výstava"}
-                className="rounded-xl shadow-lg w-full object-cover h-64 md:h-96"
-                loading="eager"
-                decoding="async"
-              />
+              <div className="relative h-64 overflow-hidden rounded-[1.8rem] border border-white/40 bg-white/35 shadow-[0_24px_60px_rgba(15,23,42,0.18)] backdrop-blur-md md:h-96">
+                <img
+                  src={featuredExhibition?.coverImage?.url || Placeholder}
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl opacity-45"
+                  loading="eager"
+                  decoding="async"
+                />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.24),rgba(15,23,42,0.18))]" />
+                <img
+                  src={featuredExhibition?.coverImage?.url || Placeholder}
+                  alt={featuredExhibition?.title || "Aktuální výstava"}
+                  className="relative h-full w-full object-contain p-4 md:p-6"
+                  loading="eager"
+                  decoding="async"
+                />
+              </div>
             )}
           </div>
         }
       />
+
       <div className="relative">
         <ScrollHint variant="overlay" color="light" />
       </div>
+
       <Section border={true}>
-        <div className="flex items-center mb-8">
-          <CalendarSearchIcon className="w-8 h-8 text-[#f5a623] mr-3" />
+        <div className="mb-8 flex items-center">
+          <CalendarSearchIcon className="mr-3 h-8 w-8 text-[#f5a623]" />
           <h2 className="text-3xl font-bold">Následující výstavy</h2>
         </div>
         <ExhibitionCarousel
@@ -294,32 +296,45 @@ const VVVPage = () => {
       </Section>
 
       <Section border={true}>
-        <div className="flex flex-col md:flex-row items-center justify-between">
-          <div className="md:w-2/3">
-            <h2 className="text-3xl font-bold mb-4">
-              Máte zájem o nějaké dílo?
-            </h2>
-            <p className="text-gray-700 mb-6">
-              Pokud vás zaujala některá z vystavených prací, můžete si ji
-              zakoupit přímo z našeho e-shopu.
-            </p>
+        <div className="relative overflow-hidden rounded-[1.9rem] border border-[#ffd799]/20 bg-[linear-gradient(145deg,rgba(255,248,236,0.82),rgba(255,234,196,0.44))] p-6 shadow-[0_22px_60px_rgba(95,47,0,0.12)] backdrop-blur-xl md:p-8">
+          <div className="pointer-events-none absolute -left-8 top-4 h-24 w-24 rounded-full bg-[#f5a623]/18 blur-3xl" />
+          <div className="pointer-events-none absolute right-0 top-0 h-24 w-24 rounded-full bg-white/35 blur-3xl" />
+          <div className="relative flex flex-col items-stretch gap-6 md:flex-row md:items-center md:justify-between">
+            <div className="rounded-[1.6rem] border border-[#ffd799]/24 bg-white/55 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] backdrop-blur-sm md:w-2/3">
+              <span className="inline-flex items-center gap-2 rounded-full border border-[#ffd799]/30 bg-[rgba(245,166,35,0.14)] px-3 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[#9a590b]">
+                E-shop
+              </span>
+              <h2 className="mt-4 text-3xl font-semibold leading-tight tracking-tight text-gray-900">
+                Máte zájem o nějaké dílo?
+              </h2>
+              <p className="mt-4 max-w-2xl text-[1rem] leading-relaxed text-[#4a2c14]">
+                Pokud Vás zaujala některá z vystavených prací, můžete si ji
+                zakoupit přímo z našeho e-shopu.
+              </p>
 
-            <Button
-              href="/eshop"
-              className="mt-8"
-            >
-              Přejít na e-shopu
-            </Button>
-          </div>
+              <Button href="/eshop" className="mt-8">
+                Přejit na e-shop
+              </Button>
+            </div>
 
-          <div className="md:w-1/3 mt-6 md:mt-0">
-            <img
-              src={Placeholder}
-              alt="Ukázka produktů z e-shopu"
-              className="rounded-lg shadow-lg object-cover w-full h-48 md:h-64"
-              loading="lazy"
-              decoding="async"
-            />
+            <div className="relative overflow-hidden rounded-[1.6rem] border border-[#ffd799]/24 bg-[radial-gradient(circle_at_top,rgba(255,248,236,0.68),rgba(255,234,196,0.18))] md:w-1/3">
+              <img
+                src={Placeholder}
+                alt=""
+                aria-hidden="true"
+                className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl opacity-45"
+                loading="lazy"
+                decoding="async"
+              />
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,248,236,0.18),rgba(95,47,0,0.12))]" />
+              <img
+                src={Placeholder}
+                alt="Ukázka produktu z e-shopu"
+                className="relative h-56 w-full object-contain p-4 md:h-64"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
           </div>
         </div>
       </Section>
@@ -329,48 +344,33 @@ const VVVPage = () => {
       </Section>
 
       <Section border={true}>
-        <div className="flex justify-between items-center mb-6">
+        <div
+          className="mb-6 flex items-center justify-between"
+          id="exhibitionsSection"
+        >
           <h2 id="fullExhibitionPlan" className="text-3xl font-bold">
             Kompletní výstavní plán
           </h2>
           {user && (
-            <Button
-              onClick={openCreateExhibition}
-            >
+            <Button onClick={openCreateExhibition}>
               <Plus size={18} />
               Přidat výstavu
             </Button>
           )}
         </div>
 
-        {user && showCreateExhibition && (
-          <ExhibitionForm
-            isEdit={Boolean(editingExhibitionId)}
-            draft={draftExhibition}
-            setDraft={setDraftExhibition}
-            creating={creatingExhibition}
-            onClose={closeForm}
-            onSubmit={handleSaveExhibition}
-            newImageUrl={newImageUrl}
-            setNewImageUrl={setNewImageUrl}
-            newImageAlt={newImageAlt}
-            setNewImageAlt={setNewImageAlt}
-            onAddImage={handleImages}
-          />
-        )}
-
         <ListToolbar
           query={planQuery}
-          setQuery={(v) => {
+          setQuery={(value) => {
             setPlanPage(1);
-            setPlanQuery(v);
+            setPlanQuery(value);
           }}
         />
 
         <div className="relative">
           {planLoading && (
-            <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] flex items-start justify-end p-2 z-10">
-              <span className="text-sm text-gray-500">Načítám…</span>
+            <div className="absolute inset-0 z-10 flex items-start justify-end bg-white/60 p-2 backdrop-blur-[1px]">
+              <span className="text-sm text-gray-500">Načítám...</span>
             </div>
           )}
 
@@ -385,10 +385,23 @@ const VVVPage = () => {
           <Pagination
             page={planData?.page ?? planPage}
             pageCount={planData?.pageCount || 1}
-            onPageChange={(p) => setPlanPage(p)}
+            onPageChange={(page) => setPlanPage(page)}
           />
         </div>
       </Section>
+
+      {user && showCreateExhibition && (
+        <ExhibitionFormModal
+          isOpen={showCreateExhibition}
+          modalKey={editingExhibitionId || "new-exhibition"}
+          isEdit={Boolean(editingExhibitionId)}
+          draft={draftExhibition}
+          setDraft={setDraftExhibition}
+          creating={creatingExhibition}
+          onClose={closeForm}
+          onSubmit={handleSaveExhibition}
+        />
+      )}
     </>
   );
 };

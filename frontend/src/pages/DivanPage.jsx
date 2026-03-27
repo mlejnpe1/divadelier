@@ -8,7 +8,7 @@ import ScrollHint from "../components/layout/ScrollHint";
 import Button from "../components/layout/Button";
 
 const images = Object.values(
-  import.meta.glob("../assets/images/divan/*.{jpg,png,jpeg}", {
+  import.meta.glob("../assets/images/divan/*.{jpg,png,jpeg,webp}", {
     eager: true,
     query: "?url",
     import: "default",
@@ -16,7 +16,7 @@ const images = Object.values(
 );
 
 const heroImages = Object.values(
-  import.meta.glob("../assets/images/hero-divanPage/*.{jpg,png,jpeg}", {
+  import.meta.glob("../assets/images/hero-divanPage/*.{jpg,png,jpeg,webp}", {
     eager: true,
     query: "?url",
     import: "default",
@@ -24,15 +24,9 @@ const heroImages = Object.values(
 );
 
 const INTRO_TEXT = `
-Jednoho dne v létě roku 2015 se domluvilo pár kamarádek, kamarádů a známých, slovo dalo slovo. Navíc se ke všemu přičetla ochota Adélky podělit se s námi ostatními o svoje zkušenosti a pedagogické schopnosti okolo divadla a jeho režie, a vést nás.
+Divan vznikl v roce 2015 jako skupina dospělých divadelních nadšenců, ve které se lidé prolínají dle časových možností a životních okolností. Od doby svého vzniku zrealizovala představení Blázinec v prvním poschodí, Hajzlbáby, Monologový večer, 17. listopad - 30 let, Firemní večírek, Tatíček zůstavitel. Taky během Covidu natočili pidifilm a účastní se Letu andělů.
 
-Tak se stalo, že jsme se začali pravidelně scházet, nadšeně dělat Adélčina cvičení a úkoly, jejichž smysl jsme zpočátku sice všichni nechápali, ale o to víc jsme se vyblbnuli. Líbila se nám všem ta úžasná možnost vychutnávat si naplno všelijaké to pitvoření se a přehánění, znovu v sobě objevovat možná někdy pozapomenutou dětskou hravost a poškádlit si svá ega coby úctyhodných dospěláků, rodičů a občanů.
-
-Jak jsme si tak navzájem blbnuli a hecovali se, že jako přeci nebudeme zkoušet jen tak bez cíle, přišla opravdová výzva ve chvíli, kdy nám Adélka přinesla vytištěný a pečlivě upravený scénář první hry co zkusíme zahrát s tím, že:
-
-„…protože nás je víc než postav ve scénáři, a abyste se nehádali kdo toho textu má víc a kdo míň, zahrají si všechny holky všechny ženský role a všichni kluci zase všechny mužský role, a basta…“.
-
-No a tak jsme začali…
+V současné době pracují na kolektivní autorské hře. Skupina funguje pod vedením Adély Pellarové.
 
 Historii Divanu si můžete prohlédnout na historických webových stránkách.
 `;
