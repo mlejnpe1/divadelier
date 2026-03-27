@@ -17,6 +17,7 @@ import Pagination from "../components/layout/Pagiantion.jsx";
 import { useDebouncedValue } from "../hooks/useDebouncedValue";
 import ContactSection from "../components/ContactSection.jsx";
 import ScrollHint from "../components/layout/ScrollHint.jsx";
+import Button from "../components/layout/Button.jsx";
 
 const EMPTY_EXHIBITION_DRAFT = {
   title: "",
@@ -303,14 +304,12 @@ const VVVPage = () => {
               zakoupit přímo z našeho e-shopu.
             </p>
 
-            <a
+            <Button
               href="/eshop"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block mt-8 bg-[#f5a623] text-white px-6 py-2 rounded-full font-semibold shadow hover:shadow-md hover:scale-105 transform transition duration-300"
+              className="mt-8"
             >
               Přejít na e-shopu
-            </a>
+            </Button>
           </div>
 
           <div className="md:w-1/3 mt-6 md:mt-0">
@@ -335,13 +334,12 @@ const VVVPage = () => {
             Kompletní výstavní plán
           </h2>
           {user && (
-            <button
+            <Button
               onClick={openCreateExhibition}
-              className="flex items-center gap-2 bg-[#f5a623] text-white px-4 py-2 rounded-full font-semibold shadow hover:shadow-md hover:scale-105 transition"
             >
               <Plus size={18} />
               Přidat výstavu
-            </button>
+            </Button>
           )}
         </div>
 

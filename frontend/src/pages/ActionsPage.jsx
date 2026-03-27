@@ -1,22 +1,20 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
+import { PartyPopper, Plus } from "lucide-react";
 import Hero from "../components/layout/Hero";
 import Section from "../components/layout/Section";
-import { PartyPopper, Plus } from "lucide-react";
-
-import { useAuth } from "../hooks/useAuth";
-import { useFetch } from "../hooks/useFetch";
-import { useDebouncedValue } from "../hooks/useDebouncedValue";
-
+import Button from "../components/layout/Button";
 import ListToolbar from "../components/layout/ListToolbar";
 import Pagination from "../components/layout/Pagiantion";
 import TimelineList from "../components/actions/TimelineList";
 import ActionForm from "../components/actions/ActionForm";
-
+import ScrollHint from "../components/layout/ScrollHint";
+import { useAuth } from "../hooks/useAuth";
+import { useFetch } from "../hooks/useFetch";
+import { useDebouncedValue } from "../hooks/useDebouncedValue";
 import { confirmToast } from "../utils/confirmToast";
 import { toastAction } from "../utils/toastAction";
 import { apiFetch } from "../utils/api";
-import ScrollHint from "../components/layout/ScrollHint";
 
 export default function ActionsPage() {
   const { user } = useAuth();
@@ -24,10 +22,8 @@ export default function ActionsPage() {
 
   const [featured, setFeatured] = useState(null);
   const [timeline, setTimeline] = useState([]);
-
   const [actionFormOpen, setActionFormOpen] = useState(false);
   const [editingAction, setEditingAction] = useState(null);
-
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebouncedValue(query, 300);
@@ -126,7 +122,7 @@ export default function ActionsPage() {
   return (
     <>
       <Hero
-        title={featured?.title || "Akce Divadeliéru"}
+        title={featured?.title || "Akce Divadelieru"}
         subtitle="Výstavy i akce na jednom místě"
         description={featured?.description || ""}
         buttonText="Výstavy ve výloze"
@@ -136,19 +132,16 @@ export default function ActionsPage() {
         <ScrollHint variant="overlay" color="light" />
       </div>
       <Section border={true}>
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex gap-3 items-center">
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
             <PartyPopper color="#f5a623" size={32} />
             <h2 className="text-3xl font-bold">Na jaké akce se můžete těšit</h2>
           </div>
           {user && (
-            <button
-              onClick={openCreateAction}
-              className="flex items-center gap-2 bg-[#f5a623] text-white px-4 py-2 rounded-full shadow hover:scale-105 transition"
-            >
+            <Button onClick={openCreateAction}>
               <Plus size={18} />
               Přidat akci
-            </button>
+            </Button>
           )}
         </div>
 
@@ -170,7 +163,7 @@ export default function ActionsPage() {
 
         <div className="relative">
           {loading && (
-            <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] flex items-start justify-end p-2 z-10">
+            <div className="absolute inset-0 z-10 flex items-start justify-end bg-white/60 p-2 backdrop-blur-[1px]">
               <span className="text-sm text-gray-500">Načítám…</span>
             </div>
           )}

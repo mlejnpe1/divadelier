@@ -1,5 +1,6 @@
 import React from "react";
 import { X } from "lucide-react";
+import Button from "../layout/Button";
 
 export default function NewsForm({
   value,
@@ -25,22 +26,23 @@ export default function NewsForm({
         </div>
 
         <div className="flex gap-2">
-          <button
+          <Button
             type="button"
             onClick={onClose}
-            className="flex items-center gap-2 rounded-full border border-[#ffd799]/24 bg-[rgba(255,214,145,0.16)] px-4 py-2 text-[#5f4126] transition hover:bg-[rgba(255,214,145,0.26)]"
+            variant="secondary"
+            className="border-[#ffd799]/24 bg-[rgba(255,214,145,0.16)] text-[#5f4126] shadow-none hover:bg-[rgba(255,214,145,0.26)]"
           >
             <X size={18} />
             Zrušit
-          </button>
+          </Button>
 
-          <button
+          <Button
             type="submit"
             disabled={creating}
-            className="rounded-full bg-[#f5a623] px-5 py-2 font-semibold text-white shadow-[0_16px_30px_rgba(245,166,35,0.28)] transition hover:scale-[1.02] hover:bg-[#e39a1b] disabled:opacity-60 disabled:hover:scale-100"
+            className="shadow-[0_16px_30px_rgba(245,166,35,0.28)] disabled:hover:translate-y-0 disabled:hover:scale-100"
           >
             {creating ? "Ukládám..." : "Uložit"}
-          </button>
+          </Button>
         </div>
       </div>
 

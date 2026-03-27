@@ -26,6 +26,7 @@ import ListToolbar from "../components/layout/ListToolbar";
 import Pagination from "../components/layout/Pagiantion";
 import ScrollHint from "../components/layout/ScrollHint";
 import { getMeetingVisual } from "../data/meetingVisuals";
+import Button from "../components/layout/Button";
 
 const EMPTY_MEETING_DRAFT = { title: "", information: "", day_in_week: "" };
 
@@ -297,15 +298,15 @@ const DrZdivPage = () => {
               <p className="relative mb-6 text-base leading-relaxed text-[#5f4126]">
                 {nearestNews.information}
               </p>
-              <button
+              <Button
                 onClick={() => {
                   const el = document.getElementById("newsSection");
                   if (el) el.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="relative inline-flex self-center items-center justify-center gap-2 rounded-full bg-[#f5a623] px-6 py-3 font-semibold text-white shadow-[0_16px_34px_rgba(245,166,35,0.28)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#e39a1b]"
+                className="relative self-center shadow-[0_16px_34px_rgba(245,166,35,0.28)]"
               >
                 Zobrazit všechny aktuality
-              </button>
+              </Button>
             </div>
           ) : (
             <p className="text-gray-400">Žádné aktuality k zobrazení</p>
@@ -343,13 +344,12 @@ const DrZdivPage = () => {
           </div>
 
           {user && (
-            <button
+            <Button
               onClick={openCreateMeeting}
-              className="flex items-center gap-2 bg-[#f5a623] text-white px-4 py-2 rounded-full font-semibold shadow hover:shadow-md hover:scale-105 transition"
             >
               <Plus size={18} />
               Přidat schůzku
-            </button>
+            </Button>
           )}
         </div>
 
@@ -426,13 +426,13 @@ const DrZdivPage = () => {
           zde.
         </p>
         <div className="flex flex-row gap-4 my-3">
-          <a
+          <Button
             onClick={() => handleDownload()}
-            className="flex items-center gap-2 rounded-full bg-[#f5a623] px-4 py-2 font-semibold text-white transition hover:scale-[1.02] hover:bg-[#e39a1b] cursor-pointer"
+            className="cursor-pointer"
           >
             Stáhnout přihlášku
             <DownloadIcon size={20} />
-          </a>
+          </Button>
         </div>
         <p>Kurzovné činí 1700,-Kč za pololetí.</p>
       </Section>
@@ -444,13 +444,12 @@ const DrZdivPage = () => {
           </div>
 
           {user && (
-            <button
+            <Button
               onClick={openCreateNews}
-              className="flex items-center gap-2 rounded-full bg-[#f5a623] px-4 py-2 font-semibold text-white transition hover:scale-[1.02] hover:bg-[#e39a1b]"
             >
               <Plus size={18} />
               Přidat aktualitu
-            </button>
+            </Button>
           )}
         </div>
 

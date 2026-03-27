@@ -3,6 +3,7 @@ import { Mail } from "lucide-react";
 import toast from "react-hot-toast";
 import { apiFetch } from "../../utils/api";
 import InquiryModal from "../InquiryModal";
+import Button from "../layout/Button";
 
 export default function RentCTA() {
   const [open, setOpen] = useState(false);
@@ -12,7 +13,7 @@ export default function RentCTA() {
       method: "POST",
       body: {
         ...payload,
-        subject: `Poptávka – Pronájem prostoru`,
+        subject: "Poptávka – Pronájem prostoru",
         source: "rental",
       },
     });
@@ -21,23 +22,20 @@ export default function RentCTA() {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-8 text-center space-y-4">
+    <div className="space-y-4 rounded-2xl bg-white p-8 text-center shadow-lg">
       <h3 className="text-2xl font-bold text-gray-900">
-        Máte zájem o pronájem prostoru Divadeliéru?
+        Máte zájem o pronájem prostoru Divadelieru?
       </h3>
 
       <p className="text-gray-700">
-        Napište nám nezávazně – rádi s vámi projdeme možnosti využití prostoru.
+        Napište nám nezávazně, rádi s vámi projdeme možnosti využití prostoru.
       </p>
 
-      <div className="flex flex-col items-center gap-2 mt-4">
-        <button
-          onClick={() => setOpen(true)}
-          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#f5a623] text-white font-semibold shadow hover:shadow-md hover:scale-[1.02] transition"
-        >
+      <div className="mt-4 flex flex-col items-center gap-2">
+        <Button onClick={() => setOpen(true)}>
           <Mail size={18} />
           Nezávazně poptat pronájem
-        </button>
+        </Button>
 
         <p className="text-sm text-gray-600">
           nebo zavolejte na&nbsp;
@@ -57,7 +55,7 @@ export default function RentCTA() {
         title="Poptávka pronájmu"
         subtitle="Rádi s vámi projdeme možnosti využití prostoru."
         contextLabel="Typ poptávky"
-        contextValue="Pronájem prostoru Divadeliéru"
+        contextValue="Pronájem prostoru Divadelieru"
         contextType="rental"
       />
     </div>

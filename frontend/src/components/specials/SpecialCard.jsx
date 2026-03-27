@@ -1,5 +1,6 @@
 import React from "react";
 import { ExternalLink, Edit2, Trash2 } from "lucide-react";
+import Button from "../layout/Button";
 
 export default function SpecialCard({ special, user, onEdit, onDelete }) {
   return (
@@ -40,14 +41,16 @@ export default function SpecialCard({ special, user, onEdit, onDelete }) {
         )}
       </div>
 
-      <a
+      <Button
         href={special.link}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 text-[#f5a623] font-semibold hover:underline break-all"
+        variant="secondary"
+        size="sm"
+        className="w-fit break-all"
       >
         Otevřít odkaz <ExternalLink size={16} />
-      </a>
+      </Button>
     </div>
   );
 }

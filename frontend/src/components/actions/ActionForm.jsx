@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { toastAction } from "../../utils/toastAction";
 import { apiFetch } from "../../utils/api";
 import Placeholder from "../../assets/images/placeholder.png";
+import Button from "../layout/Button";
 
 const EMPTY = {
   title: "",
@@ -72,26 +73,19 @@ export default function ActionForm({ initial, onSaved, onClose }) {
   };
 
   return (
-    <form onSubmit={save} className="bg-white rounded-xl shadow p-5 space-y-4">
+    <form onSubmit={save} className="space-y-4 rounded-xl bg-white p-5 shadow">
       <div className="flex items-center justify-between gap-3">
         <h3 className="text-lg font-bold">
           {isEdit ? "Upravit akci" : "Přidat akci"}
         </h3>
 
         <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200"
-          >
+          <Button type="button" onClick={onClose} variant="secondary">
             Zrušit
-          </button>
-          <button
-            type="submit"
-            className="px-4 py-2 rounded-lg bg-[#f5a623] text-white font-semibold hover:scale-105 transition"
-          >
+          </Button>
+          <Button type="submit" className="shadow-none">
             Uložit
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -99,7 +93,7 @@ export default function ActionForm({ initial, onSaved, onClose }) {
         placeholder="Název akce"
         value={draft.title}
         onChange={(e) => setDraft((d) => ({ ...d, title: e.target.value }))}
-        className="w-full border rounded-lg px-4 py-2"
+        className="w-full rounded-lg border px-4 py-2"
       />
 
       <textarea
@@ -108,7 +102,7 @@ export default function ActionForm({ initial, onSaved, onClose }) {
         onChange={(e) =>
           setDraft((d) => ({ ...d, description: e.target.value }))
         }
-        className="w-full border rounded-lg px-4 py-2"
+        className="w-full rounded-lg border px-4 py-2"
         rows={3}
       />
 
@@ -116,13 +110,13 @@ export default function ActionForm({ initial, onSaved, onClose }) {
         type="date"
         value={draft.date}
         onChange={(e) => setDraft((d) => ({ ...d, date: e.target.value }))}
-        className="w-full border rounded-lg px-4 py-2"
+        className="w-full rounded-lg border px-4 py-2"
       />
 
       <div className="space-y-2">
         <p className="font-semibold text-gray-800">Titulní fotka</p>
 
-        <div className="grid md:grid-cols-3 gap-2">
+        <div className="grid gap-2 md:grid-cols-3">
           <input
             placeholder="URL titulní fotky"
             value={draft.coverImage.url}
@@ -132,7 +126,7 @@ export default function ActionForm({ initial, onSaved, onClose }) {
                 coverImage: { ...d.coverImage, url: e.target.value },
               }))
             }
-            className="md:col-span-2 border rounded-lg px-4 py-2"
+            className="rounded-lg border px-4 py-2 md:col-span-2"
           />
 
           <input
@@ -144,16 +138,16 @@ export default function ActionForm({ initial, onSaved, onClose }) {
                 coverImage: { ...d.coverImage, alt: e.target.value },
               }))
             }
-            className="border rounded-lg px-4 py-2"
+            className="rounded-lg border px-4 py-2"
           />
         </div>
 
-        <div className="flex items-center gap-4 mt-2">
-          <div className="w-28 h-20 rounded-lg overflow-hidden bg-gray-100 border">
+        <div className="mt-2 flex items-center gap-4">
+          <div className="h-20 w-28 overflow-hidden rounded-lg border bg-gray-100">
             <img
               src={draft.coverImage.url || Placeholder}
               alt={draft.coverImage.alt || ""}
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
               onError={(e) => {
                 e.currentTarget.src = Placeholder;
               }}
@@ -165,7 +159,7 @@ export default function ActionForm({ initial, onSaved, onClose }) {
             onClick={() =>
               setDraft((d) => ({ ...d, coverImage: { url: "", alt: "" } }))
             }
-            className="px-3 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition"
+            className="rounded-lg bg-red-50 px-3 py-2 text-red-600 transition hover:bg-red-100"
           >
             Odebrat fotku
           </button>

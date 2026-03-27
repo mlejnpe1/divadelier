@@ -1,10 +1,11 @@
 import React from "react";
-import { useParams, Link } from "react-router";
+import { useParams } from "react-router";
 import Section from "../components/layout/Section.jsx";
 import Placeholder from "../assets/images/placeholder.png";
 import { useFetch } from "../hooks/useFetch.jsx";
 import { ArrowLeft } from "lucide-react";
 import Gallery from "../components/layout/Gallery.jsx";
+import Button from "../components/layout/Button.jsx";
 
 const ExhibitionDetailPage = () => {
   const { id } = useParams();
@@ -24,9 +25,9 @@ const ExhibitionDetailPage = () => {
     return (
       <Section border={true}>
         <p className="text-gray-500">Výstava nebyla nalezena.</p>
-        <Link to="/vvv" className="text-[#f5a623] underline">
+        <Button to="/vvv" variant="secondary" size="sm" className="mt-4">
           Zpět na výstavy
-        </Link>
+        </Button>
       </Section>
     );
   }
@@ -34,13 +35,14 @@ const ExhibitionDetailPage = () => {
   return (
     <>
       <Section border={false}>
-        <Link
+        <Button
           to="/vvv"
-          className="inline-flex items-center gap-2 text-gray-700 hover:text-black transition"
+          variant="secondary"
+          size="sm"
         >
           <ArrowLeft size={18} />
           Zpět na výstavy
-        </Link>
+        </Button>
 
         <div className="mt-6 bg-white rounded-xl shadow-lg overflow-hidden">
           <img
@@ -95,14 +97,16 @@ const ExhibitionDetailPage = () => {
               )}
 
               {exh.author?.website && (
-                <a
+                <Button
                   href={exh.author.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block mt-3 text-[#f5a623] font-semibold hover:underline"
+                  variant="secondary"
+                  size="sm"
+                  className="mt-3"
                 >
                   Web autora
-                </a>
+                </Button>
               )}
             </div>
           </div>

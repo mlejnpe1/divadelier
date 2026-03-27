@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useFetch } from "../hooks/useFetch";
+import Button from "../components/layout/Button";
 
 const EshopPage = () => {
   const [activeTab, setActiveTab] = useState("all");
@@ -49,17 +50,18 @@ const EshopPage = () => {
             { id: "divadelier", label: "Divadelier" },
             { id: "vvv", label: "Výstavy ve výloze" },
           ].map((tab) => (
-            <button
+            <Button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-6 py-2 rounded-full font-semibold transition-all ${
+              className={`${
                 activeTab === tab.id
-                  ? "bg-[#f5a623] text-white shadow-md scale-105"
-                  : "bg-white text-gray-600 hover:bg-gray-100"
+                  ? ""
+                  : "bg-white text-gray-600 shadow-none hover:bg-gray-100 hover:text-gray-800"
               }`}
+              variant={activeTab === tab.id ? "primary" : "secondary"}
             >
               {tab.label}
-            </button>
+            </Button>
           ))}
         </div>
 
@@ -121,12 +123,12 @@ const EshopPage = () => {
                     </h3>
                     <p className="text-gray-700 mt-1">{item.price} Kč</p>
                   </div>
-                  <a
+                  <Button
                     href={`mailto:${item.contact}`}
-                    className="mt-4 inline-block bg-[#f5a623] text-white px-4 py-2 rounded-full font-semibold shadow hover:shadow-md hover:scale-105 transform transition duration-300 text-center"
+                    className="mt-4 text-center"
                   >
                     Kontaktovat
-                  </a>
+                  </Button>
                 </div>
               </motion.div>
             ))}

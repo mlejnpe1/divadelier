@@ -92,7 +92,7 @@ export default function Navbar() {
           <Link
             to="/login"
             onClick={closeMobileMenu}
-            className="flex items-center justify-between rounded-2xl border border-white/20 bg-white/50 px-4 py-4 text-sm font-medium text-gray-800 transition hover:bg-white/70"
+            className="flex items-center justify-between rounded-2xl border border-white/30 bg-white/55 px-4 py-4 text-sm font-medium text-gray-800 shadow-[0_14px_36px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.4)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-white/70"
           >
             <span>Přihlášení</span>
             <UserRoundPen className="h-5 w-5 text-[#f5a623]" />
@@ -101,9 +101,12 @@ export default function Navbar() {
       }
 
       return (
-        <a href="/login" className="flex items-center justify-end">
-          <UserRoundPen className="h-5 w-5 text-gray-700 transition hover:text-[#f5a623]" />
-        </a>
+        <Link
+          to="/login"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-white/55 text-gray-700 shadow-[0_14px_36px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.4)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-white/70 hover:text-[#f5a623]"
+        >
+          <UserRoundPen className="h-5 w-5" />
+        </Link>
       );
     }
 
@@ -127,9 +130,9 @@ export default function Navbar() {
 
           <button
             onClick={handleLogout}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#f5a623] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#e19812]"
+            className="flex w-full items-center justify-center gap-2 rounded-2xl border border-white/30 bg-white/55 px-4 py-4 text-sm font-medium text-gray-800 shadow-[0_14px_36px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.4)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-white/70"
           >
-            <LogOut className="h-4 w-4" />
+            <LogOut className="h-4 w-4 text-[#f5a623]" />
             Odhlásit se
           </button>
         </div>
@@ -143,7 +146,7 @@ export default function Navbar() {
         </span>
         <button
           onClick={handleLogout}
-          className="rounded-full p-2 text-gray-700 transition hover:bg-white/50 hover:text-[#f5a623]"
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-white/55 text-gray-700 shadow-[0_14px_36px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.4)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-white/70 hover:text-[#f5a623]"
         >
           <LogOut className="h-5 w-5" />
         </button>
@@ -157,9 +160,9 @@ export default function Navbar() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex shrink-0 items-center">
-              <a href="/" className="flex items-center bg-white rounded-xl">
+              <Link to="/" className="flex items-center bg-white rounded-xl">
                 <img src={Logo} alt="Logo" className="h-12 w-auto" />
-              </a>
+              </Link>
             </div>
 
             <div className="hidden items-center gap-2 md:flex">

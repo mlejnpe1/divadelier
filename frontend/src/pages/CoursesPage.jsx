@@ -8,6 +8,7 @@ import InquiryModal from "../components/InquiryModal.jsx";
 import toast from "react-hot-toast";
 import { apiFetch } from "../utils/api.js";
 import ScrollHint from "../components/layout/ScrollHint.jsx";
+import Button from "../components/layout/Button.jsx";
 
 function mailto(subject, body = "") {
   const s = encodeURIComponent(subject);
@@ -180,14 +181,16 @@ export default function CoursesPage() {
       <Section id="offerSection" border={true}>
         <div className="flex flex-wrap gap-2">
           {SECTIONS.map((s) => (
-            <button
+            <Button
               key={s.id}
               type="button"
               onClick={() => scrollToId(s.id)}
-              className="px-4 py-2 rounded-full border bg-white hover:bg-gray-50 transition text-sm"
+              variant="secondary"
+              size="sm"
+              className="shadow-none"
             >
               {s.title}
-            </button>
+            </Button>
           ))}
         </div>
       </Section>

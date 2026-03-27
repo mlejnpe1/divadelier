@@ -1,4 +1,5 @@
 import HeroBG1 from "../../assets/images/heroBG1.webp";
+import Button from "./Button";
 
 const Hero = ({
   title,
@@ -54,21 +55,15 @@ const Hero = ({
             )}
 
             {buttonText && buttonLink && (
-              <a
-                href={buttonLink}
-                className="flex items-center gap-2 rounded-full bg-[#f5a623] px-4 py-2 font-semibold text-white transition hover:scale-[1.02] hover:bg-[#e39a1b]"
-              >
+              <Button href={buttonLink}>
                 {buttonText}
-              </a>
+              </Button>
             )}
 
             {buttonText && onButtonClick && !buttonLink && (
-              <button
-                onClick={onButtonClick}
-                className="flex items-center gap-2 rounded-full bg-[#f5a623] px-4 py-2 font-semibold text-white transition hover:scale-[1.02] hover:bg-[#e39a1b]"
-              >
+              <Button onClick={onButtonClick}>
                 {buttonText}
-              </button>
+              </Button>
             )}
           </div>
         </div>

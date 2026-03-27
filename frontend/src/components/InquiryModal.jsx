@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
+import Button from "./layout/Button";
 
 export default function InquiryModal({
   open,
@@ -76,18 +77,18 @@ export default function InquiryModal({
       <div className="absolute inset-0 flex items-center justify-center p-4">
         <div
           ref={panelRef}
-          className="relative w-full max-w-xl rounded-2xl bg-white shadow-xl border border-gray-100"
+          className="relative w-full max-w-xl rounded-2xl border border-gray-100 bg-white shadow-xl"
         >
-          <div className="flex items-start justify-between gap-4 p-5 border-b">
+          <div className="flex items-start justify-between gap-4 border-b p-5">
             <div className="min-w-0">
               <h3 className="text-xl font-bold text-gray-900">{title}</h3>
 
               {subtitle ? (
-                <p className="text-sm text-gray-600 mt-1">{subtitle}</p>
+                <p className="mt-1 text-sm text-gray-600">{subtitle}</p>
               ) : null}
 
               {effectiveContext ? (
-                <p className="text-sm text-gray-600 mt-1">
+                <p className="mt-1 text-sm text-gray-600">
                   {contextLabel}:{" "}
                   <span className="font-semibold">{effectiveContext}</span>
                 </p>
@@ -99,7 +100,7 @@ export default function InquiryModal({
               onClick={() => {
                 onClose?.();
               }}
-              className="p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50"
+              className="rounded-lg p-2 hover:bg-gray-100 disabled:opacity-50"
               aria-label="Zavřít"
               disabled={submitting}
             >
@@ -108,7 +109,7 @@ export default function InquiryModal({
           </div>
 
           <form
-            className="p-5 space-y-4"
+            className="space-y-4 p-5"
             onSubmit={async (e) => {
               e.preventDefault();
 
@@ -121,7 +122,6 @@ export default function InquiryModal({
               const payload = {
                 type: String(contextType || "general"),
                 context: effectiveContext,
-
                 name: String(fd.get("name") || "").trim(),
                 email: String(fd.get("email") || "").trim(),
                 phone: String(fd.get("phone") || "").trim(),
@@ -144,24 +144,24 @@ export default function InquiryModal({
                 type="text"
                 value={effectiveContext}
                 readOnly
-                className="w-full border rounded-lg px-4 py-2 bg-gray-50"
+                className="w-full rounded-lg border bg-gray-50 px-4 py-2"
                 placeholder={contextLabel}
               />
             ) : null}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <input
                 name="name"
                 type="text"
                 required
                 placeholder="Vaše jméno"
-                className="w-full border rounded-lg px-4 py-2"
+                className="w-full rounded-lg border px-4 py-2"
               />
               <input
                 name="phone"
                 type="tel"
                 placeholder="Telefon (nepovinné)"
-                className="w-full border rounded-lg px-4 py-2"
+                className="w-full rounded-lg border px-4 py-2"
               />
             </div>
 
@@ -170,34 +170,34 @@ export default function InquiryModal({
               type="email"
               required
               placeholder="Váš e-mail"
-              className="w-full border rounded-lg px-4 py-2"
+              className="w-full rounded-lg border px-4 py-2"
             />
 
             <textarea
               name="message"
               rows={4}
               placeholder="Zpráva (nepovinné)"
-              className="w-full border rounded-lg px-4 py-2"
+              className="w-full rounded-lg border px-4 py-2"
             />
 
-            <div className="flex flex-col sm:flex-row gap-3 sm:justify-end pt-2">
-              <button
+            <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:justify-end">
+              <Button
                 type="button"
                 onClick={() => {
                   onClose?.();
                 }}
-                className="px-5 py-2 rounded-full border bg-white hover:bg-gray-50 disabled:opacity-50"
+                variant="secondary"
                 disabled={submitting}
               >
                 Zrušit
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
                 disabled={submitting}
-                className="px-6 py-2 rounded-full bg-[#f5a623] text-white font-semibold shadow hover:shadow-md hover:scale-[1.01] transition disabled:opacity-50"
+                className="disabled:hover:translate-y-0 disabled:hover:scale-100"
               >
-                {submitting ? "Odesílám…" : "Odeslat"}
-              </button>
+                {submitting ? "Odesílám..." : "Odeslat"}
+              </Button>
             </div>
 
             <p className="text-xs text-gray-500">

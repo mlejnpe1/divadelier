@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Edit2, Trash2 } from "lucide-react";
 import Placeholder from "../../assets/images/placeholder.png";
+import Button from "../layout/Button";
 
 export default function ExhibitionCard({
   exhibition: exh,
@@ -33,12 +34,14 @@ export default function ExhibitionCard({
             Od: {new Date(exh.date).toLocaleDateString("cs-CZ")}
           </p>
         )}
-        <a
-          href={`/vvv/${exh._id}`}
-          className="text-yellow-500 font-semibold hover:underline mt-6"
+        <Button
+          to={`/vvv/${exh._id}`}
+          variant="secondary"
+          size="sm"
+          className="mt-6"
         >
           Více informací <ArrowRight className="inline-block ml-2 w-4 h-4" />
-        </a>
+        </Button>
 
         {user && (
           <div className="mt-6 flex space-x-2">

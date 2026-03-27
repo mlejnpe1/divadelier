@@ -1,19 +1,20 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Plus } from "lucide-react";
+import toast from "react-hot-toast";
 import Hero from "../components/layout/Hero.jsx";
 import Section from "../components/layout/Section.jsx";
+import Button from "../components/layout/Button.jsx";
+import SpecialForm from "../components/specials/SpecialForm.jsx";
+import SpecialsList from "../components/specials/SpecialList.jsx";
+import Pagination from "../components/layout/Pagiantion.jsx";
+import ListToolbar from "../components/layout/ListToolbar.jsx";
+import ScrollHint from "../components/layout/ScrollHint.jsx";
 import { useFetch } from "../hooks/useFetch.jsx";
 import { useAuth } from "../hooks/useAuth.jsx";
-import SpecialsList from "../components/specials/SpecialList.jsx";
-import { Plus } from "lucide-react";
-import SpecialForm from "../components/specials/SpecialForm.jsx";
+import { useListControls } from "../hooks/useListControls.jsx";
 import { toastAction } from "../utils/toastAction.jsx";
 import { apiFetch } from "../utils/api.js";
 import { confirmToast } from "../utils/confirmToast.jsx";
-import Pagination from "../components/layout/Pagiantion.jsx";
-import { useListControls } from "../hooks/useListControls.jsx";
-import ListToolbar from "../components/layout/ListToolbar.jsx";
-import toast from "react-hot-toast";
-import ScrollHint from "../components/layout/ScrollHint.jsx";
 
 const EMPTY_SPECIAL_DRAFT = { name: "", information: "", link: "" };
 
@@ -21,15 +22,14 @@ const TVVVPage = () => {
   const { data, loading } = useFetch("/api/specials");
   const { user } = useAuth();
   const [specials, setSpecials] = useState([]);
-
-  useEffect(() => {
-    if (Array.isArray(data)) setSpecials(data);
-  }, [data]);
-
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [creating, setCreating] = useState(false);
   const [draft, setDraft] = useState(EMPTY_SPECIAL_DRAFT);
+
+  useEffect(() => {
+    if (Array.isArray(data)) setSpecials(data);
+  }, [data]);
 
   const isEdit = Boolean(editingId);
 
@@ -137,14 +137,14 @@ const TVVVPage = () => {
     setSpecials((prev) => prev.filter((s) => s._id !== id));
     if (editingId === id) close();
 
-    controls.setPage((p) => Math.max(1, Math.min(p, pageCount)));
+    controls.setPage((p) => Math.max(1, Math.min(p, controls.pageCount)));
   };
 
   return (
-    <div className="bg-gray-50 text-gray-800 min-h-screen">
+    <div className="min-h-screen bg-gray-50 text-gray-800">
       <Hero
         title="TV VV – Televize ve výloze"
-        subtitle="Archiv i aktuální přehled speciálů z Divadeliéru."
+        subtitle="Archiv i aktuální přehled speciálů z Divadelieru."
         buttonText="Přejít na speciály"
         onButtonClick={() => {
           const el = document.getElementById("specialsSection");
@@ -157,25 +157,22 @@ const TVVVPage = () => {
 
       <Section border={true}>
         <p className="text-gray-700">
-          Televize ve výloze Vás každý týden informuje o událostech v
-          Divadeliéru v Novinkách z výlohy a ve Speciálu z Divadeliéru se můžete
-          podívat na rozhovory s úžasnými hosty, kteří Divadeliér navštívili, či
+          Televize ve výloze vás každý týden informuje o událostech v
+          Divadelieru v Novinkách z výlohy a ve Speciálu z Divadelieru se můžete
+          podívat na rozhovory s úžasnými hosty, kteří Divadelier navštívili či
           v něm vystupovali.
         </p>
       </Section>
 
       <Section border={true} id="specialsSection">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold">Speciály z Divadeliéru</h2>
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className="text-3xl font-bold">Speciály z Divadelieru</h2>
 
           {user && (
-            <button
-              onClick={openCreate}
-              className="flex items-center gap-2 bg-[#f5a623] text-white px-4 py-2 rounded-full font-semibold shadow hover:shadow-md hover:scale-105 transition"
-            >
+            <Button onClick={openCreate}>
               <Plus size={18} />
               Přidat speciál
-            </button>
+            </Button>
           )}
         </div>
 
@@ -191,8 +188,8 @@ const TVVVPage = () => {
         )}
 
         {loading ? (
-          <div className="flex justify-center items-center h-32">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-[#f5a623] border-solid" />
+          <div className="flex h-32 items-center justify-center">
+            <div className="animate-spin rounded-full border-t-4 border-[#f5a623] border-solid h-12 w-12" />
           </div>
         ) : (
           <>
@@ -203,18 +200,12 @@ const TVVVPage = () => {
               filteredCount={controls.filteredCount}
             />
 
-            {loading ? (
-              <div className="flex justify-center items-center h-32">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-[#f5a623] border-solid" />
-              </div>
-            ) : (
-              <SpecialsList
-                specials={controls.items}
-                user={user}
-                onEdit={openEdit}
-                onDelete={onDelete}
-              />
-            )}
+            <SpecialsList
+              specials={controls.items}
+              user={user}
+              onEdit={openEdit}
+              onDelete={onDelete}
+            />
 
             <Pagination
               page={controls.page}

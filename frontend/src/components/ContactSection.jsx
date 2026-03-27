@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { Megaphone } from "lucide-react";
 import toast from "react-hot-toast";
 import { apiFetch } from "../utils/api";
+import Button from "./layout/Button";
 
 export default function ContactSection({
-  icon = <Megaphone className="w-8 h-8 text-[#f5a623] mr-3" />,
+  icon = <Megaphone className="mr-3 h-8 w-8 text-[#f5a623]" />,
   title = "Máte zájem vystavovat?",
-  subtitle = "Neváhejte se nám ozvat — rádi s vámi probereme možnosti a termíny.",
+  subtitle = "Neváhejte se nám ozvat, rádi s vámi probereme možnosti a termíny.",
   note = "Odpovíme co nejdříve (obvykle do 1–2 pracovních dnů).",
   endpoint = "/api/contact",
   page = "VVV",
@@ -17,7 +18,7 @@ export default function ContactSection({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formEl = e.currentTarget; // ✅ uložit hned
+    const formEl = e.currentTarget;
     const form = new FormData(formEl);
 
     const payload = {
@@ -35,8 +36,7 @@ export default function ContactSection({
 
     setSending(true);
     try {
-      const res = await apiFetch(endpoint, { method: "POST", body: payload });
-
+      await apiFetch(endpoint, { method: "POST", body: payload });
       toast.success("Děkujeme! Zpráva byla odeslána.");
       formEl.reset();
     } catch (err) {
@@ -49,23 +49,22 @@ export default function ContactSection({
 
   return (
     <div className={className}>
-      <div className="flex items-center mb-8">
+      <div className="mb-8 flex items-center">
         {icon}
         <div>
           <h2 className="text-3xl font-bold">{title}</h2>
-          {subtitle ? <p className="text-gray-600 mt-1">{subtitle}</p> : null}
+          {subtitle ? <p className="mt-1 text-gray-600">{subtitle}</p> : null}
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+      <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-lg">
         {note ? (
-          <div className="p-6 border-b bg-gray-50">
+          <div className="border-b bg-gray-50 p-6">
             <p className="text-sm text-gray-600">{note}</p>
           </div>
         ) : null}
 
-        <form className="p-6 flex flex-col gap-4" onSubmit={handleSubmit}>
-          {/* honeypot */}
+        <form className="flex flex-col gap-4 p-6" onSubmit={handleSubmit}>
           <input
             type="text"
             name="company"
@@ -74,20 +73,20 @@ export default function ContactSection({
             className="hidden"
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <input
               name="name"
               type="text"
               placeholder="Vaše jméno"
               required
-              className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f5a623]"
+              className="rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f5a623]"
             />
             <input
               name="email"
               type="email"
               placeholder="Váš e-mail"
               required
-              className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f5a623]"
+              className="rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f5a623]"
             />
           </div>
 
@@ -96,17 +95,17 @@ export default function ContactSection({
             placeholder="Vaše zpráva"
             rows={5}
             required
-            className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f5a623]"
+            className="rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#f5a623]"
           />
 
           <div className="flex items-center justify-end pt-2">
-            <button
+            <Button
               type="submit"
               disabled={sending}
-              className="bg-[#f5a623] text-white px-6 py-2 rounded-full font-semibold shadow hover:shadow-md hover:scale-105 transform transition duration-300 disabled:opacity-60 disabled:hover:scale-100"
+              className="disabled:hover:translate-y-0 disabled:hover:scale-100"
             >
-              {sending ? "Odesílám…" : "Odeslat zprávu"}
-            </button>
+              {sending ? "Odesílám..." : "Odeslat zprávu"}
+            </Button>
           </div>
         </form>
       </div>
