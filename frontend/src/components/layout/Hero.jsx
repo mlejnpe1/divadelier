@@ -36,7 +36,9 @@ const Hero = ({
         {/* Left side */}
         <div className={`w-full ${hasChildren ? "md:w-[46%]" : "max-w-4xl"}`}>
           <div
-            className={`max-w-3xl text-center ${hasChildren ? "md:text-left" : ""}`}
+            className={`max-w-3xl text-center ${
+              hasChildren ? "md:text-left" : "mx-auto"
+            }`}
           >
             {subtitle && (
               <p className="mb-6 text-sm font-semibold uppercase tracking-[0.3em] text-orange-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">

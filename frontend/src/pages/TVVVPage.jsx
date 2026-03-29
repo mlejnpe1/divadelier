@@ -164,56 +164,68 @@ const TVVVPage = () => {
         </p>
       </Section>
 
-      <Section border={true} id="specialsSection">
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-3xl font-bold">Speciály z Divadelieru</h2>
+      <Section id="specialsSection">
+        <div className="relative overflow-hidden rounded-[2rem] md:p-8">
+          <div className="relative mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h2 className="text-3xl font-bold text-[#3d2514]">
+                Speciály z Divadeliéru
+              </h2>
+              <p className="mt-3 max-w-2xl text-sm leading-7 text-[#6b4b2b] md:text-base">
+                Výběr rozhovorů, hostů a záznamů z TV VV v jednom přehledném
+                archivu.
+              </p>
+            </div>
 
-          {user && (
-            <Button onClick={openCreate}>
-              <Plus size={18} />
-              Přidat speciál
-            </Button>
+            {user && (
+              <Button onClick={openCreate}>
+                <Plus size={18} />
+                Přidat speciál
+              </Button>
+            )}
+          </div>
+
+          {user && showForm && (
+            <div className="relative mb-6 md:p-6">
+              <SpecialForm
+                isEdit={isEdit}
+                draft={draft}
+                setDraft={setDraft}
+                creating={creating}
+                onClose={close}
+                onSubmit={onSave}
+              />
+            </div>
+          )}
+
+          {loading ? (
+            <div className="flex h-32 items-center justify-center">
+              <div className="h-12 w-12 animate-spin rounded-full border-t-4 border-[#f5a623] border-solid" />
+            </div>
+          ) : (
+            <div className="relative md:p-6">
+              <ListToolbar
+                query={controls.query}
+                setQuery={controls.setQuery}
+                totalCount={controls.totalCount}
+                filteredCount={controls.filteredCount}
+              />
+
+              <SpecialsList
+                specials={controls.items}
+                user={user}
+                onEdit={openEdit}
+                onDelete={onDelete}
+              />
+
+              <Pagination
+                page={controls.page}
+                pageCount={controls.pageCount}
+                onPageChange={controls.setPage}
+              />
+            </div>
           )}
         </div>
-
-        {user && showForm && (
-          <SpecialForm
-            isEdit={isEdit}
-            draft={draft}
-            setDraft={setDraft}
-            creating={creating}
-            onClose={close}
-            onSubmit={onSave}
-          />
-        )}
-
-        {loading ? (
-          <div className="flex h-32 items-center justify-center">
-            <div className="animate-spin rounded-full border-t-4 border-[#f5a623] border-solid h-12 w-12" />
-          </div>
-        ) : (
-          <>
-            <ListToolbar
-              query={controls.query}
-              setQuery={controls.setQuery}
-              totalCount={controls.totalCount}
-              filteredCount={controls.filteredCount}
-            />
-
-            <SpecialsList
-              specials={controls.items}
-              user={user}
-              onEdit={openEdit}
-              onDelete={onDelete}
-            />
-
-            <Pagination
-              page={controls.page}
-              pageCount={controls.pageCount}
-              onPageChange={controls.setPage}
-            />
-          </>
-        )}
       </Section>
     </div>
   );
