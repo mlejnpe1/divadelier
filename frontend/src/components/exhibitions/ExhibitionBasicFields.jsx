@@ -7,10 +7,9 @@ export default function ExhibitionBasicFields({ draft, setDraft }) {
       <div className="grid gap-4 md:grid-cols-2">
         <label className="space-y-2">
           <span className="text-sm font-semibold text-gray-800">
-            Nazev vystavy *
+            Nazev vystavy
           </span>
           <input
-            required
             value={draft.title}
             onChange={(event) =>
               setDraft((prev) => ({ ...prev, title: event.target.value }))
@@ -35,9 +34,8 @@ export default function ExhibitionBasicFields({ draft, setDraft }) {
       </div>
 
       <label className="mt-4 block space-y-2">
-        <span className="text-sm font-semibold text-gray-800">O vystave *</span>
+        <span className="text-sm font-semibold text-gray-800">O vystave</span>
         <textarea
-          required
           value={draft.information}
           onChange={(event) =>
             setDraft((prev) => ({

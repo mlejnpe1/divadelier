@@ -3,7 +3,6 @@ import { uploadFile, deleteUploadedFile } from "../../utils/handleFile.js";
 
 export default function useExhibitionUploadSession({
   draft,
-  setDraft,
   onClose,
   onSubmit,
 }) {
@@ -11,6 +10,10 @@ export default function useExhibitionUploadSession({
   const pendingUploadKeysRef = useRef(new Set());
   const skipCleanupRef = useRef(false);
   const initialPersistedKeysRef = useRef(null);
+  const uploadSlug =
+    String(draft.title || "").trim() ||
+    String(draft.author?.name || "").trim() ||
+    (draft.date ? `exhibition-${draft.date}` : "exhibition");
 
   if (!initialPersistedKeysRef.current) {
     const keys = new Set();
@@ -113,17 +116,13 @@ export default function useExhibitionUploadSession({
       return null;
     }
 
-    if (!draft.title?.trim()) {
-      throw new Error("Nejdrive zadej nazev vystavy.");
-    }
-
     setActiveUploads((value) => value + 1);
 
     try {
       const uploaded = await uploadFile({
         file,
         scope: "exhibitions",
-        slug: draft.title,
+        slug: uploadSlug,
       });
 
       if (

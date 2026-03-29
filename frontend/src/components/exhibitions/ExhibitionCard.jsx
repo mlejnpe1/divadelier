@@ -9,14 +9,24 @@ function truncateText(text, maxLength = 220) {
   return `${normalized.slice(0, maxLength).trim()}...`;
 }
 
+function getExhibitionDisplayTitle(exhibition) {
+  const title = String(exhibition?.title || "").trim();
+  if (title) return title;
+
+  const authorName = String(exhibition?.author?.name || "").trim();
+  if (authorName) return `Vystava autora ${authorName}`;
+
+  return "Vystava bez nazvu";
+}
+
 export default function ExhibitionCard({
   exhibition: exh,
-  index,
   user,
   onEdit,
   onDelete,
 }) {
   const previewImage = exh.coverImage?.url || Placeholder;
+  const displayTitle = getExhibitionDisplayTitle(exh);
 
   return (
     <article
@@ -36,10 +46,10 @@ export default function ExhibitionCard({
             decoding="async"
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,248,236,0.18),rgba(95,47,0,0.12))]" />
-          <img
-            src={previewImage}
-            alt={exh.coverImage?.alt || exh.title || "Titulni fotka vystavy"}
-            className="relative h-64 w-full object-contain p-4 md:h-full"
+            <img
+              src={previewImage}
+              alt={exh.coverImage?.alt || displayTitle}
+              className="relative h-64 w-full object-contain p-4 md:h-full"
             loading="lazy"
             decoding="async"
           />
@@ -60,7 +70,7 @@ export default function ExhibitionCard({
           </div>
 
           <h3 className="text-2xl font-semibold leading-tight tracking-tight text-gray-900">
-            {exh.title}
+            {displayTitle}
           </h3>
 
           <p className="mt-4 text-[1rem] leading-relaxed text-[#4a2c14]">

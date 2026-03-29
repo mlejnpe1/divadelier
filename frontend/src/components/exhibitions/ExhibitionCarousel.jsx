@@ -14,6 +14,16 @@ function truncateText(text, maxLength = 92) {
   return `${normalized.slice(0, maxLength).trim()}...`;
 }
 
+function getExhibitionDisplayTitle(exhibition) {
+  const title = String(exhibition?.title || "").trim();
+  if (title) return title;
+
+  const authorName = String(exhibition?.author?.name || "").trim();
+  if (authorName) return `Vystava autora ${authorName}`;
+
+  return "Vystava bez nazvu";
+}
+
 export default function ExhibitionCarousel({ items = [], loading }) {
   const carouselRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -87,6 +97,7 @@ export default function ExhibitionCarousel({ items = [], loading }) {
       >
         {items.map((exh) => {
           const previewImage = exh.coverImage?.url || Placeholder;
+          const displayTitle = getExhibitionDisplayTitle(exh);
 
           return (
             <Link
@@ -107,7 +118,7 @@ export default function ExhibitionCarousel({ items = [], loading }) {
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,248,236,0.18),rgba(95,47,0,0.12))]" />
                 <img
                   src={previewImage}
-                  alt={exh.coverImage?.alt || exh.title || "Vystava"}
+                  alt={exh.coverImage?.alt || displayTitle}
                   className="relative h-full w-full object-contain p-4 transition duration-700 group-hover:scale-[1.03]"
                   loading="lazy"
                   decoding="async"
@@ -117,7 +128,7 @@ export default function ExhibitionCarousel({ items = [], loading }) {
               <div className="relative flex flex-1 flex-col p-4">
                 <div className="rounded-[1.6rem] border border-[#ffd799]/24 bg-white/55 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] backdrop-blur-sm">
                   <h3 className="line-clamp-2 min-h-[3.5rem] text-xl font-semibold leading-tight tracking-tight text-gray-900">
-                    {exh.title}
+                    {displayTitle}
                   </h3>
 
                   <p className="mt-3 min-h-[3.5rem] text-sm leading-relaxed text-gray-600">

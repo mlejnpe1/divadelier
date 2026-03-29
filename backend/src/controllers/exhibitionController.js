@@ -59,15 +59,37 @@ function buildGalleryImages(images) {
     .filter((image) => image.url);
 }
 
+function normalizeAuthorWebsites(author = {}) {
+  const rawItems = Array.isArray(author?.websites)
+    ? author.websites
+    : author?.website
+      ? [{ url: author.website, description: "" }]
+      : [];
+
+  return rawItems
+    .map((website) => {
+      if (typeof website === "string") {
+        return { url: String(website).trim(), description: "" };
+      }
+
+      return {
+        url: String(website?.url || "").trim(),
+        description: String(website?.description || "").trim(),
+      };
+    })
+    .filter((website) => website.url);
+}
+
 function buildAuthor(author = {}) {
   const normalizedPhoto = String(author?.photo || "").trim();
+  const normalizedWebsites = normalizeAuthorWebsites(author);
 
   return {
     name: String(author?.name || "").trim(),
     bio: String(author?.bio || "").trim(),
     photo: normalizedPhoto,
     photoKey: normalizedPhoto ? String(author?.photoKey || "").trim() : "",
-    website: String(author?.website || "").trim(),
+    websites: normalizedWebsites,
   };
 }
 
@@ -166,25 +188,21 @@ export async function createExhibition(req, res) {
       author = {},
     } = req.body;
 
-    if (!title?.trim()) {
-      return res.status(400).json({ message: "Chybi title." });
-    }
-
-    if (!information?.trim()) {
-      return res.status(400).json({ message: "Chybi information." });
-    }
-
     if (!date) {
       return res.status(400).json({ message: "Chybi date." });
     }
 
-    const normalizedTitle = String(title).trim();
+    if (!String(author?.name || "").trim()) {
+      return res.status(400).json({ message: "Chybi author.name." });
+    }
+
+    const normalizedTitle = String(title || "").trim();
     const normalizedCoverImage = buildCoverImage(coverImage, normalizedTitle);
     const cleanedImages = buildGalleryImages(images);
 
     const doc = await Exhibition.create({
       title: normalizedTitle,
-      information: String(information).trim(),
+      information: String(information || "").trim(),
       date,
       coverImage: normalizedCoverImage,
       images: cleanedImages,
@@ -214,7 +232,7 @@ export async function updateExhibition(req, res) {
     }
 
     if (information !== undefined) {
-      update.information = String(information).trim();
+      update.information = String(information || "").trim();
     }
 
     if (date !== undefined) {
@@ -233,7 +251,11 @@ export async function updateExhibition(req, res) {
     }
 
     if (author !== undefined) {
-      update.author = buildAuthor(author);
+      const nextAuthor = buildAuthor(author);
+      if (!nextAuthor.name) {
+        return res.status(400).json({ message: "Chybi author.name." });
+      }
+      update.author = nextAuthor;
     }
 
     const nextExhibitionShape = {

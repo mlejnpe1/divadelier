@@ -1,6 +1,6 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Plus, X } from "lucide-react";
 import Placeholder from "../../assets/images/placeholder.png";
 import { fieldClass, sectionClass } from "./exhibitionFormStyles.js";
 
@@ -13,20 +13,12 @@ export default function ExhibitionAuthorSection({
   const authorPhotoInputRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const hasAuthorContent = useMemo(
-    () =>
-      Boolean(
-        draft.author?.name ||
-          draft.author?.bio ||
-          draft.author?.photo ||
-          draft.author?.photoKey ||
-          draft.author?.website,
-      ),
-    [draft.author],
-  );
-  const [showSection, setShowSection] = useState(hasAuthorContent);
+  const [showSection, setShowSection] = useState(true);
 
   const authorPhotoPreviewAlt = draft.author?.name?.trim() || "Fotka autora";
+  const authorWebsites = Array.isArray(draft.author?.websites)
+    ? draft.author.websites
+    : [{ url: "", description: "" }];
 
   const uploadAuthorPhotoFile = async (file) => {
     if (!file) {
@@ -92,7 +84,7 @@ export default function ExhibitionAuthorSection({
         <div>
           <p className="text-lg font-semibold text-gray-900">Autor</p>
           <p className="mt-1 text-sm text-gray-600">
-            Nepovinna sekce pro medailonek a kontakt.
+            Povinny je alespon zaznam jmena autora. Ostatni udaje jsou volitelne.
           </p>
         </div>
 
@@ -109,10 +101,11 @@ export default function ExhibitionAuthorSection({
         <div className="mt-5">
           <div className="grid gap-4 md:grid-cols-2">
             <label className="space-y-2">
-              <span className="text-sm font-semibold text-gray-800">
-                Jmeno autora
-              </span>
+                <span className="text-sm font-semibold text-gray-800">
+                  Jmeno autora *
+                </span>
               <input
+                required
                 value={draft.author.name}
                 onChange={(event) =>
                   setDraft((prev) => ({
@@ -237,19 +230,115 @@ export default function ExhibitionAuthorSection({
 
           <label className="mt-4 block space-y-2">
             <span className="text-sm font-semibold text-gray-800">
-              Web autora
+              Weby autora
             </span>
-            <input
-              value={draft.author.website}
-              onChange={(event) =>
-                setDraft((prev) => ({
-                  ...prev,
-                  author: { ...prev.author, website: event.target.value },
-                }))
-              }
-              placeholder="https://..."
-              className={fieldClass}
-            />
+            <div className="space-y-3">
+              {authorWebsites.map((website, index) => (
+                <div
+                  key={index}
+                  className="grid gap-2 md:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_52px]"
+                >
+                  <input
+                    value={website?.description || ""}
+                    onChange={(event) =>
+                      setDraft((prev) => {
+                        const nextWebsites = Array.isArray(prev.author?.websites)
+                          ? [...prev.author.websites]
+                          : [{ url: "", description: "" }];
+                        nextWebsites[index] = {
+                          ...nextWebsites[index],
+                          description: event.target.value,
+                        };
+
+                        return {
+                          ...prev,
+                          author: {
+                            ...prev.author,
+                            websites: nextWebsites,
+                          },
+                        };
+                      })
+                    }
+                    placeholder={`Popis odkazu${index > 0 ? ` ${index + 1}` : ""}`}
+                    className={fieldClass}
+                  />
+                  <input
+                    value={website?.url || ""}
+                    onChange={(event) =>
+                      setDraft((prev) => {
+                        const nextWebsites = Array.isArray(prev.author?.websites)
+                          ? [...prev.author.websites]
+                          : [{ url: "", description: "" }];
+                        nextWebsites[index] = {
+                          ...nextWebsites[index],
+                          url: event.target.value,
+                        };
+
+                        return {
+                          ...prev,
+                          author: {
+                            ...prev.author,
+                            websites: nextWebsites,
+                          },
+                        };
+                      })
+                    }
+                    placeholder={`https://...${index > 0 ? ` (${index + 1})` : ""}`}
+                    className={fieldClass}
+                  />
+                  {authorWebsites.length > 1 ? (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setDraft((prev) => {
+                          const nextWebsites = (
+                            Array.isArray(prev.author?.websites)
+                              ? prev.author.websites
+                              : [{ url: "", description: "" }]
+                          ).filter((_, websiteIndex) => websiteIndex !== index);
+
+                          return {
+                            ...prev,
+                            author: {
+                              ...prev.author,
+                              websites: nextWebsites.length
+                                ? nextWebsites
+                                : [{ url: "", description: "" }],
+                            },
+                          };
+                        })
+                      }
+                      className="inline-flex h-[52px] w-[52px] flex-shrink-0 items-center justify-center rounded-2xl border border-red-200/70 bg-red-50/75 text-red-600 transition hover:bg-red-100/85"
+                      aria-label={`Odebrat web autora ${index + 1}`}
+                    >
+                      <X size={18} />
+                    </button>
+                  ) : null}
+                </div>
+              ))}
+
+              <button
+                type="button"
+                onClick={() =>
+                  setDraft((prev) => ({
+                    ...prev,
+                    author: {
+                      ...prev.author,
+                      websites: [
+                        ...(Array.isArray(prev.author?.websites)
+                          ? prev.author.websites
+                          : [{ url: "", description: "" }]),
+                        { url: "", description: "" },
+                      ],
+                    },
+                  }))
+                }
+                className="inline-flex items-center gap-2 rounded-2xl border border-white/60 bg-white/55 px-4 py-3 text-sm font-medium text-[#8a5d24] transition hover:bg-white/75"
+              >
+                <Plus size={16} />
+                Pridat dalsi web
+              </button>
+            </div>
           </label>
         </div>
       ) : null}

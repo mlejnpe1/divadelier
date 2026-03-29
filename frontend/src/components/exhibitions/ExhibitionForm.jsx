@@ -50,14 +50,11 @@ export default function ExhibitionForm({
       <div className="relative space-y-5">
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#9a6a2a]">
-              Exhibition Editor
-            </p>
             <h3 className="mt-2 text-2xl font-semibold tracking-tight text-gray-900">
               {isEdit ? "Upravit vystavu" : "Pridat vystavu"}
             </h3>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-gray-600">
-              Povinne jsou nazev, datum a popis. Fotky i autor jsou volitelne,
+              Povinné jsou název, datum a popis. Fotky i autor jsou volitelne,
               kdyz nic nenahrajes, pouzije se placeholder.
             </p>
           </div>

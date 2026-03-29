@@ -69,9 +69,6 @@ export default function ExhibitionFormModal({
           <div className="flex items-center justify-between border-b border-white/20 px-5 py-4 md:px-7">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#f0b24d]">
-                Exhibition Modal
-              </p>
-              <p className="mt-1 text-lg font-semibold text-white">
                 {isEdit ? "Upravit vystavu" : "Pridat vystavu"}
               </p>
             </div>
@@ -79,7 +76,7 @@ export default function ExhibitionFormModal({
             <button
               type="button"
               onClick={handleRequestClose}
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 text-[#f5a623] shadow-[inset_0_1px_0_rgba(255,255,255,0.28)] transition hover:bg-white/16"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 text-black shadow-[inset_0_1px_0_rgba(255,255,255,0.28)] transition hover:bg-white/16"
             >
               <X size={20} />
             </button>

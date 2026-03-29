@@ -19,11 +19,6 @@ export default function ExhibitionImagesEditor({
     const files = Array.from(fileList || []).filter(Boolean);
     if (!files.length) return;
 
-    if (!draft.title?.trim()) {
-      toast.error("Nejdrive zadej nazev vystavy.");
-      return;
-    }
-
     setIsUploading(true);
 
     try {

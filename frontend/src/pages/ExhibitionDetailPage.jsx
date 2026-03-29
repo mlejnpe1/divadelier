@@ -7,6 +7,30 @@ import { useFetch } from "../hooks/useFetch.jsx";
 import Gallery from "../components/layout/Gallery.jsx";
 import Button from "../components/layout/Button.jsx";
 
+function getWebsiteLabel(website) {
+  const description = String(website?.description || "").trim();
+  if (description) return description;
+
+  const url = String(website?.url || "").trim();
+  if (!url) return "Web autora";
+
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+}
+
+function getExhibitionDisplayTitle(exhibition) {
+  const title = String(exhibition?.title || "").trim();
+  if (title) return title;
+
+  const authorName = String(exhibition?.author?.name || "").trim();
+  if (authorName) return `Vystava autora ${authorName}`;
+
+  return "Vystava bez nazvu";
+}
+
 const ExhibitionDetailPage = () => {
   const { id } = useParams();
   const { data: exh, loading } = useFetch(`/api/exhibitions/${id}`);
@@ -18,6 +42,7 @@ const ExhibitionDetailPage = () => {
         year: "numeric",
       })
     : null;
+  const displayTitle = getExhibitionDisplayTitle(exh);
 
   const galleryImages =
     Array.isArray(exh?.images) && exh.images.length > 0
@@ -25,11 +50,29 @@ const ExhibitionDetailPage = () => {
       : [
           {
             url: Placeholder,
-            alt: exh?.title
-              ? `${exh.title} - placeholder galerie`
-              : "Placeholder galerie",
+              alt: displayTitle
+                ? `${displayTitle} - placeholder galerie`
+                : "Placeholder galerie",
           },
         ];
+  const authorWebsites = (
+    Array.isArray(exh?.author?.websites)
+      ? exh.author.websites
+      : exh?.author?.website
+        ? [{ url: exh.author.website, description: "" }]
+        : []
+  )
+    .map((website) => {
+      if (typeof website === "string") {
+        return { url: String(website).trim(), description: "" };
+      }
+
+      return {
+        url: String(website?.url || "").trim(),
+        description: String(website?.description || "").trim(),
+      };
+    })
+    .filter((website) => website.url);
 
   useEffect(() => {
     if (!isCoverOpen) return undefined;
@@ -115,7 +158,7 @@ const ExhibitionDetailPage = () => {
             <div className="absolute inset-x-8 top-6 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent" />
             <img
               src={exh.coverImage?.url || Placeholder}
-              alt={exh.coverImage?.alt || exh.title}
+              alt={exh.coverImage?.alt || displayTitle}
               className="relative h-full w-full object-contain p-2 md:p-4 lg:p-5"
               loading="eager"
               decoding="async"
@@ -143,7 +186,7 @@ const ExhibitionDetailPage = () => {
               </div>
 
               <h1 className="mt-5 text-3xl font-bold leading-tight text-gray-900 md:text-4xl">
-                {exh.title}
+                {displayTitle}
               </h1>
 
               {formattedDate && (
@@ -167,7 +210,7 @@ const ExhibitionDetailPage = () => {
       {(exh.author?.name ||
         exh.author?.bio ||
         exh.author?.photo ||
-        exh.author?.website) && (
+        authorWebsites.length > 0) && (
         <Section border={false}>
           <div className="overflow-hidden rounded-[2rem] border border-white/40 bg-white/[0.34] p-6 shadow-[0_28px_70px_rgba(15,23,42,0.1)] backdrop-blur-2xl md:-mt-12 md:p-8">
             <div className="mb-6 flex items-center gap-3">
@@ -203,17 +246,22 @@ const ExhibitionDetailPage = () => {
                   </p>
                 )}
 
-                {exh.author?.website && (
-                  <Button
-                    href={exh.author.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    variant="secondary"
-                    size="sm"
-                    className="mt-5 border-white/55 bg-white/60 backdrop-blur-md hover:bg-white/75"
-                  >
-                    Web autora
-                  </Button>
+                {authorWebsites.length > 0 && (
+                  <div className="mt-5 flex flex-wrap gap-3">
+                    {authorWebsites.map((website, index) => (
+                      <Button
+                        key={`${website.url}-${index}`}
+                        href={website.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        variant="secondary"
+                        size="sm"
+                        className="border-white/55 bg-white/60 backdrop-blur-md hover:bg-white/75"
+                      >
+                        {getWebsiteLabel(website)}
+                      </Button>
+                    ))}
+                  </div>
                 )}
               </div>
             </div>
@@ -245,7 +293,7 @@ const ExhibitionDetailPage = () => {
             <div className="relative flex items-center justify-between gap-4 border-b border-white/10 bg-white/[0.04] px-5 py-4 backdrop-blur-xl sm:px-6">
               <div>
                 <p className="text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-[#f5a623]">
-                  {exh.title}
+                  {displayTitle}
                 </p>
               </div>
 
@@ -263,7 +311,7 @@ const ExhibitionDetailPage = () => {
               <div className="relative w-full overflow-hidden rounded-[1.7rem] border border-white/10 bg-black/25 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
                 <img
                   src={exh.coverImage?.url || Placeholder}
-                  alt={exh.coverImage?.alt || exh.title}
+                  alt={exh.coverImage?.alt || displayTitle}
                   className="max-h-[78vh] w-full object-contain"
                   loading="eager"
                   decoding="async"

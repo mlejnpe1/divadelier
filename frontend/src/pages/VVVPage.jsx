@@ -25,8 +25,24 @@ const EMPTY_EXHIBITION_DRAFT = {
   date: "",
   coverImage: { url: "", alt: "", key: "" },
   images: [],
-  author: { name: "", bio: "", photo: "", photoKey: "", website: "" },
+  author: {
+    name: "",
+    bio: "",
+    photo: "",
+    photoKey: "",
+    websites: [{ url: "", description: "" }],
+  },
 };
+
+function getExhibitionDisplayTitle(exhibition) {
+  const title = String(exhibition?.title || "").trim();
+  if (title) return title;
+
+  const authorName = String(exhibition?.author?.name || "").trim();
+  if (authorName) return `Vystava autora ${authorName}`;
+
+  return "Vystava bez nazvu";
+}
 
 const VVVPage = () => {
   const { user } = useAuth();
@@ -35,6 +51,7 @@ const VVVPage = () => {
     useState(true);
   const [planPage, setPlanPage] = useState(1);
   const [planQuery, setPlanQuery] = useState("");
+  const [planRefresh, setPlanRefresh] = useState(0);
   const [editingExhibitionId, setEditingExhibitionId] = useState(null);
   const [draftExhibition, setDraftExhibition] = useState(
     EMPTY_EXHIBITION_DRAFT,
@@ -50,11 +67,12 @@ const VVVPage = () => {
     const params = new URLSearchParams();
     params.set("page", String(planPage));
     params.set("limit", String(planLimit));
+    params.set("r", String(planRefresh));
     if (debouncedPlanQuery.trim()) {
       params.set("q", debouncedPlanQuery.trim());
     }
     return `/api/exhibitions?${params.toString()}`;
-  }, [planPage, planLimit, debouncedPlanQuery]);
+  }, [planPage, planLimit, debouncedPlanQuery, planRefresh]);
 
   const { data: planData, loading: planLoading } = useFetch(planUrl);
   const { data: carouselData, loading: carouselLoading } = useFetch(
@@ -90,6 +108,26 @@ const VVVPage = () => {
   };
 
   const openEditExhibition = (exh) => {
+    const authorWebsites = Array.isArray(exh.author?.websites)
+      ? exh.author.websites
+          .map((website) => {
+            if (typeof website === "string") {
+              return { url: String(website).trim(), description: "" };
+            }
+
+            return {
+              url: String(website?.url || "").trim(),
+              description: String(website?.description || "").trim(),
+            };
+          })
+          .filter((website) => website.url)
+      : [];
+    const normalizedAuthorWebsites = authorWebsites.length
+      ? authorWebsites
+      : exh.author?.website
+        ? [{ url: String(exh.author.website).trim(), description: "" }]
+        : [{ url: "", description: "" }];
+
     setEditingExhibitionId(exh._id);
     setDraftExhibition({
       title: exh.title || "",
@@ -112,7 +150,7 @@ const VVVPage = () => {
         bio: exh.author?.bio || "",
         photo: exh.author?.photo || "",
         photoKey: exh.author?.photoKey || "",
-        website: exh.author?.website || "",
+        websites: normalizedAuthorWebsites,
       },
     });
     setShowCreateExhibition(true);
@@ -146,13 +184,13 @@ const VVVPage = () => {
     await refreshFeaturedExhibition();
     setPlanQuery("");
     setPlanPage(1);
+    setPlanRefresh((x) => x + 1);
     setCarouselRefresh((x) => x + 1);
   };
 
   function validateExhibitionDraft(draft) {
-    if (!draft.title?.trim()) return "Zadej nazev vystavy.";
-    if (!draft.information?.trim()) return "Zadej popis vystavy.";
     if (!draft.date) return "Zadej datum vystavy.";
+    if (!draft.author?.name?.trim()) return "Zadej jmeno autora.";
 
     const invalidImage = draft.images.find((img) => !img?.url?.trim());
     if (invalidImage) {
@@ -188,7 +226,18 @@ const VVVPage = () => {
         alt: img.alt?.trim() || `Fotka ${index + 1}`,
         key: img.key?.trim() || "",
       })),
-      author: draftExhibition.author || {},
+      author: {
+        ...(draftExhibition.author || {}),
+        websites: (Array.isArray(draftExhibition.author?.websites)
+          ? draftExhibition.author.websites
+          : []
+        )
+          .map((website) => ({
+            url: String(website?.url || "").trim(),
+            description: String(website?.description || "").trim(),
+          }))
+          .filter((website) => website.url),
+      },
     };
 
     setCreatingExhibition(true);
@@ -218,6 +267,7 @@ const VVVPage = () => {
       await refreshFeaturedExhibition();
       setPlanQuery("");
       setPlanPage(1);
+      setPlanRefresh((x) => x + 1);
       setCarouselRefresh((x) => x + 1);
       return true;
     } finally {
@@ -238,10 +288,15 @@ const VVVPage = () => {
         }}
         children={
           <div className="mx-auto mt-6 w-full max-w-3xl">
-            <div className="mb-4 flex flex-row justify-evenly items-center gap-3">
+            <div className="mb-4 flex flex-row items-center gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.3em] text-gray-700">
-                Aktuální výstava
+                Aktuální výstava:
               </h2>
+              {!loadingFeaturedExhibition && featuredExhibition ? (
+                <h2 className="text-sm font-semibold uppercase tracking-[0.3em] text-gray-700">
+                  {getExhibitionDisplayTitle(featuredExhibition)}
+                </h2>
+              ) : null}
               {featuredExhibition?.date ? (
                 <div className="rounded-full border border-white/60 bg-white/72 p-2 text-sm font-medium text-gray-700 shadow-[0_10px_24px_rgba(15,23,42,0.08)] backdrop-blur-md">
                   Od:{" "}
@@ -269,7 +324,10 @@ const VVVPage = () => {
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.24),rgba(15,23,42,0.18))]" />
                 <img
                   src={featuredExhibition?.coverImage?.url || Placeholder}
-                  alt={featuredExhibition?.title || "Aktuální výstava"}
+                  alt={
+                    featuredExhibition?.coverImage?.alt ||
+                    getExhibitionDisplayTitle(featuredExhibition)
+                  }
                   className="relative h-full w-full object-contain p-4 md:p-6"
                   loading="eager"
                   decoding="async"

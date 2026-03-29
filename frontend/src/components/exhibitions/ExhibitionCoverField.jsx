@@ -16,6 +16,7 @@ export default function ExhibitionCoverField({
   const coverPreviewAlt =
     draft.coverImage?.alt?.trim() ||
     draft.title?.trim() ||
+    draft.author?.name?.trim() ||
     "Titulni fotka vystavy";
 
   const uploadCoverFile = async (file) => {
