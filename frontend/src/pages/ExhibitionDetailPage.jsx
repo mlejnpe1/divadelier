@@ -69,14 +69,14 @@ const ExhibitionDetailPage = () => {
 
         <Section border={false}>
           <div className="overflow-hidden rounded-[2rem] border border-white/45 bg-white/60 px-6 py-14 shadow-[0_28px_70px_rgba(15,23,42,0.12)] backdrop-blur-xl">
-            <p className="text-gray-500">Vystava nebyla nalezena.</p>
+            <p className="text-gray-500">Výstava nebyla nalezena.</p>
             <Button
               to="/vvv"
               variant="secondary"
               size="sm"
               className="mt-4 border-white/60 bg-white/70 backdrop-blur-md"
             >
-              Zpet na vystavy
+              Zpět na výstavy
             </Button>
           </div>
         </Section>
@@ -98,16 +98,11 @@ const ExhibitionDetailPage = () => {
           className="border-white/60 bg-white/70 shadow-[0_16px_36px_rgba(15,23,42,0.08)] backdrop-blur-xl"
         >
           <ArrowLeft size={18} />
-          Zpet na vystavy
+          Zpět na výstavy
         </Button>
 
         <div className="mt-6 overflow-hidden rounded-[2.2rem] border border-white/45 bg-white/[0.38] shadow-[0_30px_90px_rgba(15,23,42,0.12)] backdrop-blur-2xl">
-          <button
-            type="button"
-            onClick={() => setIsCoverOpen(true)}
-            className="group relative block h-[300px] w-full overflow-hidden border-b border-white/20 bg-white/20 text-left md:h-[425px] lg:h-[550px]"
-            aria-label="Zobrazit titulni obrazek pres celou obrazovku"
-          >
+          <div className="relative h-[300px] w-full overflow-hidden border-b border-white/20 bg-white/20 md:h-[425px] lg:h-[550px]">
             <img
               src={exh.coverImage?.url || Placeholder}
               alt=""
@@ -118,9 +113,6 @@ const ExhibitionDetailPage = () => {
             />
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.34),rgba(15,23,42,0.16))]" />
             <div className="absolute inset-x-8 top-6 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent" />
-            <div className="absolute bottom-4 right-4 rounded-full border border-white/35 bg-white/20 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white/90 backdrop-blur-md transition duration-300 group-hover:bg-white/28">
-              Zvetsit
-            </div>
             <img
               src={exh.coverImage?.url || Placeholder}
               alt={exh.coverImage?.alt || exh.title}
@@ -128,15 +120,26 @@ const ExhibitionDetailPage = () => {
               loading="eager"
               decoding="async"
             />
-          </button>
+          </div>
 
           <div className="relative p-6 md:p-8 lg:p-10">
             <div className="pointer-events-none absolute -right-10 top-0 h-40 w-40 rounded-full bg-white/30 blur-3xl" />
             <div className="pointer-events-none absolute bottom-6 left-0 h-28 w-28 rounded-full bg-[#f5a623]/15 blur-3xl" />
 
             <div className="relative">
-              <div className="inline-flex rounded-full border border-white/40 bg-white/35 px-4 py-2 text-xs uppercase tracking-[0.22em] text-[#8a5a11] backdrop-blur-md">
-                Vystava ve vyloze
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="inline-flex rounded-full border border-white/40 bg-white/35 px-4 py-2 text-xs uppercase tracking-[0.22em] text-[#8a5a11] backdrop-blur-md">
+                  Výstava ve výloze
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsCoverOpen(true)}
+                  className="inline-flex items-center justify-center rounded-full border border-white/50 bg-white/55 px-4 py-2 text-sm font-medium text-gray-700 shadow-[0_12px_30px_rgba(15,23,42,0.08)] backdrop-blur-md transition hover:-translate-y-0.5 hover:bg-white/75"
+                  aria-label="Zobrazit titulni obrazek pres celou obrazovku"
+                >
+                  Zvětšit obrázek
+                </button>
               </div>
 
               <h1 className="mt-5 text-3xl font-bold leading-tight text-gray-900 md:text-4xl">
@@ -166,9 +169,8 @@ const ExhibitionDetailPage = () => {
         exh.author?.photo ||
         exh.author?.website) && (
         <Section border={false}>
-          <div className="-mt-10 overflow-hidden rounded-[2rem] border border-white/40 bg-white/[0.34] p-6 shadow-[0_28px_70px_rgba(15,23,42,0.1)] backdrop-blur-2xl md:-mt-12 md:p-8">
+          <div className="overflow-hidden rounded-[2rem] border border-white/40 bg-white/[0.34] p-6 shadow-[0_28px_70px_rgba(15,23,42,0.1)] backdrop-blur-2xl md:-mt-12 md:p-8">
             <div className="mb-6 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-2xl bg-white/50 shadow-inner" />
               <div>
                 <p className="text-xs uppercase tracking-[0.22em] text-[#8a5a11]">
                   Medailon
@@ -219,23 +221,14 @@ const ExhibitionDetailPage = () => {
         </Section>
       )}
 
-      <Section border={false}>
-        <div className="-mt-10 overflow-hidden rounded-[2rem] border border-white/40 bg-white/[0.34] p-6 shadow-[0_28px_70px_rgba(15,23,42,0.1)] backdrop-blur-2xl md:-mt-12 md:p-8">
-          <div className="mb-6 flex items-center justify-between gap-4">
-            <div>
-              <p className="text-xs uppercase tracking-[0.22em] text-[#8a5a11]">
-                Nahledy
-              </p>
-              <h2 className="text-2xl font-bold text-gray-900">Galerie</h2>
-            </div>
-            <div className="hidden rounded-full border border-white/45 bg-white/40 px-4 py-2 text-sm text-gray-600 backdrop-blur-md md:inline-flex">
-              Kliknutim otevres detail
-            </div>
-          </div>
-
+      <section className="px-6 pb-20 pt-20 md:px-12">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="mb-8 text-center text-3xl font-bold text-gray-900">
+            Galerie
+          </h2>
           <Gallery images={galleryImages} />
         </div>
-      </Section>
+      </section>
 
       {isCoverOpen && (
         <div
@@ -252,16 +245,15 @@ const ExhibitionDetailPage = () => {
             <div className="relative flex items-center justify-between gap-4 border-b border-white/10 bg-white/[0.04] px-5 py-4 backdrop-blur-xl sm:px-6">
               <div>
                 <p className="text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-[#f5a623]">
-                  Titulni obrazek
+                  {exh.title}
                 </p>
-                <p className="mt-2 text-sm text-white/82">{exh.title}</p>
               </div>
 
               <button
                 type="button"
                 onClick={() => setIsCoverOpen(false)}
-                aria-label="Zavrit nahled obrazku"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white shadow-[0_12px_30px_rgba(0,0,0,0.22)] backdrop-blur-xl transition hover:bg-white/18"
+                aria-label="Zavřít náhled obrázku"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/10 text-black shadow-[0_12px_30px_rgba(0,0,0,0.22)] backdrop-blur-xl transition hover:bg-white/18"
               >
                 <X size={18} />
               </button>
