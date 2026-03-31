@@ -51,18 +51,18 @@ export default function ExhibitionForm({
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div>
             <h3 className="mt-2 text-2xl font-semibold tracking-tight text-gray-900">
-              {isEdit ? "Upravit vystavu" : "Pridat vystavu"}
+              {isEdit ? "Upravit výstavu" : "Přidat výstavu"}
             </h3>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-gray-600">
-              Povinné jsou název, datum a popis. Fotky i autor jsou volitelne,
-              kdyz nic nenahrajes, pouzije se placeholder.
+              Povinné je datum a jméno autora. Ostatní jsou volitelné položky,
+              které jdou doplnit i později.
             </p>
           </div>
 
           <div className="flex flex-wrap gap-2">
             <Button type="button" onClick={handleCancel} variant="secondary">
               <X size={18} />
-              Zrusit
+              Zrušit
             </Button>
 
             <Button
@@ -70,7 +70,7 @@ export default function ExhibitionForm({
               disabled={creating || isUploading}
               className="disabled:hover:translate-y-0 disabled:hover:scale-100"
             >
-              {creating ? "Ukladam..." : "Ulozit vystavu"}
+              {creating ? "Ukládám..." : "Uložit výstavu"}
             </Button>
           </div>
         </div>

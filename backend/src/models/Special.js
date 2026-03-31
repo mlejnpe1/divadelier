@@ -6,6 +6,11 @@ const specialSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    authorName: {
+      type: String,
+      trim: true,
+      default: "",
+    },
     information: {
       type: String,
     },

@@ -19,9 +19,9 @@ function getExhibitionDisplayTitle(exhibition) {
   if (title) return title;
 
   const authorName = String(exhibition?.author?.name || "").trim();
-  if (authorName) return `Vystava autora ${authorName}`;
+  if (authorName) return `Výstava autora ${authorName}`;
 
-  return "Vystava bez nazvu";
+  return "Výstava bez názvu";
 }
 
 export default function ExhibitionCarousel({ items = [], loading }) {
@@ -74,13 +74,13 @@ export default function ExhibitionCarousel({ items = [], loading }) {
     return (
       <div className="rounded-[2rem] border border-white/40 bg-white/35 px-6 py-12 text-center shadow-[0_20px_55px_rgba(15,23,42,0.12)] backdrop-blur-md">
         <p className="text-sm font-medium uppercase tracking-[0.22em] text-[#9a6a2a]">
-          VVV prehled
+          VVV přehled
         </p>
         <h3 className="mt-3 text-2xl font-semibold tracking-tight text-gray-900">
-          Zatim tu nejsou zadne dalsi vystavy
+          Zatím tu nejsou žádné další výstavy
         </h3>
         <p className="mt-3 text-sm leading-relaxed text-gray-600">
-          Jakmile pribydou nove terminy, objevi se tady v tomhle prehledu.
+          Jakmile přibydou nové termíny, objeví se tady v tomhle přehledu.
         </p>
       </div>
     );
@@ -137,7 +137,7 @@ export default function ExhibitionCarousel({ items = [], loading }) {
 
                   <div className="mt-4 flex items-center justify-between gap-3">
                     <div className="rounded-full border border-[#ffd799]/30 bg-[rgba(245,166,35,0.14)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#9a590b]">
-                      {formatDate(exh.date) || "Pripravujeme"}
+                      {formatDate(exh.date) || "Připravujeme"}
                     </div>
 
                     <div className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[#ffd799]/30 bg-[rgba(255,214,145,0.16)] text-[#9a590b] shadow-[0_10px_24px_rgba(95,47,0,0.08)] backdrop-blur-md transition duration-300 group-hover:bg-[#f5a623] group-hover:text-white">
@@ -156,7 +156,7 @@ export default function ExhibitionCarousel({ items = [], loading }) {
           type="button"
           onClick={() => scroll("left")}
           className="absolute left-2 top-1/2 z-20 inline-flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/55 bg-white/80 text-[#9a6a2a] shadow-[0_18px_35px_rgba(15,23,42,0.16)] backdrop-blur-md transition duration-300 hover:bg-[#f5a623] hover:text-white"
-          aria-label="Posunout vystavy doleva"
+          aria-label="Posunout výstavy doleva"
         >
           <ArrowLeft size={20} />
         </button>
@@ -167,7 +167,7 @@ export default function ExhibitionCarousel({ items = [], loading }) {
           type="button"
           onClick={() => scroll("right")}
           className="absolute right-2 top-1/2 z-20 inline-flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/55 bg-white/80 text-[#9a6a2a] shadow-[0_18px_35px_rgba(15,23,42,0.16)] backdrop-blur-md transition duration-300 hover:bg-[#f5a623] hover:text-white"
-          aria-label="Posunout vystavy doprava"
+          aria-label="Posunout výstavy doprava"
         >
           <ArrowRight size={20} />
         </button>

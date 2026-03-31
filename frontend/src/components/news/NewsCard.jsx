@@ -1,5 +1,6 @@
 import React from "react";
-import { Clock3, Megaphone, Trash2 } from "lucide-react";
+import { Clock3, Megaphone } from "lucide-react";
+import { DeleteActionButton } from "../layout/ActionIconButton";
 
 export default function NewsCard({ item, user, onDelete }) {
   return (
@@ -28,15 +29,7 @@ export default function NewsCard({ item, user, onDelete }) {
 
         <div className="mt-5 flex items-center justify-end gap-3">
           {user && (
-            <button
-              type="button"
-              onClick={onDelete}
-              className="rounded-full border border-[#ffd799]/30 bg-[rgba(255,214,145,0.16)] p-2 text-[#a13a27] transition hover:bg-red-500/12"
-              aria-label="Smazat aktualitu"
-              title="Smazat"
-            >
-              <Trash2 size={18} />
-            </button>
+            <DeleteActionButton label="Smazat aktualitu" onClick={onDelete} />
           )}
         </div>
       </div>

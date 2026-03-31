@@ -16,7 +16,12 @@ import { toastAction } from "../utils/toastAction.jsx";
 import { apiFetch } from "../utils/api.js";
 import { confirmToast } from "../utils/confirmToast.jsx";
 
-const EMPTY_SPECIAL_DRAFT = { name: "", information: "", link: "" };
+const EMPTY_SPECIAL_DRAFT = {
+  name: "",
+  authorName: "",
+  information: "",
+  link: "",
+};
 
 const TVVVPage = () => {
   const { data, loading } = useFetch("/api/specials");
@@ -35,8 +40,14 @@ const TVVVPage = () => {
 
   const controls = useListControls(specials, {
     pageSize: 8,
-    getSortValue: (s) => s.name,
-    searchFields: [(s) => s.name, (s) => s.information, (s) => s.link],
+    getSortValue: (s) => new Date(s.createdAt || 0),
+    sortDirection: "desc",
+    searchFields: [
+      (s) => s.name,
+      (s) => s.authorName,
+      (s) => s.information,
+      (s) => s.link,
+    ],
   });
 
   const openCreate = () => {
@@ -49,6 +60,7 @@ const TVVVPage = () => {
     setEditingId(s._id);
     setDraft({
       name: s.name || "",
+      authorName: s.authorName || "",
       information: s.information || "",
       link: s.link || "",
     });
@@ -80,6 +92,7 @@ const TVVVPage = () => {
 
     const payload = {
       name: draft.name.trim(),
+      authorName: (draft.authorName || "").trim(),
       information: (draft.information || "").trim(),
       link: draft.link.trim(),
     };
@@ -158,9 +171,9 @@ const TVVVPage = () => {
       <Section border={true}>
         <p className="text-gray-700">
           Televize ve výloze vás každý týden informuje o událostech v
-          Divadelieru v Novinkách z výlohy a ve Speciálu z Divadelieru se můžete
-          podívat na rozhovory s úžasnými hosty, kteří Divadelier navštívili či
-          v něm vystupovali.
+          Divadelieru v Novinkách z výlohy a ve Speciálu z Divadelieru se
+          můžete podívat na rozhovory s úžasnými hosty, kteří Divadelier
+          navštívili či v něm vystupovali.
         </p>
       </Section>
 

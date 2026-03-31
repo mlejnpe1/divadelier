@@ -17,7 +17,7 @@ export default function ExhibitionCoverField({
     draft.coverImage?.alt?.trim() ||
     draft.title?.trim() ||
     draft.author?.name?.trim() ||
-    "Titulni fotka vystavy";
+    "Titulní fotka výstavy";
 
   const uploadCoverFile = async (file) => {
     if (!file) {
@@ -42,9 +42,9 @@ export default function ExhibitionCoverField({
         },
       });
 
-      toast.success("Titulni fotka byla nahrana.");
+      toast.success("Titulní fotka byla nahrána.");
     } catch (error) {
-      toast.error(error.message || "Upload titulni fotky se nepodaril.");
+      toast.error(error.message || "Upload titulní fotky se nepodařil.");
     } finally {
       setIsUploading(false);
       if (coverInputRef.current) {
@@ -70,7 +70,7 @@ export default function ExhibitionCoverField({
         },
       });
     } catch (error) {
-      toast.error(error.message || "Smazani titulni fotky se nepodarilo.");
+      toast.error(error.message || "Smazání titulní fotky se nepodařilo.");
     }
   };
 
@@ -78,9 +78,9 @@ export default function ExhibitionCoverField({
     <section className={sectionClass}>
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div>
-          <p className="text-lg font-semibold text-gray-900">Titulni fotka</p>
+          <p className="text-lg font-semibold text-gray-900">Titulní fotka</p>
           <p className="mt-1 text-sm text-gray-600">
-            Hlavni fotka je volitelna. Kdyz ji nenahrajes, zobrazi se
+            Hlavní fotka je volitelná. Když ji nenahraješ, zobrazí se
             placeholder.
           </p>
         </div>
@@ -137,13 +137,13 @@ export default function ExhibitionCoverField({
             <div>
               <p className="text-base font-semibold text-[#7a4d16]">
                 {isUploading
-                  ? "Nahravam titulni fotku..."
+                  ? "Nahrávám titulní fotku..."
                   : draft.coverImage?.url
-                    ? "Klikni nebo pretahni sem novou titulni fotku"
-                    : "Klikni nebo pretahni sem titulni fotku"}
+                    ? "Klikni nebo přetáhni sem novou titulní fotku"
+                    : "Klikni nebo přetáhni sem titulní fotku"}
               </p>
               <p className="mt-1 text-sm leading-relaxed text-[#8f6024]">
-                Podporovane formaty: PNG, JPG, WEBP, AVIF.
+                Podporované formáty: PNG, JPG, WEBP, AVIF.
               </p>
             </div>
 
@@ -159,8 +159,8 @@ export default function ExhibitionCoverField({
 
             <div className="rounded-2xl border border-white/60 bg-white/55 px-4 py-3 text-sm text-gray-600">
               {draft.coverImage?.url
-                ? "Titulni fotka je pripravena k ulozeni."
-                : "Kdyz nic nenahrajes, pouzije se placeholder."}
+                ? "Titulní fotka je připravena k uložení."
+                : "Když nic nenahraješ, použije se placeholder."}
             </div>
           </div>
         </div>
@@ -169,9 +169,9 @@ export default function ExhibitionCoverField({
       <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-end">
         <label className="flex-1 space-y-2">
           <span className="text-sm font-semibold text-gray-800">
-            Popis titulni fotky
+            Popis titulní fotky
             <span className="ml-2 text-xs font-medium uppercase tracking-[0.18em] text-gray-400">
-              volitelne
+              volitelné
             </span>
           </span>
           <input
@@ -185,7 +185,7 @@ export default function ExhibitionCoverField({
                 },
               }))
             }
-            placeholder="Kdyz zustane prazdne, doplni se automaticky."
+            placeholder="Když zůstane prázdné, doplní se automaticky."
             className={fieldClass}
           />
         </label>
@@ -196,7 +196,7 @@ export default function ExhibitionCoverField({
           disabled={!draft.coverImage?.url}
           className="rounded-2xl border border-red-200/70 bg-red-50/75 px-4 py-3 text-sm font-medium text-red-600 transition hover:bg-red-100/85 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Odebrat titulni fotku
+          Odebrat titulní fotku
         </button>
       </div>
     </section>

@@ -28,7 +28,7 @@ export default function SpecialForm({
               TV VV
             </p>
             <p className="text-xl font-bold text-[#3d2514]">
-              {isEdit ? "Upravit speciál" : "Přidat speciál"}
+              {isEdit ? "Upravit Speciál" : "Přidat Speciál"}
             </p>
           </div>
 
@@ -56,7 +56,7 @@ export default function SpecialForm({
         <div className="grid gap-4">
           <label className="grid gap-2">
             <span className="text-sm font-medium text-[#5f4126]">
-              Název speciálu
+              Název Speciálu
             </span>
             <input
               value={draft.name}
@@ -64,6 +64,20 @@ export default function SpecialForm({
                 setDraft((d) => ({ ...d, name: e.target.value }))
               }
               placeholder="Název (povinné)"
+              className={inputClassName}
+            />
+          </label>
+
+          <label className="grid gap-2">
+            <span className="text-sm font-medium text-[#5f4126]">
+              Jméno autora / hosta
+            </span>
+            <input
+              value={draft.authorName || ""}
+              onChange={(e) =>
+                setDraft((d) => ({ ...d, authorName: e.target.value }))
+              }
+              placeholder="Jméno podle kterého se bude filtrovat"
               className={inputClassName}
             />
           </label>

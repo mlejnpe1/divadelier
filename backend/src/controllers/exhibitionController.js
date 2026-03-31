@@ -124,11 +124,7 @@ async function cleanupR2Keys(keys, logLabel) {
 export async function getAllExhibitions(req, res) {
   try {
     const q = String(req.query.q || "").trim();
-    const page = Math.max(1, parseInt(req.query.page || "1", 10));
-    const limit = Math.max(
-      1,
-      Math.min(50, parseInt(req.query.limit || "5", 10)),
-    );
+    const requestedYear = parseInt(req.query.year || "", 10);
 
     const filter = {};
     if (q) {
@@ -136,22 +132,52 @@ export async function getAllExhibitions(req, res) {
       filter.$or = [{ title: rx }, { information: rx }, { "author.name": rx }];
     }
 
-    const total = await Exhibition.countDocuments(filter);
-    const pageCount = Math.max(1, Math.ceil(total / limit));
-    const safePage = Math.min(page, pageCount);
+    const yearBuckets = await Exhibition.aggregate([
+      { $match: filter },
+      { $group: { _id: { $year: "$date" } } },
+      { $sort: { _id: -1 } },
+    ]);
 
-    const items = await Exhibition.find(filter)
-      .sort({ date: -1, _id: 1 })
-      .skip((safePage - 1) * limit)
-      .limit(limit)
-      .lean();
+    const years = yearBuckets
+      .map((bucket) => bucket?._id)
+      .filter((year) => Number.isInteger(year));
+
+    const activeYear = years.includes(requestedYear) ? requestedYear : years[0];
+
+    let items = [];
+    let total = 0;
+
+    if (activeYear) {
+      const yearStart = new Date(Date.UTC(activeYear, 0, 1));
+      const nextYearStart = new Date(Date.UTC(activeYear + 1, 0, 1));
+      const yearFilter = {
+        ...filter,
+        date: {
+          $gte: yearStart,
+          $lt: nextYearStart,
+        },
+      };
+
+      [items, total] = await Promise.all([
+        Exhibition.find(yearFilter)
+          .sort({ date: -1, _id: 1 })
+          .lean(),
+        Exhibition.countDocuments(yearFilter),
+      ]);
+    }
+
+    const pageCount = years.length;
+    const page =
+      activeYear && pageCount ? years.indexOf(activeYear) + 1 : 1;
 
     return res.status(200).json({
       items,
       total,
-      page: safePage,
-      limit,
+      page,
+      limit: total,
       pageCount,
+      year: activeYear || null,
+      years,
     });
   } catch (error) {
     console.error("Error in getAllExhibitions controller.", error);

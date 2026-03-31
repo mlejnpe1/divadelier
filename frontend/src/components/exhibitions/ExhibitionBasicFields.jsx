@@ -7,14 +7,14 @@ export default function ExhibitionBasicFields({ draft, setDraft }) {
       <div className="grid gap-4 md:grid-cols-2">
         <label className="space-y-2">
           <span className="text-sm font-semibold text-gray-800">
-            Nazev vystavy
+            Název výstavy
           </span>
           <input
             value={draft.title}
             onChange={(event) =>
               setDraft((prev) => ({ ...prev, title: event.target.value }))
             }
-            placeholder="Napriklad Jarni kolekce"
+            placeholder="Název výstavy"
             className={fieldClass}
           />
         </label>
@@ -34,7 +34,7 @@ export default function ExhibitionBasicFields({ draft, setDraft }) {
       </div>
 
       <label className="mt-4 block space-y-2">
-        <span className="text-sm font-semibold text-gray-800">O vystave</span>
+        <span className="text-sm font-semibold text-gray-800">O výstavě</span>
         <textarea
           value={draft.information}
           onChange={(event) =>
@@ -44,7 +44,7 @@ export default function ExhibitionBasicFields({ draft, setDraft }) {
             }))
           }
           rows={4}
-          placeholder="Strucny popis vystavy, atmosfery a autora."
+          placeholder="Stručný popis výstavy"
           className={`${fieldClass} min-h-[132px] resize-y`}
         />
       </label>

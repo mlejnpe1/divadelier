@@ -43,11 +43,11 @@ export default function ExhibitionImagesEditor({
 
       toast.success(
         files.length === 1
-          ? "Fotka byla nahrana."
-          : `Nahrano ${files.length} fotek.`,
+          ? "Fotka byla nahrána."
+          : `Nahráno ${files.length} fotek.`,
       );
     } catch (error) {
-      toast.error(error.message || "Upload galerie se nepodaril.");
+      toast.error(error.message || "Upload galerie se nepodařil.");
     } finally {
       setIsUploading(false);
       if (inputRef.current) {
@@ -82,7 +82,7 @@ export default function ExhibitionImagesEditor({
         ),
       }));
     } catch (error) {
-      toast.error(error.message || "Smazani fotky se nepodarilo.");
+      toast.error(error.message || "Smazání fotky se nepodařilo.");
     }
   };
 
@@ -92,8 +92,8 @@ export default function ExhibitionImagesEditor({
         <div>
           <p className="text-lg font-semibold text-gray-900">Galerie fotek</p>
           <p className="mt-1 text-sm text-gray-600">
-            Nahraj vic fotek najednou. URL zustavaji skryte a popis fotky je jen
-            volitelny. Kdyz galerii nevyplnis, zobrazi se placeholder.
+            Nahraj víc fotek najednou. URL zůstávají skryté a popis fotky je jen
+            volitelný. Když galerii nevyplníš, zobrazí se placeholder.
           </p>
         </div>
 
@@ -129,21 +129,21 @@ export default function ExhibitionImagesEditor({
       >
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-base font-semibold text-[#7a4d16]">
-              {isUploading
-                ? "Nahravam galerii..."
-                : "Klikni nebo pretahni sem fotky galerie"}
-            </p>
-            <p className="mt-1 text-sm leading-relaxed text-[#8f6024]">
-              Muzes nahrat vice souboru najednou. Podporovane formaty: PNG, JPG,
-              WEBP, AVIF.
-            </p>
-          </div>
+              <p className="text-base font-semibold text-[#7a4d16]">
+                {isUploading
+                  ? "Nahrávám galerii..."
+                  : "Klikni nebo přetáhni sem fotky galerie"}
+              </p>
+              <p className="mt-1 text-sm leading-relaxed text-[#8f6024]">
+                Můžeš nahrát více souborů najednou. Podporované formáty: PNG, JPG,
+                WEBP, AVIF.
+              </p>
+            </div>
 
           <div className="rounded-2xl border border-white/55 bg-white/60 px-4 py-3 text-sm text-gray-600">
             {draft.images?.length
-              ? "Fotky jsou pripravene k ulozeni."
-              : "Kdyz nic nenahrajes, pouzije se placeholder."}
+              ? "Fotky jsou připravené k uložení."
+              : "Když nic nenahraješ, použije se placeholder."}
           </div>
         </div>
 
@@ -193,7 +193,7 @@ export default function ExhibitionImagesEditor({
                   <span className="text-sm font-semibold text-gray-800">
                     Popis fotky
                     <span className="ml-2 text-xs font-medium uppercase tracking-[0.18em] text-gray-400">
-                      volitelne
+                      volitelné
                     </span>
                   </span>
                   <input
@@ -206,7 +206,7 @@ export default function ExhibitionImagesEditor({
                         return { ...prev, images: next };
                       });
                     }}
-                    placeholder={`Kdyz zustane prazdne, doplni se Fotka ${index + 1}.`}
+                    placeholder={`Když zůstane prázdné, doplní se Fotka ${index + 1}.`}
                     className={fieldClass}
                   />
                 </label>
@@ -234,11 +234,11 @@ export default function ExhibitionImagesEditor({
 
           <div className="space-y-2 p-4">
             <p className="text-sm font-semibold text-gray-800">
-              Galerie zatim nema vlastni fotky
+              Galerie zatím nemá vlastní fotky
             </p>
             <p className="text-sm text-gray-600">
-              Pokud nic nenahrajes, pouzije se tento placeholder i na detailu
-              vystavy.
+              Pokud nic nenahraješ, použije se tento placeholder i na detailu
+              výstavy.
             </p>
           </div>
         </article>

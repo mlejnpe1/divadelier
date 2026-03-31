@@ -1,5 +1,9 @@
 import React from "react";
-import { CalendarDays, Edit2, Images, Trash2 } from "lucide-react";
+import { CalendarDays, Images } from "lucide-react";
+import {
+  DeleteActionButton,
+  EditActionButton,
+} from "../layout/ActionIconButton";
 
 export default function MeetingCard({
   meeting,
@@ -75,27 +79,21 @@ export default function MeetingCard({
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
             <p className="inline-flex items-center gap-2 rounded-full border border-[#ffe1b0]/24 bg-[rgba(255,214,145,0.16)] px-3 py-2 text-xs font-medium text-[#fff8ef]">
               <CalendarDays size={14} />
-              Kdy se schazime: {meeting.day_in_week}
+              Kdy se scházíme: {meeting.day_in_week}
             </p>
 
             {user && (
               <div className="flex items-center gap-2">
-                <button
-                  type="button"
+                <EditActionButton
+                  label={`Upravit schůzku ${meeting.title}`}
                   onClick={handleEdit}
-                  className="rounded-full border border-[#ffe1b0]/24 bg-[rgba(255,214,145,0.16)] p-2 text-white transition hover:bg-blue-400/60"
-                  aria-label={`Upravit schuzku ${meeting.title}`}
-                >
-                  <Edit2 size={18} />
-                </button>
-                <button
-                  type="button"
+                  tone="dark"
+                />
+                <DeleteActionButton
+                  label={`Smazat schůzku ${meeting.title}`}
                   onClick={handleDelete}
-                  className="rounded-full border border-[#ffe1b0]/24 bg-[rgba(255,214,145,0.16)] p-2 text-white transition hover:bg-red-500/35"
-                  aria-label={`Smazat schuzku ${meeting.title}`}
-                >
-                  <Trash2 size={18} />
-                </button>
+                  tone="dark"
+                />
               </div>
             )}
           </div>

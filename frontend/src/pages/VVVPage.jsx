@@ -45,11 +45,12 @@ function getExhibitionDisplayTitle(exhibition) {
 }
 
 const VVVPage = () => {
+  const currentYear = new Date(Date.now()).getFullYear();
   const { user } = useAuth();
   const [featuredExhibition, setFeaturedExhibition] = useState(null);
   const [loadingFeaturedExhibition, setLoadingFeaturedExhibition] =
     useState(true);
-  const [planPage, setPlanPage] = useState(1);
+  const [selectedPlanYear, setSelectedPlanYear] = useState(currentYear);
   const [planQuery, setPlanQuery] = useState("");
   const [planRefresh, setPlanRefresh] = useState(0);
   const [editingExhibitionId, setEditingExhibitionId] = useState(null);
@@ -60,24 +61,45 @@ const VVVPage = () => {
   const [showCreateExhibition, setShowCreateExhibition] = useState(false);
   const [carouselRefresh, setCarouselRefresh] = useState(0);
 
-  const planLimit = 5;
   const debouncedPlanQuery = useDebouncedValue(planQuery, 300);
 
   const planUrl = useMemo(() => {
     const params = new URLSearchParams();
-    params.set("page", String(planPage));
-    params.set("limit", String(planLimit));
     params.set("r", String(planRefresh));
+    if (selectedPlanYear) {
+      params.set("year", String(selectedPlanYear));
+    }
     if (debouncedPlanQuery.trim()) {
       params.set("q", debouncedPlanQuery.trim());
     }
     return `/api/exhibitions?${params.toString()}`;
-  }, [planPage, planLimit, debouncedPlanQuery, planRefresh]);
+  }, [selectedPlanYear, debouncedPlanQuery, planRefresh]);
 
   const { data: planData, loading: planLoading } = useFetch(planUrl);
   const { data: carouselData, loading: carouselLoading } = useFetch(
     `/api/exhibitions/carousel?limit=6&r=${carouselRefresh}`,
   );
+
+  useEffect(() => {
+    if (
+      !planLoading &&
+      selectedPlanYear !== null &&
+      Array.isArray(planData?.years) &&
+      !planData.years.includes(selectedPlanYear)
+    ) {
+      setSelectedPlanYear(planData?.year ?? null);
+    }
+  }, [planData?.year, planData?.years, planLoading, selectedPlanYear]);
+
+  const planYearItems = useMemo(() => {
+    if (!Array.isArray(planData?.years)) return [];
+    return planData.years.map((year) => ({
+      value: year,
+      label: String(year),
+    }));
+  }, [planData?.years]);
+
+  const activePlanYear = selectedPlanYear ?? planData?.year ?? null;
 
   const refreshFeaturedExhibition = async () => {
     setLoadingFeaturedExhibition(true);
@@ -183,7 +205,7 @@ const VVVPage = () => {
     closeForm();
     await refreshFeaturedExhibition();
     setPlanQuery("");
-    setPlanPage(1);
+    setSelectedPlanYear(currentYear);
     setPlanRefresh((x) => x + 1);
     setCarouselRefresh((x) => x + 1);
   };
@@ -266,7 +288,7 @@ const VVVPage = () => {
 
       await refreshFeaturedExhibition();
       setPlanQuery("");
-      setPlanPage(1);
+      setSelectedPlanYear(currentYear);
       setPlanRefresh((x) => x + 1);
       setCarouselRefresh((x) => x + 1);
       return true;
@@ -420,7 +442,7 @@ const VVVPage = () => {
         <ListToolbar
           query={planQuery}
           setQuery={(value) => {
-            setPlanPage(1);
+            setSelectedPlanYear(currentYear);
             setPlanQuery(value);
           }}
         />
@@ -441,9 +463,11 @@ const VVVPage = () => {
           />
 
           <Pagination
-            page={planData?.page ?? planPage}
-            pageCount={planData?.pageCount || 1}
-            onPageChange={(page) => setPlanPage(page)}
+            page={activePlanYear}
+            pageCount={planYearItems.length}
+            items={planYearItems}
+            itemTypeLabel="rok"
+            onPageChange={(year) => setSelectedPlanYear(year)}
           />
         </div>
       </Section>

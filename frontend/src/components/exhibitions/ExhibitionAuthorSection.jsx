@@ -43,9 +43,9 @@ export default function ExhibitionAuthorSection({
         },
       });
 
-      toast.success("Fotka autora byla nahrana.");
+      toast.success("Fotka autora byla nahrána.");
     } catch (error) {
-      toast.error(error.message || "Upload fotky autora se nepodaril.");
+      toast.error(error.message || "Upload fotky autora se nepodařil.");
     } finally {
       setIsUploading(false);
       if (authorPhotoInputRef.current) {
@@ -70,7 +70,7 @@ export default function ExhibitionAuthorSection({
         },
       });
     } catch (error) {
-      toast.error(error.message || "Smazani fotky autora se nepodarilo.");
+      toast.error(error.message || "Smazání fotky autora se nepodařilo.");
     }
   };
 
@@ -84,12 +84,12 @@ export default function ExhibitionAuthorSection({
         <div>
           <p className="text-lg font-semibold text-gray-900">Autor</p>
           <p className="mt-1 text-sm text-gray-600">
-            Povinny je alespon zaznam jmena autora. Ostatni udaje jsou volitelne.
+            Povinný je alespoň záznam jména autora. Ostatní údaje jsou volitelné.
           </p>
         </div>
 
         <span className="inline-flex items-center rounded-full border border-white/60 bg-white/55 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-[#8a5d24]">
-          {showSection ? "Skryt" : "Rozbalit"}
+          {showSection ? "Skrýt" : "Rozbalit"}
           <ChevronDown
             size={16}
             className={`ml-2 transition ${showSection ? "rotate-180" : ""}`}
@@ -101,9 +101,9 @@ export default function ExhibitionAuthorSection({
         <div className="mt-5">
           <div className="grid gap-4 md:grid-cols-2">
             <label className="space-y-2">
-                <span className="text-sm font-semibold text-gray-800">
-                  Jmeno autora *
-                </span>
+              <span className="text-sm font-semibold text-gray-800">
+                Jméno autora *
+              </span>
               <input
                 required
                 value={draft.author.name}
@@ -113,7 +113,7 @@ export default function ExhibitionAuthorSection({
                     author: { ...prev.author, name: event.target.value },
                   }))
                 }
-                placeholder="Napriklad Jana Novakova"
+                placeholder="Například Jana Nováková"
                 className={fieldClass}
               />
             </label>
@@ -176,13 +176,13 @@ export default function ExhibitionAuthorSection({
                     <div>
                       <p className="text-sm font-semibold text-[#7a4d16]">
                         {isUploading
-                          ? "Nahravam fotku autora..."
+                          ? "Nahrávám fotku autora..."
                           : draft.author?.photo
-                            ? "Klikni nebo pretahni sem novou fotku autora"
-                            : "Klikni nebo pretahni sem fotku autora"}
+                            ? "Klikni nebo přetáhni sem novou fotku autora"
+                            : "Klikni nebo přetáhni sem fotku autora"}
                       </p>
                       <p className="mt-1 text-sm leading-relaxed text-[#8f6024]">
-                        Volitelne. Kdyz nic nenahrajes, pouzije se placeholder.
+                        Volitelné. Když nic nenahraješ, použije se placeholder.
                       </p>
                     </div>
 
@@ -214,8 +214,8 @@ export default function ExhibitionAuthorSection({
             <span className="text-sm font-semibold text-gray-800">
               Medailonek autora
             </span>
-            <textarea
-              value={draft.author.bio}
+              <textarea
+                value={draft.author.bio}
               onChange={(event) =>
                 setDraft((prev) => ({
                   ...prev,
@@ -223,7 +223,7 @@ export default function ExhibitionAuthorSection({
                 }))
               }
               rows={3}
-              placeholder="Kratke predstaveni autora."
+              placeholder="Krátké představení autora."
               className={`${fieldClass} min-h-[108px] resize-y`}
             />
           </label>
@@ -336,7 +336,7 @@ export default function ExhibitionAuthorSection({
                 className="inline-flex items-center gap-2 rounded-2xl border border-white/60 bg-white/55 px-4 py-3 text-sm font-medium text-[#8a5d24] transition hover:bg-white/75"
               >
                 <Plus size={16} />
-                Pridat dalsi web
+                Přidat další web
               </button>
             </div>
           </label>

@@ -1,7 +1,11 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { motion as Motion } from "framer-motion";
 import Placeholder from "../../assets/images/placeholder.png";
-import { Calendar, Edit2, Trash2 } from "lucide-react";
+import { Calendar } from "lucide-react";
+import {
+  DeleteActionButton,
+  EditActionButton,
+} from "../layout/ActionIconButton";
 
 export default function TimelineCard({
   item,
@@ -12,7 +16,7 @@ export default function TimelineCard({
   onDelete,
 }) {
   return (
-    <motion.div
+    <Motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
@@ -43,31 +47,15 @@ export default function TimelineCard({
 
           {user && (
             <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onEdit?.();
-                }}
-                className="p-2 rounded-md hover:bg-blue-100 text-blue-700 transition"
-                aria-label="Upravit"
-                title="Upravit"
-              >
-                <Edit2 size={18} />
-              </button>
+              <EditActionButton
+                onClick={onEdit}
+                stopPropagation={true}
+              />
 
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete?.();
-                }}
-                className="p-2 rounded-md hover:bg-red-100 text-red-700 transition"
-                aria-label="Smazat"
-                title="Smazat"
-              >
-                <Trash2 size={18} />
-              </button>
+              <DeleteActionButton
+                onClick={onDelete}
+                stopPropagation={true}
+              />
             </div>
           )}
         </div>
@@ -81,6 +69,6 @@ export default function TimelineCard({
           </p>
         )}
       </div>
-    </motion.div>
+    </Motion.div>
   );
 }

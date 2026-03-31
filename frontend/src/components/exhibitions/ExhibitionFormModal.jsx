@@ -56,7 +56,7 @@ export default function ExhibitionFormModal({
     <div className="fixed inset-0 z-[120] flex items-center justify-center p-3 md:p-6">
       <button
         type="button"
-        aria-label="Zavrit modal"
+        aria-label="Zavřít modal"
         onClick={handleRequestClose}
         className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,244,222,0.34),rgba(15,23,42,0.62))] backdrop-blur-md"
       />
@@ -69,7 +69,7 @@ export default function ExhibitionFormModal({
           <div className="flex items-center justify-between border-b border-white/20 px-5 py-4 md:px-7">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#f0b24d]">
-                {isEdit ? "Upravit vystavu" : "Pridat vystavu"}
+                {isEdit ? "Upravit výstavu" : "Přidat výstavu"}
               </p>
             </div>
 

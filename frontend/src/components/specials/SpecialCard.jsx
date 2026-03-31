@@ -1,6 +1,10 @@
 import React from "react";
-import { ExternalLink, Edit2, Trash2 } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import Button from "../layout/Button";
+import {
+  DeleteActionButton,
+  EditActionButton,
+} from "../layout/ActionIconButton";
 
 export default function SpecialCard({ special, user, onEdit, onDelete }) {
   return (
@@ -11,11 +15,18 @@ export default function SpecialCard({ special, user, onEdit, onDelete }) {
       <div className="relative flex items-start justify-between gap-4">
         <div className="min-w-0">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.28em] text-[#9a6a36]">
-            TV VV Speciál
+            TV VV speciál
           </p>
           <h3 className="text-xl font-bold text-[#3d2514] md:text-2xl">
             {special.name}
           </h3>
+
+          {special.authorName ? (
+            <p className="mt-2 text-sm font-medium text-[#8c6a43]">
+              Host: {special.authorName}
+            </p>
+          ) : null}
+
           {special.information ? (
             <p className="mt-3 whitespace-pre-line text-[15px] leading-7 text-[#6b4b2b]">
               {special.information}
@@ -27,22 +38,8 @@ export default function SpecialCard({ special, user, onEdit, onDelete }) {
 
         {user && (
           <div className="flex shrink-0 gap-2">
-            <button
-              type="button"
-              onClick={onEdit}
-              className="rounded-full border border-white/50 bg-white/60 p-2 text-[#8a5a11] shadow-[0_10px_24px_rgba(15,23,42,0.08)] backdrop-blur-md transition hover:-translate-y-0.5 hover:bg-white"
-              aria-label="Upravit"
-            >
-              <Edit2 size={18} />
-            </button>
-            <button
-              type="button"
-              onClick={onDelete}
-              className="rounded-full border border-white/50 bg-white/60 p-2 text-[#b45309] shadow-[0_10px_24px_rgba(15,23,42,0.08)] backdrop-blur-md transition hover:-translate-y-0.5 hover:bg-white"
-              aria-label="Smazat"
-            >
-              <Trash2 size={18} />
-            </button>
+            <EditActionButton onClick={onEdit} />
+            <DeleteActionButton onClick={onDelete} />
           </div>
         )}
       </div>
@@ -56,7 +53,7 @@ export default function SpecialCard({ special, user, onEdit, onDelete }) {
           size="sm"
           className="w-fit shrink-0 border-white/60 bg-white/70 text-[#4a2c14] shadow-[0_12px_30px_rgba(95,47,0,0.1)] backdrop-blur-md hover:bg-white"
         >
-          Přejí na YT <ExternalLink size={16} />
+          Přejít na YouTube <ExternalLink size={16} />
         </Button>
       </div>
     </article>

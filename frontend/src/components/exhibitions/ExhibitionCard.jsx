@@ -1,6 +1,10 @@
 import React from "react";
-import { ArrowRight, CalendarDays, Edit2, Trash2 } from "lucide-react";
+import { ArrowRight, CalendarDays } from "lucide-react";
 import Placeholder from "../../assets/images/placeholder.png";
+import {
+  DeleteActionButton,
+  EditActionButton,
+} from "../layout/ActionIconButton";
 import Button from "../layout/Button";
 
 function truncateText(text, maxLength = 220) {
@@ -14,9 +18,9 @@ function getExhibitionDisplayTitle(exhibition) {
   if (title) return title;
 
   const authorName = String(exhibition?.author?.name || "").trim();
-  if (authorName) return `Vystava autora ${authorName}`;
+  if (authorName) return `Výstava autora ${authorName}`;
 
-  return "Vystava bez nazvu";
+  return "Výstava bez názvu";
 }
 
 export default function ExhibitionCard({
@@ -58,7 +62,7 @@ export default function ExhibitionCard({
         <div className="flex flex-1 flex-col rounded-[1.6rem] border border-[#ffd799]/24 bg-white/55 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] backdrop-blur-sm">
           <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
             <span className="inline-flex items-center gap-2 rounded-full border border-[#ffd799]/30 bg-[rgba(245,166,35,0.14)] px-3 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[#9a590b]">
-              Vystava
+              Výstava
             </span>
 
             {exh.date ? (
@@ -84,29 +88,16 @@ export default function ExhibitionCard({
               size="sm"
               className="border-[#ffd799]/30 bg-[rgba(255,214,145,0.16)] text-[#5f4126] shadow-none hover:bg-[rgba(255,214,145,0.26)]"
             >
-              Vice informaci <ArrowRight className="h-4 w-4" />
+              Více informací <ArrowRight className="h-4 w-4" />
             </Button>
 
             {user ? (
               <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={onEdit}
-                  className="rounded-full p-2 text-blue-600 transition hover:bg-blue-200/70"
-                  aria-label="Upravit vystavu"
-                  title="Upravit"
-                >
-                  <Edit2 size={18} />
-                </button>
-                <button
-                  type="button"
+                <EditActionButton label="Upravit výstavu" onClick={onEdit} />
+                <DeleteActionButton
+                  label="Smazat výstavu"
                   onClick={onDelete}
-                  className="rounded-full p-2 text-red-600 transition hover:bg-red-200/70"
-                  aria-label="Smazat vystavu"
-                  title="Smazat"
-                >
-                  <Trash2 size={18} />
-                </button>
+                />
               </div>
             ) : null}
           </div>

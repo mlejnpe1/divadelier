@@ -4,7 +4,7 @@ export async function getAllSpecials(_, res) {
   try {
     const specials = await Special.find()
       .collation({ locale: "cs", strength: 1 })
-      .sort({ name: 1 });
+      .sort({ createdAt: -1 });
     res.status(200).json(specials);
   } catch (error) {
     console.error("Error in getAllSpecial Controller.");
@@ -26,8 +26,13 @@ export async function getSpecialById(req, res) {
 
 export async function createSpecial(req, res) {
   try {
-    const { name, information, link } = req.body;
-    const special = new Special({ name, information, link });
+    const { name, authorName, information, link } = req.body;
+    const special = new Special({
+      name,
+      authorName: String(authorName || "").trim(),
+      information,
+      link,
+    });
     const savedSpecial = await special.save();
     res.status(201).json(savedSpecial);
   } catch (error) {
@@ -38,11 +43,12 @@ export async function createSpecial(req, res) {
 
 export async function updateSpecial(req, res) {
   try {
-    const { name, information, link } = req.body;
+    const { name, authorName, information, link } = req.body;
     const updatedSpecial = await Special.findByIdAndUpdate(
       req.params.id,
       {
         name,
+        authorName: String(authorName || "").trim(),
         information,
         link,
       },
