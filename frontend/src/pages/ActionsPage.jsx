@@ -7,6 +7,7 @@ import ListToolbar from "../components/layout/ListToolbar";
 import Pagination from "../components/layout/Pagiantion";
 import TimelineList from "../components/actions/TimelineList";
 import ActionArchiveList from "../components/actions/ActionArchiveList.jsx";
+import ActionHeroPosterPanel from "../components/actions/ActionHeroPosterPanel.jsx";
 import ActionFormModal from "../components/actions/ActionFormModal.jsx";
 import ScrollHint from "../components/layout/ScrollHint";
 import { useAuth } from "../hooks/useAuth";
@@ -72,6 +73,7 @@ export default function ActionsPage() {
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [selectedArchiveYear, setSelectedArchiveYear] = useState(null);
   const [listRefresh, setListRefresh] = useState(0);
+  const [heroPosterRefresh, setHeroPosterRefresh] = useState(0);
   const [query, setQuery] = useState("");
   const [lastArchiveResult, setLastArchiveResult] = useState(null);
   const debouncedQuery = useDebouncedValue(query, 300);
@@ -96,6 +98,9 @@ export default function ActionsPage() {
   }, [debouncedQuery, listRefresh, selectedArchiveYear, selectedMonth, viewMode]);
 
   const { data: timelineData, loading } = useFetch(timelineUrl);
+  const { data: heroPosterData } = useFetch(
+    `/api/actions/hero-poster?r=${heroPosterRefresh}`,
+  );
 
   const refreshFeatured = async () => {
     try {
@@ -172,6 +177,8 @@ export default function ActionsPage() {
   const failedArchiveItems = Array.isArray(lastArchiveResult?.failedItems)
     ? lastArchiveResult.failedItems
     : [];
+  const shouldShowHeroPoster =
+    viewMode === "current" && (heroPosterData?.hasPoster || user?.admin);
 
   const refreshAll = async () => {
     setListRefresh((value) => value + 1);
@@ -261,6 +268,15 @@ export default function ActionsPage() {
           viewMode === "archive"
             ? "Jednoduchý archiv akcí za předchozí roky, řazený po jednotlivých ročnících."
             : featured?.description || ""
+        }
+        children={
+          shouldShowHeroPoster ? (
+            <ActionHeroPosterPanel
+              user={user}
+              refreshToken={heroPosterRefresh}
+              onUploaded={() => setHeroPosterRefresh((value) => value + 1)}
+            />
+          ) : null
         }
       />
       <div className="relative">

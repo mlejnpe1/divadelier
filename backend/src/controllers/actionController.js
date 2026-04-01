@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 import Action from "../models/Action.js";
+import ActionHeroPoster from "../models/ActionHeroPoster.js";
 import { deleteFromR2 } from "../lib/r2.js";
+
+const ACTION_HERO_POSTER_KEY = "actions-page-hero";
 
 function normalizeAction(doc) {
   const authorWebsites = Array.isArray(doc.author?.websites)
@@ -307,6 +310,16 @@ function isAdminRequest(req) {
   return Boolean(req.user?.admin);
 }
 
+function normalizeActionHeroPoster(doc) {
+  const hasPoster = Boolean(doc?.image?.contentType);
+
+  return {
+    hasPoster,
+    filename: hasPoster ? String(doc.image?.filename || "").trim() : "",
+    updatedAt: doc?.updatedAt || null,
+  };
+}
+
 export async function getAllActions(req, res) {
   try {
     const view = String(req.query.view || "current").trim().toLowerCase();
@@ -488,6 +501,76 @@ export async function archiveOldActions(req, res) {
     });
   } catch (error) {
     console.error("Error in archiveOldActions controller.", error);
+    return res.status(500).json({ message: "Internal server error." });
+  }
+}
+
+export async function getActionHeroPoster(req, res) {
+  try {
+    const poster = await ActionHeroPoster.findOne({
+      key: ACTION_HERO_POSTER_KEY,
+    }).select("image.filename image.contentType updatedAt");
+
+    return res.status(200).json(normalizeActionHeroPoster(poster));
+  } catch (error) {
+    console.error("Error in getActionHeroPoster controller.", error);
+    return res.status(500).json({ message: "Internal server error." });
+  }
+}
+
+export async function getActionHeroPosterFile(req, res) {
+  try {
+    const poster = await ActionHeroPoster.findOne({
+      key: ACTION_HERO_POSTER_KEY,
+    }).select("image");
+
+    if (!poster?.image?.data?.length || !poster?.image?.contentType) {
+      return res.status(404).json({ message: "Action hero poster not found." });
+    }
+
+    const filename = String(poster.image?.filename || "actions-hero-poster");
+
+    res.set("Content-Type", poster.image.contentType);
+    res.set("Content-Disposition", `inline; filename="${filename}"`);
+    res.set("Cache-Control", "public, max-age=300");
+
+    return res.send(poster.image.data);
+  } catch (error) {
+    console.error("Error in getActionHeroPosterFile controller.", error);
+    return res.status(500).json({ message: "Internal server error." });
+  }
+}
+
+export async function upsertActionHeroPoster(req, res) {
+  try {
+    if (!isAdminRequest(req)) {
+      return res.status(403).json({ message: "Nedostatečná oprávnění." });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ message: "Chybí soubor plakátu." });
+    }
+
+    const poster = await ActionHeroPoster.findOneAndUpdate(
+      { key: ACTION_HERO_POSTER_KEY },
+      {
+        key: ACTION_HERO_POSTER_KEY,
+        image: {
+          data: req.file.buffer,
+          contentType: req.file.mimetype,
+          filename: req.file.originalname,
+        },
+      },
+      {
+        new: true,
+        upsert: true,
+        setDefaultsOnInsert: true,
+      },
+    );
+
+    return res.status(200).json(normalizeActionHeroPoster(poster));
+  } catch (error) {
+    console.error("Error in upsertActionHeroPoster controller.", error);
     return res.status(500).json({ message: "Internal server error." });
   }
 }

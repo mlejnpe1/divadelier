@@ -267,7 +267,7 @@ const ActionDetailPage = () => {
 
       {isCoverOpen && (
         <div
-          className="fixed inset-0 z-[80] flex items-center justify-center bg-slate-950/84 p-4 backdrop-blur-xl md:p-8"
+          className="fixed inset-0 z-[110] flex items-center justify-center bg-slate-950/84 p-4 backdrop-blur-xl md:p-8"
           onClick={() => setIsCoverOpen(false)}
         >
           <div
