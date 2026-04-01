@@ -2,7 +2,7 @@ import React from "react";
 import { useParams, Link } from "react-router";
 import Section from "../components/layout/Section.jsx";
 import Placeholder from "../assets/images/placeholder.png";
-import { useFetch } from "../hooks/useFetch.jsx";
+import { useFetch } from "../hooks/useFetch.js";
 import { ArrowLeft } from "lucide-react";
 
 const ActionDetailPage = () => {

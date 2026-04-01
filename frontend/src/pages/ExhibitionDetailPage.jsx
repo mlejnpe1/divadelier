@@ -3,7 +3,7 @@ import { useParams } from "react-router";
 import { ArrowLeft, X } from "lucide-react";
 import Section from "../components/layout/Section.jsx";
 import Placeholder from "../assets/images/placeholder.png";
-import { useFetch } from "../hooks/useFetch.jsx";
+import { useFetch } from "../hooks/useFetch.js";
 import Gallery from "../components/layout/Gallery.jsx";
 import Button from "../components/layout/Button.jsx";
 

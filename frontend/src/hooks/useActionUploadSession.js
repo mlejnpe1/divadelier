@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { uploadFile, deleteUploadedFile } from "../../utils/handleFile.js";
+import { uploadFile, deleteUploadedFile } from "../utils/handleFile.js";
 
 export default function useExhibitionUploadSession({
   draft,
@@ -37,10 +37,7 @@ export default function useExhibitionUploadSession({
 
   const registerPendingKey = (key) => {
     const normalizedKey = String(key || "").trim();
-    if (
-      !normalizedKey ||
-      initialPersistedKeysRef.current.has(normalizedKey)
-    ) {
+    if (!normalizedKey || initialPersistedKeysRef.current.has(normalizedKey)) {
       return;
     }
 

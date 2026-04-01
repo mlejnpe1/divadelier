@@ -5,7 +5,7 @@ import ExhibitionCoverField from "./ExhibitionCoverField.jsx";
 import ExhibitionAuthorSection from "./ExhibitionAuthorSection.jsx";
 import ExhibitionImagesEditor from "./ExhibitionImagesEditor.jsx";
 import Button from "../layout/Button";
-import useExhibitionUploadSession from "./useExhibitionUploadSession.js";
+import useExhibitionUploadSession from "../../hooks/useExhibitionUploadSession.js";
 
 export default function ExhibitionForm({
   isEdit,

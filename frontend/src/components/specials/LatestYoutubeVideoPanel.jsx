@@ -1,6 +1,6 @@
 import React from "react";
 import { ExternalLink, PlayCircle, Youtube } from "lucide-react";
-import { useFetch } from "../../hooks/useFetch.jsx";
+import { useFetch } from "../../hooks/useFetch.js";
 import Button from "../layout/Button.jsx";
 
 function formatPublishedAt(value) {
