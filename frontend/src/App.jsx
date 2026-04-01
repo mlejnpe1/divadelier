@@ -17,6 +17,7 @@ import ExhibitionDetailPage from "./pages/ExhibitionDetailPage";
 import TVVVPage from "./pages/TVVVPage";
 import RentalPage from "./pages/RentalPage";
 import BackToTop from "./components/layout/BackToTop";
+import ScrollToTop from "./utils/ScrollToTop";
 
 const App = () => {
   const routes = [
@@ -44,6 +45,7 @@ const App = () => {
         ))}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      <ScrollToTop />
       <BackToTop showAfter={400} />
     </>
   );
