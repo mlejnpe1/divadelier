@@ -88,6 +88,13 @@ function getCurrentYear() {
   return new Date(Date.now()).getFullYear();
 }
 
+function getPendingArchiveItems(items, currentYear) {
+  return items.filter((item) => {
+    const itemYear = getYearNumber(item.date);
+    return !item.archived && itemYear !== null && itemYear < currentYear;
+  });
+}
+
 function sortByDateDesc(items) {
   return [...items].sort((a, b) => {
     const aDate = toValidTime(a.date);
@@ -296,6 +303,10 @@ async function cleanupR2Keys(keys, logLabel) {
   return failedMediaCleanup;
 }
 
+function isAdminRequest(req) {
+  return Boolean(req.user?.admin);
+}
+
 export async function getAllActions(req, res) {
   try {
     const view = String(req.query.view || "current").trim().toLowerCase();
@@ -311,6 +322,14 @@ export async function getAllActions(req, res) {
     }
 
     items = sortByDateDesc(items);
+    const pendingArchiveItems = getPendingArchiveItems(items, currentYear);
+    const pendingArchiveYears = Array.from(
+      new Set(
+        pendingArchiveItems
+          .map((item) => getYearNumber(item.date))
+          .filter((year) => Number.isInteger(year)),
+      ),
+    ).sort((a, b) => b - a);
 
     if (view === "archive") {
       const archiveItems = items.filter((item) => {
@@ -335,6 +354,8 @@ export async function getAllActions(req, res) {
         pageCount: years.length,
         year: activeYear,
         years,
+        pendingArchiveCount: pendingArchiveItems.length,
+        pendingArchiveYears,
       });
     }
 
@@ -366,6 +387,8 @@ export async function getAllActions(req, res) {
       year: currentYear,
       month: activeMonth,
       months,
+      pendingArchiveCount: pendingArchiveItems.length,
+      pendingArchiveYears,
     });
   } catch (error) {
     console.error("Error in getAllActions controller.", error);
@@ -393,6 +416,78 @@ export async function getFeaturedAction(_, res) {
     return res.status(200).json(featured);
   } catch (error) {
     console.error("Error in getFeaturedAction controller.", error);
+    return res.status(500).json({ message: "Internal server error." });
+  }
+}
+
+export async function archiveOldActions(req, res) {
+  try {
+    if (!isAdminRequest(req)) {
+      return res.status(403).json({ message: "Nedostatečná oprávnění." });
+    }
+
+    const currentYear = getCurrentYear();
+    const archiveBefore = new Date(Date.UTC(currentYear, 0, 1));
+    const candidates = await Action.find({
+      date: { $lt: archiveBefore },
+      archived: { $ne: true },
+    });
+
+    if (!candidates.length) {
+      return res.status(200).json({
+        archivedCount: 0,
+        failedCount: 0,
+        totalCandidates: 0,
+        failedItems: [],
+      });
+    }
+
+    let archivedCount = 0;
+    const failedItems = [];
+
+    for (const action of candidates) {
+      const mediaKeys = collectActionMediaKeys(action);
+      const failedMediaCleanup = await cleanupR2Keys(
+        mediaKeys,
+        `Action media cleanup failed during archive for ${action._id}:`,
+      );
+
+      if (failedMediaCleanup.length) {
+        failedItems.push({
+          _id: String(action._id),
+          title: String(action.title || "").trim(),
+          failedKeys: failedMediaCleanup.map(({ key }) => key),
+        });
+        continue;
+      }
+
+      action.coverImage = {
+        url: "",
+        alt: "",
+        key: "",
+      };
+      action.author = {
+        name: String(action.author?.name || "").trim(),
+        bio: String(action.author?.bio || "").trim(),
+        photo: "",
+        photoKey: "",
+        websites: normalizeAuthorWebsites(action.author),
+      };
+      action.archived = true;
+      action.archivedAt = new Date();
+
+      await action.save();
+      archivedCount += 1;
+    }
+
+    return res.status(200).json({
+      archivedCount,
+      failedCount: failedItems.length,
+      totalCandidates: candidates.length,
+      failedItems,
+    });
+  } catch (error) {
+    console.error("Error in archiveOldActions controller.", error);
     return res.status(500).json({ message: "Internal server error." });
   }
 }

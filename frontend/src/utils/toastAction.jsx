@@ -4,10 +4,15 @@ export async function toastAction(fn, { loading, success, error }) {
   const id = toast.loading(loading);
   try {
     const result = await fn();
-    toast.success(success, { id });
+    const successMessage =
+      typeof success === "function" ? success(result) : success;
+
+    toast.success(successMessage, { id });
     return result;
   } catch (e) {
-    toast.error(e.message || error, { id });
+    const errorMessage = typeof error === "function" ? error(e) : error;
+
+    toast.error(e.message || errorMessage, { id });
     throw e;
   }
 }
