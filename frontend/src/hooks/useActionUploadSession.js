@@ -1,11 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { uploadFile, deleteUploadedFile } from "../utils/handleFile.js";
 
-export default function useExhibitionUploadSession({
-  draft,
-  onClose,
-  onSubmit,
-}) {
+export default function useActionUploadSession({ draft, onClose, onSubmit }) {
   const [activeUploads, setActiveUploads] = useState(0);
   const pendingUploadKeysRef = useRef(new Set());
   const skipCleanupRef = useRef(false);
@@ -13,23 +9,17 @@ export default function useExhibitionUploadSession({
   const uploadSlug =
     String(draft.title || "").trim() ||
     String(draft.author?.name || "").trim() ||
-    (draft.date ? `exhibition-${draft.date}` : "exhibition");
+    (draft.date ? `action-${draft.date}` : "action");
 
   if (!initialPersistedKeysRef.current) {
     const keys = new Set();
 
     if (draft.coverImage?.key) {
-      keys.add(draft.coverImage.key);
+      keys.add(String(draft.coverImage.key).trim());
     }
 
     if (draft.author?.photoKey) {
-      keys.add(draft.author.photoKey);
-    }
-
-    for (const image of draft.images || []) {
-      if (image?.key) {
-        keys.add(image.key);
-      }
+      keys.add(String(draft.author.photoKey).trim());
     }
 
     initialPersistedKeysRef.current = keys;
@@ -69,12 +59,6 @@ export default function useExhibitionUploadSession({
       keys.add(String(draft.author.photoKey).trim());
     }
 
-    for (const image of draft.images || []) {
-      if (image?.key) {
-        keys.add(String(image.key).trim());
-      }
-    }
-
     return keys;
   };
 
@@ -92,7 +76,7 @@ export default function useExhibitionUploadSession({
         try {
           await deleteUploadedFile(key);
         } catch (error) {
-          console.error("Pending upload cleanup failed:", key, error);
+          console.error("Pending action upload cleanup failed:", key, error);
         } finally {
           pendingUploadKeysRef.current.delete(key);
         }
@@ -118,7 +102,7 @@ export default function useExhibitionUploadSession({
     try {
       const uploaded = await uploadFile({
         file,
-        scope: "exhibitions",
+        scope: "actions",
         slug: uploadSlug,
       });
 
@@ -131,7 +115,7 @@ export default function useExhibitionUploadSession({
           await deleteUploadedFile(previousKey);
           unregisterPendingKey(previousKey);
         } catch (deleteError) {
-          console.error("Managed upload cleanup failed:", deleteError);
+          console.error("Managed action upload cleanup failed:", deleteError);
         }
       }
 
@@ -158,14 +142,13 @@ export default function useExhibitionUploadSession({
   const handleCancel = async () => {
     skipCleanupRef.current = true;
     await cleanupPendingUploads();
-    onClose();
+    onClose?.();
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    event?.preventDefault?.();
 
-    const saved = await onSubmit(event);
-
+    const saved = await onSubmit?.(event);
     if (!saved) {
       return;
     }
@@ -181,7 +164,7 @@ export default function useExhibitionUploadSession({
 
     pendingUploadKeysRef.current.clear();
     skipCleanupRef.current = true;
-    onClose();
+    onClose?.();
   };
 
   return {

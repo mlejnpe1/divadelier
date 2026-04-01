@@ -344,9 +344,7 @@ const DrZdivPage = () => {
           </div>
 
           {user && (
-            <Button
-              onClick={openCreateMeeting}
-            >
+            <Button onClick={openCreateMeeting}>
               <Plus size={18} />
               Přidat schůzku
             </Button>
@@ -426,10 +424,7 @@ const DrZdivPage = () => {
           zde.
         </p>
         <div className="flex flex-row gap-4 my-3">
-          <Button
-            onClick={() => handleDownload()}
-            className="cursor-pointer"
-          >
+          <Button onClick={() => handleDownload()} className="cursor-pointer">
             Stáhnout přihlášku
             <DownloadIcon size={20} />
           </Button>
@@ -444,9 +439,7 @@ const DrZdivPage = () => {
           </div>
 
           {user && (
-            <Button
-              onClick={openCreateNews}
-            >
+            <Button onClick={openCreateNews}>
               <Plus size={18} />
               Přidat aktualitu
             </Button>

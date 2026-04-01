@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router";
 import { PartyPopper, Plus } from "lucide-react";
 import Hero from "../components/layout/Hero";
 import Section from "../components/layout/Section";
@@ -7,7 +6,7 @@ import Button from "../components/layout/Button";
 import ListToolbar from "../components/layout/ListToolbar";
 import Pagination from "../components/layout/Pagiantion";
 import TimelineList from "../components/actions/TimelineList";
-import ActionForm from "../components/actions/ActionForm";
+import ActionFormModal from "../components/actions/ActionFormModal.jsx";
 import ScrollHint from "../components/layout/ScrollHint";
 import { useAuth } from "../hooks/useAuth";
 import { useFetch } from "../hooks/useFetch";
@@ -18,67 +17,80 @@ import { apiFetch } from "../utils/api";
 
 export default function ActionsPage() {
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const now = new Date(Date.now());
+  const currentMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
 
   const [featured, setFeatured] = useState(null);
-  const [timeline, setTimeline] = useState([]);
   const [actionFormOpen, setActionFormOpen] = useState(false);
   const [editingAction, setEditingAction] = useState(null);
-  const [page, setPage] = useState(1);
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+  const [listRefresh, setListRefresh] = useState(0);
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebouncedValue(query, 300);
 
-  const limit = 8;
-  const type = "all";
-
   const timelineUrl = useMemo(() => {
     const params = new URLSearchParams();
-    params.set("page", String(page));
-    params.set("limit", String(limit));
-    params.set("type", type);
+    params.set("r", String(listRefresh));
+    if (selectedMonth) {
+      params.set("month", String(selectedMonth));
+    }
 
     if (debouncedQuery.trim()) {
       params.set("q", debouncedQuery.trim());
     }
 
-    return `/api/timeline?${params.toString()}`;
-  }, [page, debouncedQuery, limit, type]);
+    return `/api/actions?${params.toString()}`;
+  }, [selectedMonth, debouncedQuery, listRefresh]);
 
   const { data: timelineData, loading } = useFetch(timelineUrl);
 
   const refreshFeatured = async () => {
-    const fresh = await apiFetch("/api/timeline/featured");
-    setFeatured(fresh || null);
-  };
+    try {
+      const fresh = await apiFetch("/api/actions/featured");
+      setFeatured(fresh || null);
+    } catch (error) {
+      if (String(error?.message || "").includes("404")) {
+        setFeatured(null);
+        return;
+      }
 
-  useEffect(() => {
-    setTimeline(timelineData?.items || []);
-  }, [timelineData]);
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     refreshFeatured();
   }, []);
 
-  const buildTimelineUrl = () => {
-    const params = new URLSearchParams();
-    params.set("page", String(page));
-    params.set("limit", String(limit));
-    params.set("type", type);
+  useEffect(() => {
+    if (
+      !loading &&
+      selectedMonth !== null &&
+      Array.isArray(timelineData?.months) &&
+      !timelineData.months.includes(selectedMonth)
+    ) {
+      setSelectedMonth(timelineData?.month ?? null);
+    }
+  }, [loading, selectedMonth, timelineData?.month, timelineData?.months]);
 
-    if (query.trim()) {
-      params.set("q", query.trim());
+  const monthItems = useMemo(() => {
+    if (!Array.isArray(timelineData?.months)) {
+      return [];
     }
 
-    return `/api/timeline?${params.toString()}`;
-  };
+    return timelineData.months.map((month) => ({
+      value: month,
+      label: new Date(`${month}-01T00:00:00`).toLocaleDateString("cs-CZ", {
+        month: "long",
+      }),
+    }));
+  }, [timelineData?.months]);
 
-  const refreshTimeline = async () => {
-    const fresh = await apiFetch(buildTimelineUrl());
-    setTimeline(fresh.items || []);
-  };
+  const activeMonth = selectedMonth ?? timelineData?.month ?? null;
 
   const refreshAll = async () => {
-    await Promise.all([refreshTimeline(), refreshFeatured()]);
+    setListRefresh((value) => value + 1);
+    await refreshFeatured();
   };
 
   const handleDeleteAction = async (id) => {
@@ -123,10 +135,8 @@ export default function ActionsPage() {
     <>
       <Hero
         title={featured?.title || "Akce Divadelieru"}
-        subtitle="Výstavy i akce na jednom místě"
+        subtitle="Přehled chystaných akcí"
         description={featured?.description || ""}
-        buttonText="Výstavy ve výloze"
-        onButtonClick={() => navigate("/vvv#fullExhibitionPlan")}
       />
       <div className="relative">
         <ScrollHint variant="overlay" color="light" />
@@ -145,43 +155,39 @@ export default function ActionsPage() {
           )}
         </div>
 
-        {user && actionFormOpen && (
-          <ActionForm
+        {user && (
+          <ActionFormModal
+            isOpen={actionFormOpen}
+            isEdit={Boolean(editingAction?._id)}
             initial={editingAction}
             onClose={() => setActionFormOpen(false)}
             onSaved={onSavedAction}
+            modalKey={editingAction?._id || "new-action"}
           />
         )}
 
         <ListToolbar
           query={query}
           setQuery={(v) => {
-            setPage(1);
+            setSelectedMonth(currentMonth);
             setQuery(v);
           }}
         />
 
-        <div className="relative">
-          {loading && (
-            <div className="absolute inset-0 z-10 flex items-start justify-end bg-white/60 p-2 backdrop-blur-[1px]">
-              <span className="text-sm text-gray-500">Načítám…</span>
-            </div>
-          )}
-
-          <TimelineList
-            items={timeline}
-            user={user}
-            onEditAction={(item) => openEditAction(item)}
-            onDeleteAction={(id) => handleDeleteAction(id)}
-            onEditExhibition={() => navigate("/vvv#fullExhibitionPlan")}
-            onDeleteExhibition={() => navigate("/vvv#fullExhibitionPlan")}
-          />
-        </div>
+        <TimelineList
+          items={timelineData?.items || []}
+          loading={loading}
+          user={user}
+          onEditAction={(item) => openEditAction(item)}
+          onDeleteAction={(id) => handleDeleteAction(id)}
+        />
 
         <Pagination
-          page={timelineData?.page ?? page}
-          pageCount={timelineData?.pageCount ?? 1}
-          onPageChange={(p) => setPage(p)}
+          page={activeMonth}
+          pageCount={monthItems.length}
+          items={monthItems}
+          itemTypeLabel="měsíc"
+          onPageChange={(month) => setSelectedMonth(month)}
         />
       </Section>
     </>

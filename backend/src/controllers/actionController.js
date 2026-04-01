@@ -2,6 +2,199 @@ import mongoose from "mongoose";
 import Action from "../models/Action.js";
 import { deleteFromR2 } from "../lib/r2.js";
 
+function normalizeAction(doc) {
+  const authorWebsites = Array.isArray(doc.author?.websites)
+    ? doc.author.websites
+        .map((website) => ({
+          url: String(website?.url || "").trim(),
+          description: String(website?.description || "").trim(),
+        }))
+        .filter((website) => website.url || website.description)
+    : doc.author?.website
+      ? [{ url: String(doc.author.website).trim(), description: "" }]
+      : [];
+
+  return {
+    _id: String(doc._id),
+    title: doc.title || "",
+    description: doc.description || "",
+    date: doc.date || null,
+    coverImage: {
+      url: String(doc.coverImage?.url || ""),
+      alt: String(doc.coverImage?.alt || ""),
+      key: String(doc.coverImage?.key || ""),
+    },
+    author: {
+      name: String(doc.author?.name || ""),
+      bio: String(doc.author?.bio || ""),
+      photo: String(doc.author?.photo || ""),
+      photoKey: String(doc.author?.photoKey || ""),
+      websites: authorWebsites,
+    },
+    archived: Boolean(doc.archived),
+    archivedAt: doc.archivedAt || null,
+  };
+}
+
+function matchesQuery(item, q) {
+  if (!q) {
+    return true;
+  }
+
+  const search = q.toLowerCase();
+  return (
+    String(item.title || "")
+      .toLowerCase()
+      .includes(search) ||
+    String(item.description || "")
+      .toLowerCase()
+      .includes(search)
+  );
+}
+
+function toValidTime(value) {
+  if (!value) {
+    return null;
+  }
+
+  const time = new Date(value).getTime();
+  if (!Number.isFinite(time)) {
+    return null;
+  }
+
+  return time;
+}
+
+function getMonthKey(value) {
+  const time = toValidTime(value);
+  if (time === null) {
+    return null;
+  }
+
+  const date = new Date(time);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function getYearNumber(value) {
+  const time = toValidTime(value);
+  if (time === null) {
+    return null;
+  }
+
+  return new Date(time).getFullYear();
+}
+
+function getCurrentYear() {
+  return new Date(Date.now()).getFullYear();
+}
+
+function sortByDateDesc(items) {
+  return [...items].sort((a, b) => {
+    const aDate = toValidTime(a.date);
+    const bDate = toValidTime(b.date);
+
+    if (aDate === null && bDate === null) {
+      return 0;
+    }
+    if (aDate === null) {
+      return 1;
+    }
+    if (bDate === null) {
+      return -1;
+    }
+
+    return bDate - aDate;
+  });
+}
+
+function pickFeatured(items) {
+  if (!Array.isArray(items) || items.length === 0) {
+    return null;
+  }
+
+  function parseToLocalDateOnly(value) {
+    if (!value) {
+      return null;
+    }
+
+    if (value instanceof Date) {
+      if (Number.isNaN(value.getTime())) {
+        return null;
+      }
+      return new Date(value.getFullYear(), value.getMonth(), value.getDate());
+    }
+
+    const stringValue = String(value);
+    const exactDateMatch = /^([0-9]{4})-([0-9]{2})-([0-9]{2})$/.exec(
+      stringValue,
+    );
+    if (exactDateMatch) {
+      return new Date(
+        Number(exactDateMatch[1]),
+        Number(exactDateMatch[2]) - 1,
+        Number(exactDateMatch[3]),
+      );
+    }
+
+    const parsedDate = new Date(stringValue);
+    if (Number.isNaN(parsedDate.getTime())) {
+      return null;
+    }
+
+    return new Date(
+      parsedDate.getFullYear(),
+      parsedDate.getMonth(),
+      parsedDate.getDate(),
+    );
+  }
+
+  function dateKeyLocal(date) {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  }
+
+  const today = new Date();
+  const todayDateOnly = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+  );
+  const todayKey = dateKeyLocal(todayDateOnly);
+
+  const scored = items
+    .map((item) => {
+      const date = parseToLocalDateOnly(item.date);
+      if (!date) {
+        return null;
+      }
+
+      const key = dateKeyLocal(date);
+      const dayDiff = Math.round(
+        (date.getTime() - todayDateOnly.getTime()) / 86400000,
+      );
+      const bucket = key === todayKey ? 0 : dayDiff >= 0 ? 1 : 2;
+      const distance = key === todayKey ? 0 : Math.abs(dayDiff);
+
+      return { item, bucket, distance };
+    })
+    .filter(Boolean);
+
+  if (!scored.length) {
+    return items[0];
+  }
+
+  scored.sort((a, b) => {
+    if (a.bucket !== b.bucket) {
+      return a.bucket - b.bucket;
+    }
+    if (a.distance !== b.distance) {
+      return a.distance - b.distance;
+    }
+    return 0;
+  });
+
+  return scored[0].item;
+}
+
 function collectActionMediaKeys(action) {
   const keys = new Set();
 
@@ -103,12 +296,103 @@ async function cleanupR2Keys(keys, logLabel) {
   return failedMediaCleanup;
 }
 
-export async function getAllActions(_, res) {
+export async function getAllActions(req, res) {
   try {
-    const actions = await Action.find().sort({ date: -1, _id: 1 }).lean();
-    return res.status(200).json(actions);
+    const view = String(req.query.view || "current").trim().toLowerCase();
+    const q = String(req.query.q || "").trim();
+    const requestedMonth = String(req.query.month || "").trim();
+    const requestedYear = parseInt(req.query.year || "", 10);
+    const currentYear = getCurrentYear();
+
+    let items = (await Action.find().lean()).map(normalizeAction);
+
+    if (q) {
+      items = items.filter((item) => matchesQuery(item, q));
+    }
+
+    items = sortByDateDesc(items);
+
+    if (view === "archive") {
+      const archiveItems = items.filter((item) => {
+        const itemYear = getYearNumber(item.date);
+        return item.archived || (itemYear !== null && itemYear < currentYear);
+      });
+
+      const years = Array.from(
+        new Set(archiveItems.map((item) => getYearNumber(item.date)).filter(Boolean)),
+      ).sort((a, b) => b - a);
+
+      const activeYear = years.includes(requestedYear) ? requestedYear : years[0] || null;
+      const filteredItems = activeYear
+        ? archiveItems.filter((item) => getYearNumber(item.date) === activeYear)
+        : [];
+
+      return res.status(200).json({
+        mode: "archive",
+        items: filteredItems,
+        total: filteredItems.length,
+        page: activeYear && years.length ? years.indexOf(activeYear) + 1 : 1,
+        pageCount: years.length,
+        year: activeYear,
+        years,
+      });
+    }
+
+    const currentItems = items.filter((item) => {
+      const itemYear = getYearNumber(item.date);
+      return !item.archived && itemYear === currentYear;
+    });
+
+    const months = Array.from(
+      new Set(currentItems.map((item) => getMonthKey(item.date)).filter(Boolean)),
+    );
+    const currentMonth = getMonthKey(Date.now());
+    const activeMonth = months.includes(requestedMonth)
+      ? requestedMonth
+      : months.includes(currentMonth)
+          ? currentMonth
+          : months[0] || null;
+
+    const filteredItems = activeMonth
+      ? currentItems.filter((item) => getMonthKey(item.date) === activeMonth)
+      : [];
+
+    return res.status(200).json({
+      mode: "current",
+      items: filteredItems,
+      total: filteredItems.length,
+      page: activeMonth && months.length ? months.indexOf(activeMonth) + 1 : 1,
+      pageCount: months.length,
+      year: currentYear,
+      month: activeMonth,
+      months,
+    });
   } catch (error) {
     console.error("Error in getAllActions controller.", error);
+    return res.status(500).json({ message: "Internal server error." });
+  }
+}
+
+export async function getFeaturedAction(_, res) {
+  try {
+    const currentYear = getCurrentYear();
+    const items = sortByDateDesc(
+      (await Action.find().lean())
+        .map(normalizeAction)
+        .filter((item) => {
+          const itemYear = getYearNumber(item.date);
+          return !item.archived && itemYear === currentYear;
+        }),
+    );
+    const featured = pickFeatured(items);
+
+    if (!featured) {
+      return res.status(404).json({ message: "Action not found." });
+    }
+
+    return res.status(200).json(featured);
+  } catch (error) {
+    console.error("Error in getFeaturedAction controller.", error);
     return res.status(500).json({ message: "Internal server error." });
   }
 }

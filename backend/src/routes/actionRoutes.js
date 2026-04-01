@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getAllActions,
+  getFeaturedAction,
   getActionById,
   createAction,
   updateAction,
@@ -12,6 +13,7 @@ import { auth } from "../middleware/auth.js";
 const router = express.Router();
 
 router.get("/", getAllActions);
+router.get("/featured", getFeaturedAction);
 router.get("/:id", getActionById);
 
 router.use(auth);

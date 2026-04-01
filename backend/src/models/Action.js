@@ -25,6 +25,8 @@ const actionSchema = new mongoose.Schema(
         },
       ],
     },
+    archived: { type: Boolean, default: false },
+    archivedAt: { type: Date, default: null },
   },
   {
     timestamps: true,
