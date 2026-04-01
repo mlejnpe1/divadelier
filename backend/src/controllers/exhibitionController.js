@@ -159,16 +159,13 @@ export async function getAllExhibitions(req, res) {
       };
 
       [items, total] = await Promise.all([
-        Exhibition.find(yearFilter)
-          .sort({ date: -1, _id: 1 })
-          .lean(),
+        Exhibition.find(yearFilter).sort({ date: -1, _id: 1 }).lean(),
         Exhibition.countDocuments(yearFilter),
       ]);
     }
 
     const pageCount = years.length;
-    const page =
-      activeYear && pageCount ? years.indexOf(activeYear) + 1 : 1;
+    const page = activeYear && pageCount ? years.indexOf(activeYear) + 1 : 1;
 
     return res.status(200).json({
       items,
