@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Theater, Tv } from "lucide-react";
 import toast from "react-hot-toast";
 import Hero from "../components/layout/Hero.jsx";
 import Section from "../components/layout/Section.jsx";
@@ -15,6 +15,7 @@ import { useListControls } from "../hooks/useListControls.jsx";
 import { toastAction } from "../utils/toastAction.jsx";
 import { apiFetch } from "../utils/api.js";
 import { confirmToast } from "../utils/confirmToast.jsx";
+import LatestYoutubeVideoPanel from "../components/specials/LatestYoutubeVideoPanel.jsx";
 
 const EMPTY_SPECIAL_DRAFT = {
   name: "",
@@ -169,12 +170,24 @@ const TVVVPage = () => {
       </div>
 
       <Section border={true}>
+        <div className="flex items-center mb-8">
+          <Tv className="w-9 h-9 text-[#f5a623] mr-3" />
+          <h2 className="text-3xl font-bold">Co je TV VV?</h2>
+        </div>
         <p className="text-gray-700">
           Televize ve výloze vás každý týden informuje o událostech v
-          Divadelieru v Novinkách z výlohy a ve Speciálu z Divadelieru se
-          můžete podívat na rozhovory s úžasnými hosty, kteří Divadelier
-          navštívili či v něm vystupovali.
+          Divadeliéru v Novinkách z výlohy a ve Speciálu z Divadeliéru se můžete
+          podívat na rozhovory s úžasnými hosty, kteří Divadeliér navštívili či
+          v něm vystupovali.
         </p>
+      </Section>
+
+      <Section border={true}>
+        <div className="flex items-center mb-8">
+          <Theater className="w-9 h-9 text-[#f5a623] mr-3" />
+          <h2 className="text-3xl font-bold">Novinky z výlohy</h2>
+        </div>
+        <LatestYoutubeVideoPanel user={user} />
       </Section>
 
       <Section id="specialsSection">
