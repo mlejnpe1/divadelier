@@ -9,6 +9,14 @@ import toast from "react-hot-toast";
 import { apiFetch } from "../utils/api.js";
 import ScrollHint from "../components/layout/ScrollHint.jsx";
 import Button from "../components/layout/Button.jsx";
+import {
+  BookOpenText,
+  GraduationCap,
+  Sparkles,
+  UserRound,
+  UsersRound,
+  WandSparkles,
+} from "lucide-react";
 
 function mailto(subject, body = "") {
   const s = encodeURIComponent(subject);
@@ -105,7 +113,7 @@ export default function CoursesPage() {
           {
             title: "Přípravné kurzy k talentovým zkouškám",
             meta: "DAMU • JAMU • konzervatoře • výběr textu a interpretace",
-            price: "300–1000 Kč / lekce",
+            price: "500 - 1300 Kč / lekce",
             badges: ["Na VŠ ideálně od září", "Na SŠ nejpozději listopad"],
             description:
               "Pomoc s výběrem textu a přípravou interpretace. Cena se přizpůsobuje finančním možnostem studenta.",
@@ -136,6 +144,40 @@ export default function CoursesPage() {
     [customHref],
   );
 
+  const HERO_TRACKS = useMemo(
+    () => [
+      {
+        id: "group-regular",
+        icon: UsersRound,
+        title: "Skupinové kurzy",
+        text: "Pravidelná setkávání i jednorázové workshopy pro děti a dospělé.",
+      },
+      {
+        id: "individual-regular",
+        icon: GraduationCap,
+        title: "Talentovky",
+        text: "Cílená individuální příprava na DAMU, JAMU i konzervatoře.",
+      },
+      {
+        id: "individual-once",
+        icon: WandSparkles,
+        title: "Kurz na míru",
+        text: "Rétorika, přednes, práce s trémou i konkrétní zadání pro jednotlivce i skupiny.",
+      },
+    ],
+    [],
+  );
+
+  const LECTURER_HIGHLIGHTS = useMemo(
+    () => [
+      "Divadelní pedagogika a dramatická výchova",
+      "Práce s hlasem, přednesem a prezentací",
+      "Režie, scénáře a autorská tvorba",
+      "Zkušenosti se školami i profesionálním divadlem",
+    ],
+    [],
+  );
+
   const [inquiryOpen, setInquiryOpen] = useState(false);
   const [selectedCourseTitle, setSelectedCourseTitle] = useState("");
 
@@ -163,6 +205,53 @@ export default function CoursesPage() {
           const el = document.getElementById("offerSection");
           if (el) el.scrollIntoView({ behavior: "smooth" });
         }}
+        children={
+          <div className="w-full max-w-3xl">
+            <div className="relative overflow-hidden rounded-[2rem] border border-white/18 bg-[linear-gradient(145deg,rgba(255,248,236,0.84),rgba(255,232,190,0.36))] p-6 shadow-[0_28px_75px_rgba(60,28,0,0.22)] backdrop-blur-xl md:p-7">
+              <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/28 blur-3xl" />
+              <div className="pointer-events-none absolute -left-8 bottom-0 h-28 w-28 rounded-full bg-[#f5a623]/20 blur-3xl" />
+
+              <div className="relative">
+                <p className="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[#9a590b]">
+                  Jakou cestou se vydat
+                </p>
+                <h2 className="mt-3 text-3xl font-bold leading-tight text-[#3f250f]">
+                  Kurzy, které se přizpůsobí tomu, kde právě jste
+                </h2>
+                <p className="mt-4 max-w-2xl text-sm leading-7 text-[#5f4126]">
+                  Dlouhodobé skupiny, jednorázové divadelní workshopy i
+                  individuální příprava pro konkrétní cíl. Vyberte si formát,
+                  který vám dává smysl právě teď.
+                </p>
+
+                <div className="mt-6 grid gap-4 md:grid-cols-3">
+                  {HERO_TRACKS.map((track) => {
+                    const Icon = track.icon;
+
+                    return (
+                      <button
+                        key={track.id}
+                        type="button"
+                        onClick={() => scrollToId(track.id)}
+                        className="group rounded-[1.6rem] border border-white/24 bg-white/50 p-4 text-left shadow-[0_16px_40px_rgba(15,23,42,0.08)] backdrop-blur-md transition hover:-translate-y-1 hover:bg-white/66"
+                      >
+                        <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/35 bg-[rgba(245,166,35,0.14)] text-[#c46f04] shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]">
+                          <Icon size={20} />
+                        </div>
+                        <h3 className="mt-4 text-lg font-semibold text-gray-900">
+                          {track.title}
+                        </h3>
+                        <p className="mt-2 text-sm leading-7 text-[#5f4a35]">
+                          {track.text}
+                        </p>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        }
       />
       <div className="relative">
         <ScrollHint variant="overlay" color="light" />
@@ -179,81 +268,167 @@ export default function CoursesPage() {
       />
 
       <Section id="offerSection" border={true}>
-        <div className="flex flex-wrap gap-2">
-          {SECTIONS.map((s) => (
-            <Button
-              key={s.id}
-              type="button"
-              onClick={() => scrollToId(s.id)}
-              variant="secondary"
-              size="sm"
-              className="shadow-none"
-            >
-              {s.title}
-            </Button>
-          ))}
+        <div className="relative overflow-hidden rounded-[1.9rem] border border-white/45 bg-[linear-gradient(145deg,rgba(255,255,255,0.84),rgba(247,241,233,0.76))] p-5 shadow-[0_20px_56px_rgba(15,23,42,0.08)] backdrop-blur-xl sm:p-6">
+          <div className="pointer-events-none absolute -left-8 top-4 h-24 w-24 rounded-full bg-[#f5a623]/14 blur-3xl" />
+          <div className="pointer-events-none absolute right-0 top-0 h-24 w-24 rounded-full bg-white/45 blur-3xl" />
+
+          <div className="relative">
+            <p className="text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-[#9a590b]">
+              Nabídka kurzů
+            </p>
+            <h2 className="mt-3 text-3xl font-bold leading-tight text-gray-900">
+              Vyberte si formát, který vám sedí
+            </h2>
+            <p className="mt-3 max-w-3xl text-sm leading-7 text-[#5f4a35]">
+              Nabídku jsme rozdělili podle typu práce a intenzity. Můžete
+              přeskočit rovnou k části, která vás zajímá nejvíc.
+            </p>
+
+            <div className="mt-6 flex flex-wrap gap-3">
+              {SECTIONS.map((s) => (
+                <Button
+                  key={s.id}
+                  type="button"
+                  onClick={() => scrollToId(s.id)}
+                  variant="secondary"
+                  size="sm"
+                  className="border-white/55 bg-white/72 text-[#5f4126] shadow-[0_12px_30px_rgba(15,23,42,0.06)] backdrop-blur-md hover:bg-white"
+                >
+                  {s.title}
+                </Button>
+              ))}
+            </div>
+          </div>
         </div>
       </Section>
 
       <Section border={true}>
         <div
           id="lecturer"
-          className="scroll-mt-24 grid grid-cols-1 md:grid-cols-3 gap-8 items-start"
+          className="relative overflow-hidden rounded-[2rem] border border-white/45 bg-[linear-gradient(145deg,rgba(255,255,255,0.84),rgba(247,241,233,0.74))] p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl md:p-8"
         >
-          <div className="md:col-span-2">
-            <h2 className="text-3xl font-bold">
-              Lektorka kurzů: Mgr. Adéla Pellarová
-            </h2>
+          <div className="pointer-events-none absolute -left-10 top-8 h-28 w-28 rounded-full bg-[#f5a623]/14 blur-3xl" />
+          <div className="pointer-events-none absolute right-0 top-0 h-28 w-28 rounded-full bg-white/45 blur-3xl" />
 
-            <ul className="mt-4 list-disc pl-6 text-gray-700 space-y-2">
-              <li>
-                Dramatická výchova na ZŠ, spolupráce se speciálními pedagogy.
-              </li>
-              <li>
-                Prevence šikany, regulace agrese, videotréning ve školách.
-              </li>
-              <li>Sobotní divadelní dopoledne (Motol – dětská psychiatrie).</li>
-              <li>Herečka profesionálního divadla Di, vedoucí Divadeliéru.</li>
-              <li>Režie, scénáře (Dilia), básnická tvorba.</li>
-            </ul>
+          <div className="relative grid grid-cols-1 items-start gap-8 md:grid-cols-[minmax(0,1.2fr)_minmax(260px,360px)]">
+            <div>
+              <p className="text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-[#9a590b]">
+                Lektorské vedení
+              </p>
+              <h2 className="mt-3 text-3xl font-bold leading-tight text-gray-900">
+                Mgr. Adéla Pellarová
+              </h2>
+              <p className="mt-4 max-w-3xl text-base leading-8 text-[#5f4a35]">
+                Kurzy vede divadelní pedagožka, herečka a autorka, která staví
+                výuku na přirozenosti, hlasu, spolupráci a odvaze vystoupit
+                před druhé.
+              </p>
 
-            <div className="mt-6">
-              <Accordion title="Celý profil lektorky">
-                <div className="space-y-3">
-                  <p>
-                    Během DAMU studijní pobyt v Anglii (strukturované drama),
-                    pobyt v Maďarsku (divadlo ve výchově). Po studiu pobyt v
-                    Dánsku (specifika dánského školství).
-                  </p>
-                  <p>
-                    Velmi mě ovlivnilo dialogické jednání Ivana Vyskočila na
-                    DAMU. Spolupracovala jsem se speciálními pedagogy, PPP a
-                    podílela se na projektech eliminace šikany ve školách.
-                  </p>
-                  <p>
-                    V současnosti se věnuji profesionálnímu divadlu Di, vedení
-                    Divadeliéru, režii, psaní scénářů a organizaci kulturních
-                    akcí.
-                  </p>
-                  <p>
-                    Jsem autorkou akce Let andělů (23. 12.) a každoročně
-                    realizujeme stínové divadlo ve výlohách Divadeliéru.
-                  </p>
-                  <p>
-                    Byla jsem 2× nominována na Výroční cenu města Vysokého Mýta
-                    a za rok 2024 jsem toto ocenění za kulturu obdržela.
-                  </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                {LECTURER_HIGHLIGHTS.map((item) => (
+                  <span
+                    key={item}
+                    className="inline-flex items-center gap-2 rounded-full border border-white/55 bg-white/72 px-4 py-2 text-sm font-medium text-[#5f4126] shadow-[0_10px_24px_rgba(15,23,42,0.06)] backdrop-blur-md"
+                  >
+                    <Sparkles size={15} className="text-[#c46f04]" />
+                    {item}
+                  </span>
+                ))}
+              </div>
+
+              <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                <div className="rounded-[1.6rem] border border-[#ffd799]/28 bg-[rgba(255,248,236,0.75)] p-5 shadow-[0_16px_38px_rgba(95,47,0,0.08)]">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/45 bg-white/70 text-[#c46f04]">
+                      <BookOpenText size={18} />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Zkušenosti v praxi
+                    </h3>
+                  </div>
+                  <ul className="mt-4 space-y-3 text-sm leading-7 text-[#5f4a35]">
+                    <li>
+                      Dramatická výchova na ZŠ a spolupráce se speciálními
+                      pedagogy.
+                    </li>
+                    <li>
+                      Prevence šikany, regulace agrese a videotréning ve
+                      školách.
+                    </li>
+                    <li>
+                      Sobotní divadelní dopoledne v Motole a pedagogická práce
+                      s dětmi.
+                    </li>
+                  </ul>
                 </div>
-              </Accordion>
+
+                <div className="rounded-[1.6rem] border border-white/45 bg-white/64 p-5 shadow-[0_16px_38px_rgba(15,23,42,0.06)]">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/45 bg-[rgba(245,166,35,0.14)] text-[#c46f04]">
+                      <UserRound size={18} />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Divadlo a autorská práce
+                    </h3>
+                  </div>
+                  <ul className="mt-4 space-y-3 text-sm leading-7 text-[#5f4a35]">
+                    <li>Herečka profesionálního divadla Di a vedoucí Divadeliéru.</li>
+                    <li>Režie, scénáře v databázi Dilia a básnická tvorba.</li>
+                    <li>
+                      Výroční cena Města Vysokého Mýta 2024 za kulturu.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <Accordion title="Celý profil lektorky">
+                  <div className="space-y-4 leading-8">
+                    <p>
+                      V současné době hraje, píše divadelní hry, režíruje,
+                      navrhuje scény inscenací, vede Divadeliér ve Vysokém Mýtě,
+                      který je domovskou scénou profesionálnímu souboru divadla
+                      Di, dramatickým kurzům pro děti i dospělé (Dr. ZDIV,
+                      Divan), Výstavám ve výloze, TV VV a kulturním akcím
+                      vzácných hostů a plánuje v Divadeliéru otevřít Hereckou
+                      laboratoř.
+                    </p>
+                    <p>
+                      Lektoruje a rozvíjí herecké dovednosti. Nejvíce ji ovlivnil
+                      Ivan Vyskočil hereckou disciplínou Dialogické jednání,
+                      hlasovou výchovou ji provedla Šárka Šternbergová,
+                      pohybovou průpravou Zdena Kratochvílová, hereckou Hana
+                      Smrčková, dramaturgickou Zdena Josková, scénografickou
+                      Karel Vostárek, režijní Aleš Bergman a další pedagogové
+                      DAMU. Divadelně obohacující pro ni byly studijní pobyty v
+                      Anglii, Maďarsku a Dánsku.
+                    </p>
+                    <p>
+                      Její scénáře naleznete v databázi Dilia, hra Spolu byla
+                      přeložena do polštiny (Wspolnie – Jan Węglowski), píše
+                      básně.
+                    </p>
+                    <p>
+                      Za rok 2024 získala Výroční cenu Města Vysokého Mýta 2024
+                      za kulturu za vedení divadla Di, Divadeliéru, autorskou a
+                      režijní práci i organizaci Letu andělů.
+                    </p>
+                  </div>
+                </Accordion>
+              </div>
             </div>
-          </div>
-          <div className="md:col-span-1">
-            <img
-              src={LecturerPhoto}
-              alt="Mgr. Adéla Pellarová"
-              className="w-full rounded-2xl shadow-md object-cover aspect-[3/4]"
-              loading="lazy"
-            />
+
+            <div className="relative">
+              <div className="absolute -inset-4 rounded-[2rem] bg-[#f5a623]/12 blur-3xl" />
+              <div className="relative overflow-hidden rounded-[1.9rem] border border-white/50 bg-white/55 p-3 shadow-[0_22px_56px_rgba(15,23,42,0.1)] backdrop-blur-xl">
+                <img
+                  src={LecturerPhoto}
+                  alt="Mgr. Adéla Pellarová"
+                  className="aspect-[3/4] w-full rounded-[1.5rem] object-cover"
+                  loading="lazy"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </Section>
@@ -262,16 +437,33 @@ export default function CoursesPage() {
       </div>
       {SECTIONS.map((section) => (
         <Section key={section.id} border={true}>
-          <div id={section.id} className="scroll-mt-20 md:scroll-mt-24">
-            <h2 className="text-2xl sm:text-3xl font-bold leading-tight">
-              {section.title}
-            </h2>
+          <div
+            id={section.id}
+            className={`scroll-mt-20 overflow-hidden rounded-[1.95rem] border p-6 shadow-[0_22px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl md:scroll-mt-24 md:p-8 ${
+              section.id.includes("individual")
+                ? "border-white/45 bg-[linear-gradient(145deg,rgba(255,255,255,0.86),rgba(247,241,233,0.74))]"
+                : "border-[#ffd799]/24 bg-[linear-gradient(145deg,rgba(255,248,236,0.82),rgba(255,234,196,0.44))]"
+            }`}
+          >
+            <div className="pointer-events-none absolute" />
+            <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p className="text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-[#9a590b]">
+                  {section.id.includes("individual")
+                    ? "Individuální práce"
+                    : "Skupinový formát"}
+                </p>
+                <h2 className="mt-3 text-2xl font-bold leading-tight text-gray-900 sm:text-3xl">
+                  {section.title}
+                </h2>
+              </div>
 
-            <p className="text-gray-700 mt-2 text-sm sm:text-base max-w-prose">
-              {section.subtitle}
-            </p>
+              <p className="max-w-2xl text-sm leading-7 text-[#5f4a35] sm:text-base">
+                {section.subtitle}
+              </p>
+            </div>
 
-            <div className="mt-5 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6">
+            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
               {section.items.map((c) => (
                 <CourseItemCard
                   key={c.title}
@@ -281,6 +473,9 @@ export default function CoursesPage() {
                   meta={c.meta}
                   badges={c.badges}
                   ctaText={c.ctaText}
+                  accent={
+                    section.id.includes("individual") ? "ivory" : "warm"
+                  }
                   onCtaClick={() => {
                     setSelectedCourseTitle(c.title);
                     setInquiryOpen(true);
