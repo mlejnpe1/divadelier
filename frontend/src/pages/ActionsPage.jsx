@@ -95,7 +95,13 @@ export default function ActionsPage() {
     }
 
     return `/api/actions?${params.toString()}`;
-  }, [debouncedQuery, listRefresh, selectedArchiveYear, selectedMonth, viewMode]);
+  }, [
+    debouncedQuery,
+    listRefresh,
+    selectedArchiveYear,
+    selectedMonth,
+    viewMode,
+  ]);
 
   const { data: timelineData, loading } = useFetch(timelineUrl);
   const { data: heroPosterData } = useFetch(
@@ -130,7 +136,13 @@ export default function ActionsPage() {
     ) {
       setSelectedMonth(timelineData?.month ?? null);
     }
-  }, [loading, selectedMonth, timelineData?.month, timelineData?.months, viewMode]);
+  }, [
+    loading,
+    selectedMonth,
+    timelineData?.month,
+    timelineData?.months,
+    viewMode,
+  ]);
 
   useEffect(() => {
     if (
@@ -142,7 +154,13 @@ export default function ActionsPage() {
     ) {
       setSelectedArchiveYear(timelineData?.year ?? null);
     }
-  }, [loading, selectedArchiveYear, timelineData?.year, timelineData?.years, viewMode]);
+  }, [
+    loading,
+    selectedArchiveYear,
+    timelineData?.year,
+    timelineData?.years,
+    viewMode,
+  ]);
 
   const monthItems = useMemo(() => {
     if (!Array.isArray(timelineData?.months)) {
@@ -262,13 +280,18 @@ export default function ActionsPage() {
         subtitle={
           viewMode === "archive"
             ? "Přehled akcí z minulých let"
-            : "Přehled chystaných akcí"
+            : "Nejbližší akce v Divadeliéru je"
         }
         description={
           viewMode === "archive"
             ? "Jednoduchý archiv akcí za předchozí roky, řazený po jednotlivých ročnících."
             : featured?.description || ""
         }
+        buttonText="Všechny akce si můžete prohlédnout zde"
+        onButtonClick={() => {
+          const el = document.getElementById("actionsSection");
+          if (el) el.scrollIntoView({ behavior: "smooth" });
+        }}
         children={
           shouldShowHeroPoster ? (
             <ActionHeroPosterPanel
@@ -317,7 +340,7 @@ export default function ActionsPage() {
           />
         )}
 
-        <div className="mb-6 flex justify-center">
+        <div className="mb-6 flex justify-center" id="actionsSection">
           <div className="inline-flex rounded-full border border-white/50 bg-white/55 p-1 shadow-[0_16px_34px_rgba(15,23,42,0.08)] backdrop-blur-xl">
             <button
               type="button"
@@ -379,19 +402,21 @@ export default function ActionsPage() {
           </div>
         ) : null}
 
-        {user?.admin && viewMode === "archive" && failedArchiveItems.length > 0 ? (
+        {user?.admin &&
+        viewMode === "archive" &&
+        failedArchiveItems.length > 0 ? (
           <div className="mb-6 overflow-hidden rounded-[1.6rem] border border-[#b85c38]/25 bg-[linear-gradient(145deg,rgba(255,245,240,0.95),rgba(255,232,223,0.78))] p-5 shadow-[0_18px_44px_rgba(122,52,19,0.09)] backdrop-blur-xl">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#a64924]">
               Některé akce nešly archivovat
             </p>
             <p className="mt-2 text-base font-semibold text-gray-900">
-              U {failedArchiveItems.length} {pluralizeActionSubject(failedArchiveItems.length)} se nepodařilo dokončit mazání fotek z R2.
+              U {failedArchiveItems.length}{" "}
+              {pluralizeActionSubject(failedArchiveItems.length)} se nepodařilo
+              dokončit mazání fotek z R2.
             </p>
             <ul className="mt-3 space-y-2 text-sm leading-7 text-[#6b4032]">
               {failedArchiveItems.map((item) => (
-                <li key={item._id}>
-                  {item.title || "Akce bez názvu"}
-                </li>
+                <li key={item._id}>{item.title || "Akce bez názvu"}</li>
               ))}
             </ul>
           </div>

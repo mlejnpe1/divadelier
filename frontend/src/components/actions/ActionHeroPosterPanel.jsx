@@ -120,7 +120,7 @@ export default function ActionHeroPosterPanel({
           <div className="flex items-start justify-between gap-4">
             <div>
               <h2 className="text-2xl font-bold leading-tight text-orange-300 sm:text-3xl">
-                Měsíční přehled
+                Na co se těšit tento měsíc?
               </h2>
             </div>
 
