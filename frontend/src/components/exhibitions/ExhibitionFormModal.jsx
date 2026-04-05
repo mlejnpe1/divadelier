@@ -66,9 +66,9 @@ export default function ExhibitionFormModal({
         <div className="pointer-events-none absolute right-0 top-0 h-64 w-64 rounded-full bg-white/18 blur-3xl" />
 
         <div className="relative flex max-h-[min(92vh,980px)] flex-col">
-          <div className="flex items-center justify-between border-b border-white/20 px-5 py-4 md:px-7">
+          <div className="flex items-center justify-between border-b border-white/25 bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,247,237,0.04))] px-5 py-4 md:px-7">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#f0b24d]">
+              <p className="inline-flex rounded-full border border-[#efcf9a]/80 bg-white/72 px-4 py-2 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-[#8a4f08] shadow-[0_12px_30px_rgba(138,79,8,0.08)]">
                 {isEdit ? "Upravit výstavu" : "Přidat výstavu"}
               </p>
             </div>
@@ -76,7 +76,7 @@ export default function ExhibitionFormModal({
             <button
               type="button"
               onClick={handleRequestClose}
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 text-black shadow-[inset_0_1px_0_rgba(255,255,255,0.28)] transition hover:bg-white/16"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/40 bg-white/55 text-[#6b4517] shadow-[inset_0_1px_0_rgba(255,255,255,0.4)] transition hover:bg-white/72"
             >
               <X size={20} />
             </button>

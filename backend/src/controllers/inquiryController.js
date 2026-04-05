@@ -17,7 +17,7 @@ function normalizeType(v) {
   const t = String(v || "")
     .trim()
     .toLowerCase();
-  if (t === "course" || t === "rental" || t === "general") {
+  if (t === "course" || t === "rental" || t === "shop" || t === "general") {
     return t;
   }
   return "general";
@@ -30,6 +30,9 @@ function typeLabel(type) {
   if (type === "rental") {
     return "Pronájem";
   }
+  if (type === "shop") {
+    return "E-shop";
+  }
   return "Obecná poptávka";
 }
 
@@ -40,6 +43,9 @@ function subjectFor(type, context) {
   }
   if (type === "rental") {
     return `Poptávka pronájmu${ctx}`;
+  }
+  if (type === "shop") {
+    return `Poptávka produktu${ctx}`;
   }
   return `Poptávka z webu${ctx}`;
 }

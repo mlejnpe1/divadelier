@@ -9,6 +9,12 @@ const shopItemSchema = new mongoose.Schema(
     title: {
       type: String,
       required: true,
+      trim: true,
+    },
+    description: {
+      type: String,
+      trim: true,
+      default: "",
     },
     price: {
       type: Number,
@@ -16,19 +22,30 @@ const shopItemSchema = new mongoose.Schema(
     },
     contact: {
       type: String,
-      required: true,
+      trim: true,
+      default: "",
     },
     image: {
-      data: Buffer,
-      contentType: String,
+      url: {
+        type: String,
+        trim: true,
+        default: "",
+      },
+      alt: {
+        type: String,
+        trim: true,
+        default: "",
+      },
+      key: {
+        type: String,
+        trim: true,
+        default: "",
+      },
     },
   },
   {
     timestamps: true,
   },
-  {
-    toJSON: { getters: true },
-  }
 );
 
 const ShopItem = new mongoose.model("ShopItem", shopItemSchema);

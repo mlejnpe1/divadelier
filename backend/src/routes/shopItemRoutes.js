@@ -6,6 +6,7 @@ import {
   getShopItemById,
   updateShopItem,
 } from "../controllers/shopItemController.js";
+import { auth } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -14,6 +15,7 @@ router.get("/", getAllShopItems);
 router.get("/:id", getShopItemById);
 
 //protected
+router.use(auth);
 router.post("/", createShopItem);
 router.put("/:id", updateShopItem);
 router.delete("/:id", deleteShopItem);

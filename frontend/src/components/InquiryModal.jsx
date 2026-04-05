@@ -13,6 +13,7 @@ export default function InquiryModal({
   contextLabel = "Téma",
   contextValue = "",
   contextType,
+  initialMessage = "",
 
   courseTitle = "",
 }) {
@@ -178,6 +179,7 @@ export default function InquiryModal({
               rows={4}
               placeholder="Zpráva (nepovinné)"
               className="w-full rounded-lg border px-4 py-2"
+              defaultValue={initialMessage}
             />
 
             <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:justify-end">
