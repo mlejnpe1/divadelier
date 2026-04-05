@@ -14,6 +14,7 @@ export default function InquiryModal({
   contextValue = "",
   contextType,
   initialMessage = "",
+  summary = null,
 
   courseTitle = "",
 }) {
@@ -78,7 +79,7 @@ export default function InquiryModal({
       <div className="absolute inset-0 flex items-center justify-center p-4">
         <div
           ref={panelRef}
-          className="relative w-full max-w-xl rounded-2xl border border-gray-100 bg-white shadow-xl"
+          className="relative w-full max-w-xl rounded-[2rem] border border-white/35 bg-[linear-gradient(145deg,rgba(255,255,255,0.96),rgba(251,246,238,0.92))] shadow-[0_35px_100px_rgba(15,23,42,0.18)]"
         >
           <div className="flex items-start justify-between gap-4 border-b p-5">
             <div className="min-w-0">
@@ -139,13 +140,52 @@ export default function InquiryModal({
               }
             }}
           >
+            {summary ? (
+              <div className="overflow-hidden rounded-[1.5rem] border border-[#f2d5a9]/80 bg-[linear-gradient(145deg,rgba(255,250,241,0.96),rgba(255,241,214,0.76))] shadow-[0_16px_34px_rgba(138,79,8,0.08)]">
+                <div className="grid gap-4 p-4 sm:grid-cols-[110px_minmax(0,1fr)] sm:p-5">
+                  {summary.imageUrl ? (
+                    <div className="overflow-hidden rounded-[1.2rem] border border-white/55 bg-white/70 shadow-[0_12px_28px_rgba(15,23,42,0.06)]">
+                      <img
+                        src={summary.imageUrl}
+                        alt={summary.imageAlt || summary.title || "Vybraný produkt"}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                  ) : null}
+
+                  <div className="min-w-0">
+                    <p className="text-[0.7rem] font-semibold uppercase tracking-[0.24em] text-[#9a590b]">
+                      Vybraný produkt
+                    </p>
+                    <h4 className="mt-2 text-lg font-semibold text-gray-900">
+                      {summary.title}
+                    </h4>
+
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {summary.price ? (
+                        <span className="inline-flex rounded-full border border-white/60 bg-white/82 px-3 py-1.5 text-sm font-semibold text-[#5f4126] shadow-[0_10px_24px_rgba(15,23,42,0.05)]">
+                          {summary.price}
+                        </span>
+                      ) : null}
+                      {summary.label ? (
+                        <span className="inline-flex rounded-full border border-[#f0d6aa] bg-white/55 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#8a5a11]">
+                          {summary.label}
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+
             {effectiveContext ? (
               <input
                 name="context"
                 type="text"
                 value={effectiveContext}
                 readOnly
-                className="w-full rounded-lg border bg-gray-50 px-4 py-2"
+                className="w-full rounded-xl border border-[#eadfce] bg-[#f8f4ee] px-4 py-3 text-[#5f4126]"
                 placeholder={contextLabel}
               />
             ) : null}
@@ -156,13 +196,13 @@ export default function InquiryModal({
                 type="text"
                 required
                 placeholder="Vaše jméno"
-                className="w-full rounded-lg border px-4 py-2"
+                className="w-full rounded-xl border border-[#eadfce] bg-white px-4 py-3 text-[#4a2c14] outline-none focus:border-[#f5a623] focus:ring-2 focus:ring-[#f5a623]/20"
               />
               <input
                 name="phone"
                 type="tel"
                 placeholder="Telefon (nepovinné)"
-                className="w-full rounded-lg border px-4 py-2"
+                className="w-full rounded-xl border border-[#eadfce] bg-white px-4 py-3 text-[#4a2c14] outline-none focus:border-[#f5a623] focus:ring-2 focus:ring-[#f5a623]/20"
               />
             </div>
 
@@ -171,14 +211,14 @@ export default function InquiryModal({
               type="email"
               required
               placeholder="Váš e-mail"
-              className="w-full rounded-lg border px-4 py-2"
+              className="w-full rounded-xl border border-[#eadfce] bg-white px-4 py-3 text-[#4a2c14] outline-none focus:border-[#f5a623] focus:ring-2 focus:ring-[#f5a623]/20"
             />
 
             <textarea
               name="message"
               rows={4}
               placeholder="Zpráva (nepovinné)"
-              className="w-full rounded-lg border px-4 py-2"
+              className="w-full rounded-xl border border-[#eadfce] bg-white px-4 py-3 text-[#4a2c14] outline-none focus:border-[#f5a623] focus:ring-2 focus:ring-[#f5a623]/20"
               defaultValue={initialMessage}
             />
 
