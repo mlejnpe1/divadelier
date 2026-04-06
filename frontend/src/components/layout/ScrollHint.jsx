@@ -64,7 +64,7 @@ export default function ScrollHint({
 
   const colorClasses =
     color === "light"
-      ? "text-white/80 hover:text-white"
+      ? "text-white hover:text-white"
       : "text-gray-700/80 hover:text-gray-900";
 
   const base =

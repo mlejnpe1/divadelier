@@ -119,7 +119,7 @@ export default function ActionHeroPosterPanel({
         <div className="relative border-b border-white/15 px-5 py-4 backdrop-blur-xl sm:px-6">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-bold leading-tight text-orange-300 sm:text-3xl">
+              <h2 className="text-2xl font-bold leading-tight text-white sm:text-3xl">
                 Na co se těšit tento měsíc?
               </h2>
             </div>

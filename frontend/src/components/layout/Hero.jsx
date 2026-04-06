@@ -1,4 +1,7 @@
+import HeroBG from "../../assets/images/heroBG.png";
 import HeroBG1 from "../../assets/images/heroBG1.webp";
+import HeroBG2 from "../../assets/images/heroBG2.webp";
+import HeroBG3 from "../../assets/images/heroBG3.webp";
 import Button from "./Button";
 
 const Hero = ({
@@ -17,8 +20,8 @@ const Hero = ({
       className="relative w-full overflow-hidden"
       style={{
         minHeight: "calc(100vh - 4rem)",
-        backgroundImage: `url(${HeroBG1})`,
-        backgroundSize: "cover",
+        backgroundImage: `url(${HeroBG3})`,
+        backgroundSize: "100% 100%",
         backgroundPosition: "center",
       }}
     >
@@ -41,12 +44,12 @@ const Hero = ({
             }`}
           >
             {subtitle && (
-              <p className="mb-6 text-sm font-semibold uppercase tracking-[0.3em] text-orange-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
+              <p className="mb-6 text-sm font-semibold uppercase tracking-[0.3em] text-orange-100 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
                 {subtitle}
               </p>
             )}
 
-            <h1 className="mb-6 text-4xl font-bold leading-[1.05] text-white md:text-6xl">
+            <h1 className="mb-6 text-4xl font-bold leading-[1.05] text-white/95 md:text-6xl">
               {title}
             </h1>
 
@@ -57,15 +60,11 @@ const Hero = ({
             )}
 
             {buttonText && buttonLink && (
-              <Button href={buttonLink}>
-                {buttonText}
-              </Button>
+              <Button href={buttonLink}>{buttonText}</Button>
             )}
 
             {buttonText && onButtonClick && !buttonLink && (
-              <Button onClick={onButtonClick}>
-                {buttonText}
-              </Button>
+              <Button onClick={onButtonClick}>{buttonText}</Button>
             )}
           </div>
         </div>
