@@ -18,6 +18,7 @@ import { useDebouncedValue } from "../hooks/useDebouncedValue";
 import ContactSection from "../components/ContactSection.jsx";
 import ScrollHint from "../components/layout/ScrollHint.jsx";
 import Button from "../components/layout/Button.jsx";
+import HeroGlassPanel from "../components/layout/HeroGlassPanel.jsx";
 
 const EMPTY_EXHIBITION_DRAFT = {
   title: "",
@@ -309,54 +310,53 @@ const VVVPage = () => {
           if (el) el.scrollIntoView({ behavior: "smooth" });
         }}
         children={
-          <div className="mx-auto mt-6 w-full max-w-3xl">
-            <div className="mb-4 flex flex-row items-center gap-3">
-              <h2 className="text-sm font-semibold uppercase tracking-[0.3em] text-gray-700">
-                Aktuální výstava:
-              </h2>
-              {!loadingFeaturedExhibition && featuredExhibition ? (
-                <h2 className="text-sm font-semibold uppercase tracking-[0.3em] text-gray-700">
-                  {getExhibitionDisplayTitle(featuredExhibition)}
-                </h2>
-              ) : null}
-              {featuredExhibition?.date ? (
-                <div className="rounded-full border border-white/60 bg-white/72 p-2 text-sm font-medium text-gray-700 shadow-[0_10px_24px_rgba(15,23,42,0.08)] backdrop-blur-md">
-                  Od:{" "}
+          <HeroGlassPanel
+            title={
+              !loadingFeaturedExhibition && featuredExhibition
+                ? getExhibitionDisplayTitle(featuredExhibition)
+                : "Aktuální výstava"
+            }
+            headerSlot={
+              featuredExhibition?.date ? (
+                <div className="rounded-full border border-[#ffd799]/40 bg-white/88 px-4 py-2 text-sm font-medium text-[#5b3b12] shadow-[0_16px_34px_rgba(15,23,42,0.12)] backdrop-blur-xl">
+                  Od{" "}
                   {new Date(featuredExhibition.date).toLocaleDateString(
                     "cs-CZ",
                   )}
                 </div>
-              ) : null}
-            </div>
-
+              ) : null
+            }
+          >
             {loadingFeaturedExhibition ? (
-              <div className="flex h-64 items-center justify-center md:h-96">
+              <div className="flex h-64 items-center justify-center px-5 py-8 md:h-96 sm:px-6 sm:py-10">
                 <div className="h-12 w-12 animate-spin rounded-full border-t-4 border-[#f5a623] border-solid" />
               </div>
             ) : (
-              <div className="relative h-64 overflow-hidden rounded-[1.8rem] border border-white/40 bg-white/35 shadow-[0_24px_60px_rgba(15,23,42,0.18)] backdrop-blur-md md:h-96">
-                <img
-                  src={featuredExhibition?.coverImage?.url || Placeholder}
-                  alt=""
-                  aria-hidden="true"
-                  className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl opacity-45"
-                  loading="eager"
-                  decoding="async"
-                />
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.24),rgba(15,23,42,0.18))]" />
-                <img
-                  src={featuredExhibition?.coverImage?.url || Placeholder}
-                  alt={
-                    featuredExhibition?.coverImage?.alt ||
-                    getExhibitionDisplayTitle(featuredExhibition)
-                  }
-                  className="relative h-full w-full object-contain p-4 md:p-6"
-                  loading="eager"
-                  decoding="async"
-                />
+              <div className="relative p-4 sm:p-5">
+                <div className="relative overflow-hidden rounded-[1.7rem]">
+                  <img
+                    src={featuredExhibition?.coverImage?.url || Placeholder}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl opacity-35"
+                    loading="eager"
+                    decoding="async"
+                  />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.16),rgba(15,23,42,0.2))]" />
+                  <img
+                    src={featuredExhibition?.coverImage?.url || Placeholder}
+                    alt={
+                      featuredExhibition?.coverImage?.alt ||
+                      getExhibitionDisplayTitle(featuredExhibition)
+                    }
+                    className="relative h-[360px] w-full object-contain sm:h-[460px]"
+                    loading="eager"
+                    decoding="async"
+                  />
+                </div>
               </div>
             )}
-          </div>
+          </HeroGlassPanel>
         }
       />
 

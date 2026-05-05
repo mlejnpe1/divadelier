@@ -67,6 +67,7 @@ export default function Navbar() {
       title: "Program & Nabídka",
       submenu: [
         { label: "Akce", href: "/akce" },
+        { label: "Let Andělů", href: "/let-andelu" },
         { label: "Kurzy", href: "/kurzy" },
         { label: "E-shop", href: "/eshop" },
       ],

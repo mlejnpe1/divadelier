@@ -16,6 +16,7 @@ import LoginPage from "./pages/LoginPage";
 import ExhibitionDetailPage from "./pages/ExhibitionDetailPage";
 import TVVVPage from "./pages/TVVVPage";
 import RentalPage from "./pages/RentalPage";
+import LetAndeluPage from "./pages/LetAndeluPage";
 import BackToTop from "./components/layout/BackToTop";
 import ScrollToTop from "./utils/ScrollToTop";
 
@@ -32,6 +33,7 @@ const App = () => {
     { path: "/historie", element: <HistoryPage /> },
     { path: "/kurzy", element: <CoursesPage /> },
     { path: "/akce", element: <ActionsPage /> },
+    { path: "/let-andelu", element: <LetAndeluPage /> },
     { path: "/akce/:id", element: <ActionDetailPage /> },
     { path: "/vvv/:id", element: <ExhibitionDetailPage /> },
     { path: "/pronajem", element: <RentalPage /> },

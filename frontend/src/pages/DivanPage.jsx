@@ -2,7 +2,7 @@ import React from "react";
 import { ScrollTextIcon, Signature } from "lucide-react";
 import Hero from "../components/layout/Hero";
 import Gallery from "../components/layout/Gallery";
-import ImageRotator from "../components/layout/ImageRotator";
+import HeroMediaShowcase from "../components/layout/HeroMediaShowcase";
 import Section from "../components/layout/Section";
 import ScrollHint from "../components/layout/ScrollHint";
 import Button from "../components/layout/Button";
@@ -39,10 +39,10 @@ const DivanPage = () => {
         subtitle="Skupina dospělých divadelních nadšenců, která skrze vedení Adély Pellarové objevuje a rozvíjí herecké dovednosti a tvoří divadelní představení."
         description="Termíny schůzek: Pátek 19.00 – 21.00"
         children={
-          <ImageRotator
+          <HeroMediaShowcase
             images={heroImages}
             interval={4000}
-            className="h-80 w-3/4 md:h-96 md:w-full"
+            heightClassName="h-80 md:h-96"
           />
         }
         onButtonClick={() => {

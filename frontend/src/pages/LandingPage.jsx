@@ -2,7 +2,7 @@ import React from "react";
 import Hero from "../components/layout/Hero";
 import About from "../components/About";
 import ProgramOffer from "../components/ProgramOffer";
-import ImageRotator from "../components/layout/ImageRotator";
+import HeroMediaShowcase from "../components/layout/HeroMediaShowcase";
 import ScrollHint from "../components/layout/ScrollHint";
 import { Link } from "react-router";
 
@@ -62,10 +62,10 @@ const LandingPage = () => {
           </>
         }
       >
-        <ImageRotator
+        <HeroMediaShowcase
           images={heroImages}
           interval={4000}
-          className="w-full h-[320px] md:h-[480px] lg:h-[560px]"
+          heightClassName="h-[320px] md:h-[480px] lg:h-[560px]"
         />
       </Hero>
       <div className="relative">

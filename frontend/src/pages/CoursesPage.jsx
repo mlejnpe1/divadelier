@@ -9,6 +9,8 @@ import toast from "react-hot-toast";
 import { apiFetch } from "../utils/api.js";
 import ScrollHint from "../components/layout/ScrollHint.jsx";
 import Button from "../components/layout/Button.jsx";
+import HeroFeaturePanel from "../components/layout/HeroFeaturePanel.jsx";
+import HeroFeatureCard from "../components/layout/HeroFeatureCard.jsx";
 import {
   BookOpenText,
   GraduationCap,
@@ -206,51 +208,23 @@ export default function CoursesPage() {
           if (el) el.scrollIntoView({ behavior: "smooth" });
         }}
         children={
-          <div className="w-full max-w-3xl">
-            <div className="relative overflow-hidden rounded-[2rem] border border-white/18 bg-[linear-gradient(145deg,rgba(255,248,236,0.84),rgba(255,232,190,0.36))] p-6 shadow-[0_28px_75px_rgba(60,28,0,0.22)] backdrop-blur-xl md:p-7">
-              <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/28 blur-3xl" />
-              <div className="pointer-events-none absolute -left-8 bottom-0 h-28 w-28 rounded-full bg-[#f5a623]/20 blur-3xl" />
-
-              <div className="relative">
-                <p className="text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-[#9a590b]">
-                  Jakou cestou se vydat
-                </p>
-                <h2 className="mt-3 text-3xl font-bold leading-tight text-[#3f250f]">
-                  Kurzy, které se přizpůsobí tomu, kde právě jste
-                </h2>
-                <p className="mt-4 max-w-2xl text-sm leading-7 text-[#5f4126]">
-                  Dlouhodobé skupiny, jednorázové divadelní workshopy i
-                  individuální příprava pro konkrétní cíl. Vyberte si formát,
-                  který vám dává smysl právě teď.
-                </p>
-
-                <div className="mt-6 grid gap-4 md:grid-cols-3">
-                  {HERO_TRACKS.map((track) => {
-                    const Icon = track.icon;
-
-                    return (
-                      <button
-                        key={track.id}
-                        type="button"
-                        onClick={() => scrollToId(track.id)}
-                        className="group rounded-[1.6rem] border border-white/24 bg-white/50 p-4 text-left shadow-[0_16px_40px_rgba(15,23,42,0.08)] backdrop-blur-md transition hover:-translate-y-1 hover:bg-white/66"
-                      >
-                        <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/35 bg-[rgba(245,166,35,0.14)] text-[#c46f04] shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]">
-                          <Icon size={20} />
-                        </div>
-                        <h3 className="mt-4 text-lg font-semibold text-gray-900">
-                          {track.title}
-                        </h3>
-                        <p className="mt-2 text-sm leading-7 text-[#5f4a35]">
-                          {track.text}
-                        </p>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
+          <HeroFeaturePanel
+            eyebrow="Jakou cestou se vydat"
+            title="Kurzy, které se přizpůsobí tomu, kde právě jste"
+            description="Dlouhodobé skupiny, jednorázové divadelní workshopy i individuální příprava pro konkrétní cíl. Vyberte si formát, který vám dává smysl právě teď."
+            items={HERO_TRACKS}
+            renderItem={(track) => {
+              return (
+                <HeroFeatureCard
+                  as="button"
+                  onClick={() => scrollToId(track.id)}
+                  icon={track.icon}
+                  title={track.title}
+                  text={track.text}
+                />
+              );
+            }}
+          />
         }
       />
       <div className="relative">

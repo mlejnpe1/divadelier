@@ -1,5 +1,12 @@
 import React, { useMemo, useState } from "react";
-import { ChevronRight, Filter, Package2, Plus } from "lucide-react";
+import {
+  ChevronRight,
+  Filter,
+  Package2,
+  Plus,
+  MessageCircleMore,
+  Sparkles,
+} from "lucide-react";
 import Hero from "../components/layout/Hero.jsx";
 import Section from "../components/layout/Section.jsx";
 import ScrollHint from "../components/layout/ScrollHint.jsx";
@@ -15,6 +22,8 @@ import { useDebouncedValue } from "../hooks/useDebouncedValue.js";
 import { apiFetch } from "../utils/api.js";
 import { toastAction } from "../utils/toastAction.jsx";
 import { confirmToast } from "../utils/confirmToast.jsx";
+import HeroFeaturePanel from "../components/layout/HeroFeaturePanel.jsx";
+import HeroFeatureCard from "../components/layout/HeroFeatureCard.jsx";
 
 function buildShopInquiryMessage(item) {
   return `Dobrý den,\n\nmám zájem o produkt „${item.title}“ za ${item.price} Kč.\nProsím o více informací k dostupnosti a dalšímu postupu.\n\nDěkuji.`;
@@ -52,6 +61,26 @@ function formatProductCount(count) {
   }
 
   return `${count} produktů`;
+}
+
+function getHeroShopCards(totalCount) {
+  return [
+    {
+      title: "Nabídka",
+      text: "obrazy, výtvory, autorské předměty",
+      icon: Sparkles,
+    },
+    {
+      title: "Sekce",
+      text: "Divadelier a Výstavy ve výloze",
+      icon: Package2,
+    },
+    {
+      title: "Aktuálně",
+      text: formatProductCount(totalCount),
+      icon: MessageCircleMore,
+    },
+  ];
 }
 
 export default function EshopPage() {
@@ -200,69 +229,19 @@ export default function EshopPage() {
           if (el) el.scrollIntoView({ behavior: "smooth" });
         }}
         children={
-          <div className="w-full max-w-3xl">
-            <div className="relative overflow-hidden rounded-[2rem] border border-white/18 bg-[linear-gradient(145deg,rgba(255,248,236,0.84),rgba(255,232,190,0.36))] p-6 shadow-[0_28px_75px_rgba(60,28,0,0.22)] backdrop-blur-xl md:p-7">
-              <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/28 blur-3xl" />
-              <div className="pointer-events-none absolute -left-8 bottom-0 h-28 w-28 rounded-full bg-[#f5a623]/20 blur-3xl" />
-
-              <div className="relative space-y-6">
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    "originální věci",
-                    "objednávka přes poptávku",
-                    "osobní domluva",
-                  ].map((pill) => (
-                    <span
-                      key={pill}
-                      className="inline-flex rounded-full border border-white/50 bg-white/60 px-3 py-1.5 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[#7a4d16] shadow-[0_10px_26px_rgba(15,23,42,0.05)]"
-                    >
-                      {pill}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="rounded-[1.8rem] border border-white/30 bg-white/52 p-6 shadow-[0_18px_44px_rgba(15,23,42,0.08)] backdrop-blur-md">
-                  <h2 className="mt-3 text-2xl font-bold leading-tight text-[#3f250f]">
-                    Věci z Divadeliéru a Výstav ve výloze
-                  </h2>
-                  <p className="mt-4 max-w-2xl text-sm leading-7 text-[#5f4126]">
-                    Najdete tu obrazy, vývory i další autorské předměty. E-shop
-                    funguje jednoduše přes poptávku a navazuje na osobnější tón
-                    celého webu.
-                  </p>
-
-                  <div className="mt-6 grid gap-3 sm:grid-cols-3">
-                    <div className="rounded-[1.35rem] border border-white/45 bg-white/64 px-4 py-4 shadow-[0_12px_28px_rgba(15,23,42,0.05)]">
-                      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-[#9a590b]">
-                        Nabídka
-                      </p>
-                      <p className="mt-2 text-sm font-medium text-[#3f250f]">
-                        obrazy, vývory, autorské předměty
-                      </p>
-                    </div>
-
-                    <div className="rounded-[1.35rem] border border-white/45 bg-white/64 px-4 py-4 shadow-[0_12px_28px_rgba(15,23,42,0.05)]">
-                      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-[#9a590b]">
-                        Sekce
-                      </p>
-                      <p className="mt-2 text-sm font-medium text-[#3f250f]">
-                        Divadelier a Výstavy ve výloze
-                      </p>
-                    </div>
-
-                    <div className="rounded-[1.35rem] border border-white/45 bg-white/64 px-4 py-4 shadow-[0_12px_28px_rgba(15,23,42,0.05)]">
-                      <p className="text-[0.68rem] font-semibold uppercase tracking-[0.2em] text-[#9a590b]">
-                        Aktuálně
-                      </p>
-                      <p className="mt-2 text-sm font-medium text-[#3f250f]">
-                        {formatProductCount(items.length)}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <HeroFeaturePanel
+            eyebrow="Jak nakupovat"
+            title="Věci z Divadeliéru a Výstav ve výloze"
+            description="Najdete tu obrazy, výtvory i další autorské předměty. E-shop funguje jednoduše přes poptávku a navazuje na osobnější tón celého webu."
+            items={getHeroShopCards(items.length)}
+            renderItem={(item) => (
+              <HeroFeatureCard
+                icon={item.icon}
+                title={item.title}
+                text={item.text}
+              />
+            )}
+          />
         }
       />
 
