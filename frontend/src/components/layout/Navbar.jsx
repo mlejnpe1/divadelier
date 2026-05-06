@@ -9,13 +9,13 @@ import {
   LogOut,
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
-import { useNavigate, Link } from "react-router";
+import { Link } from "react-router";
 
 export default function Navbar() {
-  const { user, loading } = useAuth();
+  const { user, loading, logout } = useAuth();
   const [openDropdown, setOpenDropdown] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const navigate = useNavigate();
+  const [logoutPending, setLogoutPending] = useState(false);
 
   const toggleDropdown = (menu) => {
     if (openDropdown === menu) {
@@ -35,15 +35,19 @@ export default function Navbar() {
   };
 
   const handleLogout = async () => {
+    if (logoutPending) {
+      return;
+    }
+
     try {
-      await fetch(`${import.meta.env.VITE_API_URL}/api/auth/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
+      setLogoutPending(true);
+      await logout();
       closeMobileMenu();
-      navigate("/login");
+      window.location.reload();
     } catch (err) {
       console.error("Chyba při odhlášení: ", err);
+    } finally {
+      setLogoutPending(false);
     }
   };
 
@@ -131,10 +135,11 @@ export default function Navbar() {
 
           <button
             onClick={handleLogout}
+            disabled={logoutPending}
             className="flex w-full items-center justify-center gap-2 rounded-2xl border border-white/30 bg-white/55 px-4 py-4 text-sm font-medium text-gray-800 shadow-[0_14px_36px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.4)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-white/70"
           >
             <LogOut className="h-4 w-4 text-[#f5a623]" />
-            Odhlásit se
+            {logoutPending ? "Odhlašuji..." : "Odhlásit se"}
           </button>
         </div>
       );
@@ -147,6 +152,7 @@ export default function Navbar() {
         </span>
         <button
           onClick={handleLogout}
+          disabled={logoutPending}
           className="flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-white/55 text-gray-700 shadow-[0_14px_36px_rgba(15,23,42,0.08),inset_0_1px_0_rgba(255,255,255,0.4)] backdrop-blur-xl transition hover:-translate-y-0.5 hover:bg-white/70 hover:text-[#f5a623]"
         >
           <LogOut className="h-5 w-5" />

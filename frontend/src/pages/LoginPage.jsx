@@ -1,36 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useNavigate } from "react-router";
 import HeroBG1 from "../assets/images/heroBG1.webp";
 import Button from "../components/layout/Button";
+import { useAuth } from "../hooks/useAuth";
 
 export default function LoginPage() {
+  const { user, loading: authLoading, login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!authLoading && user) {
+      navigate("/", { replace: true });
+    }
+  }, [authLoading, navigate, user]);
 
   const handleLogin = async () => {
+    if (loading) {
+      return;
+    }
+
     setError(null);
     setLoading(true);
 
     try {
-      const API_URL = import.meta.env.VITE_API_URL;
-
-      const res = await fetch(`${API_URL}/api/auth/login`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Neplatné přihlašovací údaje");
-      }
-
-      window.location.href = "/";
+      await login({ email, password });
+      navigate("/", { replace: true });
     } catch (err) {
       setError(err.message);
     } finally {
