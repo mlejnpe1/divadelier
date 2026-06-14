@@ -6,6 +6,7 @@ import {
   Plus,
   MessageCircleMore,
   Sparkles,
+  ArrowLeft,
 } from "lucide-react";
 import Hero from "../components/layout/Hero.jsx";
 import Section from "../components/layout/Section.jsx";
@@ -220,6 +221,54 @@ export default function EshopPage() {
   return (
     <>
       <Hero
+        title="E-shop je momentálně nedostupný"
+        subtitle="Vrátíme se k němu později"
+        description="Momentálně zde není veřejně dostupná nabídka k prohlížení ani k objednání. Pokračovat můžete zpět na hlavní stránku nebo na další části webu."
+        buttonText="Zpět na hlavní stránku"
+        buttonLink="/"
+        children={
+          <div className="rounded-[2rem] border border-white/45 bg-[linear-gradient(145deg,rgba(255,255,255,0.84),rgba(247,241,233,0.74))] p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl md:p-8">
+            <div className="flex h-full min-h-[280px] flex-col justify-between rounded-[1.8rem] border border-[#ffd799]/24 bg-[linear-gradient(145deg,rgba(255,248,236,0.86),rgba(255,234,196,0.52))] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.34)]">
+              <div>
+                <h2 className="mt-5 text-2xl font-bold text-[#2f2417]">
+                  E-shop je dočasně vypnutý
+                </h2>
+                <p className="mt-3 max-w-md text-sm leading-7 text-[#5f4a35]">
+                  Jakmile bude nabídka znovu připravená, stránku opět otevřeme.
+                  Zatím se prosím vraťte na hlavní stránku nebo použijte další
+                  části webu.
+                </p>
+              </div>
+
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Button to="/" className="inline-flex">
+                  <ArrowLeft size={16} />
+                  Vrátit se na hlavní stránku
+                </Button>
+                <Button href="/kontakt" variant="secondary">
+                  Kontakt
+                </Button>
+              </div>
+            </div>
+          </div>
+        }
+      />
+
+      <Section border={true}>
+        <div className="rounded-[1.9rem] border border-white/45 bg-white/70 px-6 py-8 text-center shadow-[0_18px_50px_rgba(15,23,42,0.08)] backdrop-blur-xl">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9a590b]">
+            Upozornění
+          </p>
+          <h3 className="mt-3 text-2xl font-semibold text-gray-900">
+            Zboží nyní není veřejně dostupné
+          </h3>
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-[#5f4a35]">
+            Pokud potřebujete něco vyřešit nebo máte zájem o spolupráci, ozvěte
+            se přes kontaktní stránku. Rádi se domluvíme individuálně.
+          </p>
+        </div>
+      </Section>
+      {/*<Hero
         title="E-shop Divadeliéru"
         subtitle="Autorské předměty, drobnosti a výběr z výstav"
         description="Podpořte Divadeliér a vystavující autory. V e-shopu najdete produkty z vlastní nabídky i vybrané věci z Výstav ve výloze."
@@ -471,6 +520,7 @@ export default function EshopPage() {
           </div>
         )}
       </Section>
+       */}
     </>
   );
 }

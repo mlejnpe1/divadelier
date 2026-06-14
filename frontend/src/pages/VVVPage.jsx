@@ -301,10 +301,10 @@ const VVVPage = () => {
   return (
     <>
       <Hero
-        title='VVV - Výstavy ve výloze'
-        subtitle='Aktuální výstava na dosah'
-        description='Prohlédněte si umělecká díla přímo z výlohy. Objevte novinky, plán vystav a možnost zakoupení obrazu.'
-        buttonText='Prohlédnout výstavní plán'
+        title="VVV - Výstavy ve výloze"
+        subtitle="Aktuální výstava na dosah"
+        description="Prohlédněte si umělecká díla přímo z výlohy. Objevte novinky, plán výstav a možnost zakoupení obrazu."
+        buttonText="Prohlédnout výstavní plán"
         onButtonClick={() => {
           const el = document.getElementById("exhibitionsSection");
           if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -318,7 +318,7 @@ const VVVPage = () => {
             }
             headerSlot={
               featuredExhibition?.date ? (
-                <div className='rounded-full border border-[#ffd799]/40 bg-white/88 px-4 py-2 text-sm font-medium text-[#5b3b12] shadow-[0_16px_34px_rgba(15,23,42,0.12)] backdrop-blur-xl'>
+                <div className="rounded-full border border-[#ffd799]/40 bg-white/88 px-4 py-2 text-sm font-medium text-[#5b3b12] shadow-[0_16px_34px_rgba(15,23,42,0.12)] backdrop-blur-xl">
                   Od{" "}
                   {new Date(featuredExhibition.date).toLocaleDateString(
                     "cs-CZ",
@@ -328,30 +328,30 @@ const VVVPage = () => {
             }
           >
             {loadingFeaturedExhibition ? (
-              <div className='flex h-64 items-center justify-center px-5 py-8 md:h-96 sm:px-6 sm:py-10'>
-                <div className='h-12 w-12 animate-spin rounded-full border-t-4 border-[#f5a623] border-solid' />
+              <div className="flex h-64 items-center justify-center px-5 py-8 md:h-96 sm:px-6 sm:py-10">
+                <div className="h-12 w-12 animate-spin rounded-full border-t-4 border-[#f5a623] border-solid" />
               </div>
             ) : (
-              <div className='relative p-4 sm:p-5'>
-                <div className='relative overflow-hidden rounded-[1.7rem]'>
+              <div className="relative p-4 sm:p-5">
+                <div className="relative overflow-hidden rounded-[1.7rem]">
                   <img
                     src={featuredExhibition?.coverImage?.url || Placeholder}
-                    alt=''
-                    aria-hidden='true'
-                    className='absolute inset-0 h-full w-full scale-110 object-cover blur-2xl opacity-35'
-                    loading='eager'
-                    decoding='async'
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute inset-0 h-full w-full scale-110 object-cover blur-2xl opacity-35"
+                    loading="eager"
+                    decoding="async"
                   />
-                  <div className='absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.16),rgba(15,23,42,0.2))]' />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.16),rgba(15,23,42,0.2))]" />
                   <img
                     src={featuredExhibition?.coverImage?.url || Placeholder}
                     alt={
                       featuredExhibition?.coverImage?.alt ||
                       getExhibitionDisplayTitle(featuredExhibition)
                     }
-                    className='relative h-[360px] w-full object-contain sm:h-[460px]'
-                    loading='eager'
-                    decoding='async'
+                    className="relative h-[360px] w-full object-contain sm:h-[460px]"
+                    loading="eager"
+                    decoding="async"
                   />
                 </div>
               </div>
@@ -360,14 +360,14 @@ const VVVPage = () => {
         }
       />
 
-      <div className='relative'>
-        <ScrollHint variant='overlay' color='light' />
+      <div className="relative">
+        <ScrollHint variant="overlay" color="light" />
       </div>
 
       <Section border={true}>
-        <div className='mb-8 flex items-center'>
-          <CalendarSearchIcon className='mr-3 h-8 w-8 text-[#f5a623]' />
-          <h2 className='text-3xl font-bold'>Následující výstavy</h2>
+        <div className="mb-8 flex items-center">
+          <CalendarSearchIcon className="mr-3 h-8 w-8 text-[#f5a623]" />
+          <h2 className="text-3xl font-bold">Následující výstavy</h2>
         </div>
         <ExhibitionCarousel
           items={carouselData?.items || []}
@@ -375,7 +375,8 @@ const VVVPage = () => {
         />
       </Section>
 
-      {/*<Section border={true}>
+      {/*
+      <Section border={true}>
         <div className="relative overflow-hidden rounded-[1.9rem] border border-[#ffd799]/20 bg-[linear-gradient(145deg,rgba(255,248,236,0.82),rgba(255,234,196,0.44))] p-6 shadow-[0_22px_60px_rgba(95,47,0,0.12)] backdrop-blur-xl md:p-8">
           <div className="pointer-events-none absolute -left-8 top-4 h-24 w-24 rounded-full bg-[#f5a623]/18 blur-3xl" />
           <div className="pointer-events-none absolute right-0 top-0 h-24 w-24 rounded-full bg-white/35 blur-3xl" />
@@ -417,18 +418,19 @@ const VVVPage = () => {
             </div>
           </div>
         </div>
-      </Section> */}
+      </Section>
+      */}
 
       <Section border={true}>
-        <ContactSection page='Výstavy ve výloze' />
+        <ContactSection page="Výstavy ve výloze" />
       </Section>
 
       <Section border={true}>
         <div
-          className='mb-6 flex items-center justify-between'
-          id='exhibitionsSection'
+          className="mb-6 flex items-center justify-between"
+          id="exhibitionsSection"
         >
-          <h2 id='fullExhibitionPlan' className='text-3xl font-bold'>
+          <h2 id="fullExhibitionPlan" className="text-3xl font-bold">
             Kompletní výstavní plán
           </h2>
           {user && (
@@ -447,10 +449,10 @@ const VVVPage = () => {
           }}
         />
 
-        <div className='relative'>
+        <div className="relative">
           {planLoading && (
-            <div className='absolute inset-0 z-10 flex items-start justify-end bg-white/60 p-2 backdrop-blur-[1px]'>
-              <span className='text-sm text-gray-500'>Načítám...</span>
+            <div className="absolute inset-0 z-10 flex items-start justify-end bg-white/60 p-2 backdrop-blur-[1px]">
+              <span className="text-sm text-gray-500">Načítám...</span>
             </div>
           )}
 
@@ -466,7 +468,7 @@ const VVVPage = () => {
             page={activePlanYear}
             pageCount={planYearItems.length}
             items={planYearItems}
-            itemTypeLabel='rok'
+            itemTypeLabel="rok"
             onPageChange={(year) => setSelectedPlanYear(year)}
           />
         </div>

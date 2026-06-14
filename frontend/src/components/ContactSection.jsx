@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Megaphone } from "lucide-react";
 import toast from "react-hot-toast";
+import { Link } from "react-router";
 import { apiFetch } from "../utils/api";
 import Button from "./layout/Button";
 
@@ -109,6 +110,19 @@ export default function ContactSection({
               {sending ? "Odesílám..." : "Odeslat zprávu"}
             </Button>
           </div>
+
+          <p className="text-xs leading-6 text-[#6c5133]">
+            Odesláním formuláře berete na vědomí zpracování osobních údajů pro
+            vyřízení vaší zprávy a další komunikaci. Podrobnosti jsou uvedeny
+            v{" "}
+            <Link
+              to="/zasady-zpracovani-osobnich-udaju"
+              className="font-medium text-[#c98512] underline underline-offset-2 hover:text-[#a96a08]"
+            >
+              Zásadách zpracování osobních údajů
+            </Link>
+            .
+          </p>
         </form>
       </div>
     </div>

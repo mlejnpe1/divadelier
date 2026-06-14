@@ -2,6 +2,7 @@ import React from "react";
 import { ExternalLink, PlayCircle, Youtube } from "lucide-react";
 import { useFetch } from "../../hooks/useFetch.js";
 import Button from "../layout/Button.jsx";
+import ExternalContentGate from "../cookies/ExternalContentGate";
 
 function formatPublishedAt(value) {
   if (!value) return "";
@@ -49,19 +50,19 @@ export default function LatestYoutubeVideoPanel({ user }) {
 
       {!loading && video ? (
         <div className="relative mt-8 grid gap-6 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.85fr)] lg:items-start">
-          <div className="overflow-hidden rounded-[1.8rem] border border-white/45 bg-black shadow-[0_24px_60px_rgba(15,23,42,0.18)]">
-            <div className="aspect-video">
-              <iframe
-                className="h-full w-full"
-                src={video.embedUrl}
-                title={video.title || "YouTube video"}
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-              />
-            </div>
-          </div>
+          <ExternalContentGate
+            type="YouTube"
+            title={video.title || "Nejnovější video"}
+            description="Video přehrajeme až po vašem souhlasu s externím obsahem. Pokud nechcete nic povolovat, můžete ho otevřít přímo na YouTube."
+            sourceLabel="YouTube"
+            sourceHref={video.watchUrl}
+            loadLabel="Načíst video"
+            iframeSrc={video.embedUrl}
+            iframeTitle={video.title || "YouTube video"}
+            iframeAllow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            className="overflow-hidden rounded-[1.8rem] border border-white/45 bg-black shadow-[0_24px_60px_rgba(15,23,42,0.18)]"
+            iframeClassName="aspect-video h-full w-full"
+          />
 
           <div className="rounded-[1.6rem] border border-white/45 bg-white/55 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] backdrop-blur-sm">
             <div className="flex flex-wrap items-center gap-3">

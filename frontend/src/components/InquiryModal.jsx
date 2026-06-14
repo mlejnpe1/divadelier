@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
+import { Link } from "react-router";
 import Button from "./layout/Button";
 
 export default function InquiryModal({
@@ -242,8 +243,17 @@ export default function InquiryModal({
               </Button>
             </div>
 
-            <p className="text-xs text-gray-500">
-              Odesláním souhlasíte se zpracováním údajů za účelem kontaktování.
+            <p className="text-xs leading-6 text-gray-500">
+              Odesláním formuláře berete na vědomí zpracování osobních údajů
+              pro vyřízení vaší poptávky a další komunikaci. Podrobnosti jsou
+              uvedeny v{" "}
+              <Link
+                to="/zasady-zpracovani-osobnich-udaju"
+                className="font-medium text-[#c98512] underline underline-offset-2 hover:text-[#a96a08]"
+              >
+                Zásadách zpracování osobních údajů
+              </Link>
+              .
             </p>
             <input
               name="website"

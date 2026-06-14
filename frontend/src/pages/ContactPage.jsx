@@ -4,6 +4,7 @@ import { Facebook, Instagram, Youtube } from "lucide-react";
 import { motion } from "framer-motion";
 import Section from "../components/layout/Section";
 import ScrollHint from "../components/layout/ScrollHint";
+import ExternalContentGate from "../components/cookies/ExternalContentGate";
 
 const ContactPage = () => {
   return (
@@ -187,18 +188,19 @@ const ContactPage = () => {
               </div>
             </div>
 
-            <div className="overflow-hidden rounded-[1.5rem] border border-white/75 bg-white/70 shadow-[0_22px_54px_rgba(94,55,8,0.1)]">
-              <div className="h-[260px] sm:h-[350px] md:h-[450px]">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2567.0285798634573!2d16.156940277140183!3d49.95456637150172!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470dc172cbafc7a1%3A0xe181fc42e8afb1b6!2sDivadeli%C3%A9r!5e0!3m2!1scs!2scz!4v1758050034074!5m2!1scs!2scz"
-                  className="h-full w-full"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              </div>
-            </div>
+            <ExternalContentGate
+              type="Google Maps"
+              title="Interaktivní mapa"
+              description="Mapu načteme až po vašem souhlasu s externím obsahem. Kdykoliv ji můžete otevřít i v samostatném okně."
+              sourceLabel="Google Maps"
+              sourceHref="https://maps.google.com/?q=Pra%C5%BEsk%C3%A1%208,%20566%2001%20Vysok%C3%A9%20M%C3%BDto"
+              loadLabel="Načíst mapu"
+              iframeSrc="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2567.0285798634573!2d16.156940277140183!3d49.95456637150172!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470dc172cbafc7a1%3A0xe181fc42e8afb1b6!2sDivadeli%C3%A9r!5e0!3m2!1scs!2scz!4v1758050034074!5m2!1scs!2scz"
+              iframeTitle="Google Maps - Divadeliér"
+              iframeReferrerPolicy="no-referrer-when-downgrade"
+              className="overflow-hidden rounded-[1.5rem] border border-white/75 bg-white/70 shadow-[0_22px_54px_rgba(94,55,8,0.1)]"
+              iframeClassName="h-[260px] w-full sm:h-[350px] md:h-[450px]"
+            />
           </div>
         </motion.div>
       </Section>

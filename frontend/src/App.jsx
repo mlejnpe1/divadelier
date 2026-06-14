@@ -19,6 +19,10 @@ import RentalPage from "./pages/RentalPage";
 import LetAndeluPage from "./pages/LetAndeluPage";
 import BackToTop from "./components/layout/BackToTop";
 import ScrollToTop from "./utils/ScrollToTop";
+import ObchodniPodminky from "./components/legals/ObchodniPodminky";
+import ZasadyZpracovaniOsobnichUdaju from "./components/legals/ZasadyZpracovaniOsobnichUdaju";
+import ZasadyCookies from "./components/legals/ZasadyCookies";
+import MimosoudniReseniSpotrebitelskychSporu from "./components/legals/MimosoudniReseniSpotrebitelskychSporu";
 
 const App = () => {
   const routes = [
@@ -37,6 +41,16 @@ const App = () => {
     { path: "/akce/:id", element: <ActionDetailPage /> },
     { path: "/vvv/:id", element: <ExhibitionDetailPage /> },
     { path: "/pronajem", element: <RentalPage /> },
+    { path: "/obchodni-podminky", element: <ObchodniPodminky /> },
+    {
+      path: "/zasady-zpracovani-osobnich-udaju",
+      element: <ZasadyZpracovaniOsobnichUdaju />,
+    },
+    { path: "/zasady-cookies", element: <ZasadyCookies /> },
+    {
+      path: "/mimosoudni-reseni-spotrebitelskych-sporu",
+      element: <MimosoudniReseniSpotrebitelskychSporu />,
+    },
   ];
 
   return (
