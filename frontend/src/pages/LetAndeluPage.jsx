@@ -75,7 +75,7 @@ const PROGRAM_STEPS = [
   },
   {
     title: "Otevření Vánoc",
-    text: "V 17:00 se všichni sejdeme u chrámu svatého Vavřince. Let andělů není jen průvod. Je to společné ztišení prostoru tichým letem andělů, kterým se symbolicky otevitají Vánoce pro zrození lásky.",
+    text: "V 17:00 se všichni sejdeme u chrámu svatého Vavřince. Let andělů není jen průvod. Je to společné ztišení prostoru tichým letem andělů, kterým se symbolicky otevirají Vánoce pro zrození lásky.",
   },
 ];
 
