@@ -61,6 +61,7 @@ const App = () => {
         ))}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      <Analytics />
       <ScrollToTop />
       <BackToTop showAfter={400} />
     </>

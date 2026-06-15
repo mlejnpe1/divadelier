@@ -14,7 +14,6 @@ createRoot(document.getElementById("root")).render(
       <BrowserRouter>
         <App />
         <Toaster />
-        <Analytics />
       </BrowserRouter>
     </AuthProvider>
   </StrictMode>,
