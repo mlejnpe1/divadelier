@@ -136,12 +136,23 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="border-t border-gray-200 px-4 py-4 text-center text-sm text-gray-500">
+      <div className="border-t border-gray-200 px-4 py-2 text-center text-sm text-gray-500">
         <p className="font-medium text-gray-600">
           Provozovatel: Adéla Pellarová, IČO: 02684071, Pražská 8, 566 01 Vysoké
           Mýto
         </p>
-        <p className="mt-1">&copy; 2026 Divadeliér. Všechna práva vyhrazena.</p>
+        <p className="font-medium text-gray-600">
+          Webdesign, realizace a správa webu: Petr Mlejnek, Kontakt:{" "}
+          <a
+            href="mailto:mlejnek.petr.ml@gmail.com"
+            className="text-[#c6801c] transition hover:text-[#f5a623]"
+          >
+            mlejnek.petr.ml@gmail.com
+          </a>
+        </p>
+        <p className="mt-2 border-t py-2 border-gray-200">
+          &copy; 2026 Divadeliér. Všechna práva vyhrazena.
+        </p>
       </div>
 
       <LegalModal

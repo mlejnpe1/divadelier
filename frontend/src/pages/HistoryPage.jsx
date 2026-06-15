@@ -51,7 +51,7 @@ const HistoryPage = () => {
     {
       year: "2025",
       image: HistoryImage2025,
-      text: "Adéla Pellarová dostává Kujebu za kulturní přínos pro Vysoký Mýto v roce 2024",
+      text: "Adéla Pellarová dostává Kujebu za kulturní přínos pro Vysoké Mýto v roce 2024",
     },
     {
       year: "2026",

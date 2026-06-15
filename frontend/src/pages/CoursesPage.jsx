@@ -258,7 +258,7 @@ export default function CoursesPage() {
               přeskočit rovnou k části, která vás zajímá nejvíc.
             </p>
 
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div id="lecturer" className="mt-6 flex flex-wrap gap-3">
               {SECTIONS.map((s) => (
                 <Button
                   key={s.id}
@@ -277,10 +277,7 @@ export default function CoursesPage() {
       </Section>
 
       <Section border={true}>
-        <div
-          id="lecturer"
-          className="relative overflow-hidden rounded-[2rem] border border-white/45 bg-[linear-gradient(145deg,rgba(255,255,255,0.84),rgba(247,241,233,0.74))] p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl md:p-8"
-        >
+        <div className="relative overflow-hidden rounded-[2rem] border border-white/45 bg-[linear-gradient(145deg,rgba(255,255,255,0.84),rgba(247,241,233,0.74))] p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur-xl md:p-8">
           <div className="pointer-events-none absolute -left-10 top-8 h-28 w-28 rounded-full bg-[#f5a623]/14 blur-3xl" />
           <div className="pointer-events-none absolute right-0 top-0 h-28 w-28 rounded-full bg-white/45 blur-3xl" />
 
@@ -294,8 +291,8 @@ export default function CoursesPage() {
               </h2>
               <p className="mt-4 max-w-3xl text-base leading-8 text-[#5f4a35]">
                 Kurzy vede divadelní pedagožka, herečka a autorka, která staví
-                výuku na přirozenosti, hlasu, spolupráci a odvaze vystoupit
-                před druhé.
+                výuku na přirozenosti, hlasu, spolupráci a odvaze vystoupit před
+                druhé.
               </p>
 
               <div className="mt-6 flex flex-wrap gap-3">
@@ -330,8 +327,8 @@ export default function CoursesPage() {
                       školách.
                     </li>
                     <li>
-                      Sobotní divadelní dopoledne v Motole a pedagogická práce
-                      s dětmi.
+                      Sobotní divadelní dopoledne v Motole a pedagogická práce s
+                      dětmi.
                     </li>
                   </ul>
                 </div>
@@ -346,11 +343,11 @@ export default function CoursesPage() {
                     </h3>
                   </div>
                   <ul className="mt-4 space-y-3 text-sm leading-7 text-[#5f4a35]">
-                    <li>Herečka profesionálního divadla Di a vedoucí Divadeliéru.</li>
-                    <li>Režie, scénáře v databázi Dilia a básnická tvorba.</li>
                     <li>
-                      Výroční cena Města Vysokého Mýta 2024 za kulturu.
+                      Herečka profesionálního divadla Di a vedoucí Divadeliéru.
                     </li>
+                    <li>Režie, scénáře v databázi Dilia a básnická tvorba.</li>
+                    <li>Výroční cena Města Vysokého Mýta 2024 za kulturu.</li>
                   </ul>
                 </div>
               </div>
@@ -368,9 +365,9 @@ export default function CoursesPage() {
                       laboratoř.
                     </p>
                     <p>
-                      Lektoruje a rozvíjí herecké dovednosti. Nejvíce ji ovlivnil
-                      Ivan Vyskočil hereckou disciplínou Dialogické jednání,
-                      hlasovou výchovou ji provedla Šárka Šternbergová,
+                      Lektoruje a rozvíjí herecké dovednosti. Nejvíce ji
+                      ovlivnil Ivan Vyskočil hereckou disciplínou Dialogické
+                      jednání, hlasovou výchovou ji provedla Šárka Šternbergová,
                       pohybovou průpravou Zdena Kratochvílová, hereckou Hana
                       Smrčková, dramaturgickou Zdena Josková, scénografickou
                       Karel Vostárek, režijní Aleš Bergman a další pedagogové
@@ -447,9 +444,7 @@ export default function CoursesPage() {
                   meta={c.meta}
                   badges={c.badges}
                   ctaText={c.ctaText}
-                  accent={
-                    section.id.includes("individual") ? "ivory" : "warm"
-                  }
+                  accent={section.id.includes("individual") ? "ivory" : "warm"}
                   onCtaClick={() => {
                     setSelectedCourseTitle(c.title);
                     setInquiryOpen(true);

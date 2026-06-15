@@ -27,6 +27,7 @@ import Pagination from "../components/layout/Pagiantion";
 import ScrollHint from "../components/layout/ScrollHint";
 import { getMeetingVisual } from "../data/meetingVisuals";
 import Button from "../components/layout/Button";
+import { Link } from "react-router";
 
 const EMPTY_MEETING_DRAFT = { title: "", information: "", day_in_week: "" };
 
@@ -263,7 +264,7 @@ const DrZdivPage = () => {
       text: "Každá skupina ročně realizuje dvě představení – stínové vánoční divadlo ve výlohách Divadeliéru a závěrečné představení na jevišti v M-klubu. Možnost účastnit se ojedinělé originální akce Letu andělů.",
     },
     {
-      text: "Děti v Dr. ZDIVu objevoují nejen sebe, ale i celý proces vzniku divadelního představení.",
+      text: "Děti v Dr. ZDIVu objevují nejen sebe, ale i celý proces vzniku divadelního představení.",
     },
   ];
 
@@ -411,17 +412,16 @@ const DrZdivPage = () => {
         </div>
         <p>
           Skupiny Dr. ZDIV vede{" "}
-          <a href="/" className="text-[#f5a623]">
+          <Link to="/kurzy#lecturer" className="text-[#f5a623]">
             Mgr.Adéla Pellarová
-          </a>{" "}
+          </Link>{" "}
           (DAMU).
         </p>
         <h3 className="text-xl font-semibold py-3">Přihlášení do Dr. ZDIV:</h3>
         <p>
-          U Adély Pellarové na tel.: 777 076 901 nebo emailem
-          divadelier@divadelier.cz získáte odpovědi na všechny Vaše další
-          případné dotazy a obdržíte zde i přihlášku nebo si ji můžete stáhnout
-          zde.
+          U Adély Pellarové na tel.: 777 076 901 nebo emailem info@divadelier.cz
+          získáte odpovědi na všechny Vaše další případné dotazy a obdržíte zde
+          i přihlášku nebo si ji můžete stáhnout zde.
         </p>
         <div className="flex flex-row gap-4 my-3">
           <Button onClick={() => handleDownload()} className="cursor-pointer">

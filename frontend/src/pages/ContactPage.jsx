@@ -63,10 +63,10 @@ const ContactPage = () => {
                     E-mail
                   </p>
                   <a
-                    href="mailto:adapop@seznam.cz"
+                    href="mailto:info@divadelier.cz"
                     className="break-all text-sm leading-6 text-[#3f301d] transition hover:text-[#a55f08]"
                   >
-                    adapop@seznam.cz
+                    info@divadelier.cz
                   </a>
                 </div>
               </div>
@@ -127,6 +127,14 @@ const ContactPage = () => {
                 </div>
               </div>
             </div>
+          </div>
+          <div className="mt-6 rounded-[1.75rem] border border-white/70 bg-[linear-gradient(145deg,rgba(255,255,255,0.7),rgba(255,245,228,0.72))] p-6 shadow-[0_18px_46px_rgba(94,55,8,0.08)] backdrop-blur-2xl">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-[#c6801c]">
+              Provozovatel webu
+            </p>
+            <p className="text-base leading-7 text-[#5e4b34]">
+              Adéla Pellarová, IČO: 02684071, Pražská 8, 566 01 Vysoké Mýto
+            </p>
           </div>
           <ScrollHint
             target="#contactMapSection"
