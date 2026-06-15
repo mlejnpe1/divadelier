@@ -1,5 +1,6 @@
 import React from "react";
 import { Route, Routes } from "react-router";
+import { Analytics } from "@vercel/analytics/next";
 import LandingPage from "./pages/LandingPage";
 import Layout from "./components/layout/Layout";
 import ContactPage from "./pages/ContactPage";
