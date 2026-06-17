@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Bird,
   CalendarDays,
   ChevronRight,
   MapPinned,
@@ -13,6 +12,7 @@ import ScrollHint from "../components/layout/ScrollHint.jsx";
 import Button from "../components/layout/Button.jsx";
 import Gallery from "../components/layout/Gallery.jsx";
 import HeroMediaShowcase from "../components/layout/HeroMediaShowcase.jsx";
+import AngelIcon from "../components/icons/AngelIcon.jsx";
 
 function scrollToId(id) {
   const el = document.getElementById(id);
@@ -166,8 +166,8 @@ export default function LetAndeluPage() {
 
             <div className="rounded-[1.8rem] border border-[#ffd799]/28 bg-[linear-gradient(145deg,rgba(255,248,236,0.8),rgba(255,234,196,0.46))] p-6 shadow-[0_18px_44px_rgba(95,47,0,0.08)]">
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/45 bg-white/70 text-[#c46f04]">
-                  <Bird size={18} />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full border border-white/45 bg-white/70 text-[#c46f04]">
+                  <AngelIcon className="h-8 w-8" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900">
                   Charakter akce

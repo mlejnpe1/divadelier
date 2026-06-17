@@ -1,5 +1,5 @@
-import React from "react";
-import { Route, Routes } from "react-router";
+import React, { useEffect } from "react";
+import { Route, Routes, useLocation } from "react-router";
 import { Analytics } from "@vercel/analytics/react";
 import LandingPage from "./pages/LandingPage";
 import Layout from "./components/layout/Layout";
@@ -24,6 +24,46 @@ import ObchodniPodminky from "./components/legals/ObchodniPodminky";
 import ZasadyZpracovaniOsobnichUdaju from "./components/legals/ZasadyZpracovaniOsobnichUdaju";
 import ZasadyCookies from "./components/legals/ZasadyCookies";
 import MimosoudniReseniSpotrebitelskychSporu from "./components/legals/MimosoudniReseniSpotrebitelskychSporu";
+
+const PAGE_TITLES = [
+  { match: /^\/$/, title: "Úvodní stránka" },
+  { match: /^\/login\/?$/, title: "Přihlášení" },
+  { match: /^\/kontakt\/?$/, title: "Kontakt" },
+  { match: /^\/drZdiv\/?$/, title: "Dr. ZDIV" },
+  { match: /^\/divan\/?$/, title: "Divan" },
+  { match: /^\/vvv\/?$/, title: "Výstavy ve výloze" },
+  { match: /^\/tvvv\/?$/, title: "TV VV" },
+  { match: /^\/eshop\/?$/, title: "E-shop" },
+  { match: /^\/historie\/?$/, title: "Historie" },
+  { match: /^\/kurzy\/?$/, title: "Kurzy" },
+  { match: /^\/akce\/?$/, title: "Akce" },
+  { match: /^\/let-andelu\/?$/, title: "Let andělů" },
+  { match: /^\/pronajem\/?$/, title: "Pronájem" },
+  { match: /^\/obchodni-podminky\/?$/, title: "Obchodní podmínky" },
+  {
+    match: /^\/zasady-zpracovani-osobnich-udaju\/?$/,
+    title: "Zásady zpracování osobních údajů",
+  },
+  { match: /^\/zasady-cookies\/?$/, title: "Zásady Cookies" },
+  {
+    match: /^\/mimosoudni-reseni-spotrebitelskych-sporu\/?$/,
+    title: "Mimosoudní řešení spotřebitelských sporů",
+  },
+  { match: /^\/akce\/[^/]+\/?$/, title: "Detail akce" },
+  { match: /^\/vvv\/[^/]+\/?$/, title: "Detail výstavy" },
+];
+
+function PageMetadata() {
+  const location = useLocation();
+
+  useEffect(() => {
+    const matched = PAGE_TITLES.find(({ match }) => match.test(location.pathname));
+    const pageTitle = matched?.title || "Stránka nenalezena";
+    document.title = `Divadeliér | ${pageTitle}`;
+  }, [location.pathname]);
+
+  return null;
+}
 
 const App = () => {
   const routes = [
@@ -56,6 +96,7 @@ const App = () => {
 
   return (
     <>
+      <PageMetadata />
       <Routes>
         {routes.map(({ path, element }) => (
           <Route key={path} path={path} element={<Layout>{element}</Layout>} />

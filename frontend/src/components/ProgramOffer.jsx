@@ -3,11 +3,11 @@ import { Link } from "react-router";
 import Section from "./layout/Section";
 import {
   ArrowUpRight,
-  Bird,
   Calendar,
   Clapperboard,
   ShoppingCart,
 } from "lucide-react";
+import AngelIcon from "./icons/AngelIcon.jsx";
 
 const cards = [
   {
@@ -27,7 +27,7 @@ const cards = [
     title: "Let Andělů",
     description:
       "Samostatná stránka pro ojedinělou autorskou akci, která patří k příběhu Divadeliéru.",
-    Icon: Bird,
+    Icon: AngelIcon,
   },
   /*{
     href: "/eshop",
@@ -63,8 +63,8 @@ const ProgramOffer = () => {
               <article className='relative flex h-full min-h-[280px] flex-col overflow-hidden rounded-[1.9rem] border border-white/40 bg-[linear-gradient(160deg,rgba(255,255,255,0.62),rgba(255,248,236,0.44))] p-6 shadow-[0_18px_44px_rgba(15,23,42,0.08)] backdrop-blur-xl transition duration-300 hover:-translate-y-1.5 hover:border-[#f5a623]/30 hover:bg-[linear-gradient(160deg,rgba(255,255,255,0.76),rgba(255,242,214,0.56))] hover:shadow-[0_24px_54px_rgba(95,47,0,0.12)] md:min-h-[310px]'>
                 <div className='pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-white/28 blur-3xl transition duration-300 group-hover:bg-white/42' />
 
-                <div className='relative flex h-12 w-12 items-center justify-center rounded-full border border-white/40 bg-[rgba(245,166,35,0.14)] text-[#c46f04] shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]'>
-                  <Icon className='h-6 w-6' />
+                <div className='relative flex h-14 w-14 items-center justify-center rounded-full border border-white/40 bg-[rgba(245,166,35,0.14)] text-[#c46f04] shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]'>
+                  <Icon className='h-9 w-9' />
                 </div>
 
                 <div className='relative mt-6 flex-1'>
