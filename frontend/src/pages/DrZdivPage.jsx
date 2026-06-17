@@ -413,7 +413,7 @@ const DrZdivPage = () => {
         <p>
           Skupiny Dr. ZDIV vede{" "}
           <Link to="/kurzy#lecturer" className="text-[#f5a623]">
-            Mgr.Adéla Pellarová
+            Mgr. Adéla Pellarová
           </Link>{" "}
           (DAMU).
         </p>
@@ -429,7 +429,7 @@ const DrZdivPage = () => {
             <DownloadIcon size={20} />
           </Button>
         </div>
-        <p>Kurzovné činí 1700,-Kč za pololetí.</p>
+        <p>Kurzovné činí 1900,-Kč za pololetí.</p>
       </Section>
       <Section id="newsSection">
         <div className="relative mb-8 flex items-center justify-between gap-4">

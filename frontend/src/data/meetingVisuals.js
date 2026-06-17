@@ -84,24 +84,24 @@ const prstenaciImages = sortImageEntries(
 
 const takeGallery = (...imageSets) => {
   const combined = imageSets.flat().filter(Boolean);
-  return Array.from(new Set(combined)).slice(0, 5);
+  return Array.from(new Set(combined));
 };
 
 const visualPresets = [
   {
     key: "sunlight",
     cover: heroImages[3] || heroImages[0] || rentalImages[0] || divanImages[0] || "",
-    gallery: takeGallery(heroImages.slice(0, 5), rentalImages.slice(0, 2)),
+    gallery: takeGallery(heroImages, rentalImages.slice(0, 2)),
   },
   {
     key: "studio",
     cover: rentalImages[2] || rentalImages[0] || heroImages[1] || divanImages[0] || "",
-    gallery: takeGallery(rentalImages.slice(0, 5), heroImages.slice(0, 2)),
+    gallery: takeGallery(rentalImages, heroImages.slice(0, 2)),
   },
   {
     key: "ensemble",
     cover: divanImages[4] || divanImages[0] || heroImages[2] || rentalImages[0] || "",
-    gallery: takeGallery(divanImages.slice(0, 5), heroImages.slice(0, 2)),
+    gallery: takeGallery(divanImages, heroImages.slice(0, 2)),
   },
 ];
 
@@ -139,7 +139,7 @@ export const getMeetingVisual = (meeting, index = 0) => {
   if (customImages.length) {
     return {
       cover: customImages[0],
-      gallery: customImages.slice(0, 5),
+      gallery: customImages,
     };
   }
 

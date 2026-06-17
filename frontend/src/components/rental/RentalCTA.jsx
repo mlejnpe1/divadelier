@@ -34,7 +34,7 @@ export default function RentCTA() {
           </div>
 
           <h3 className="text-2xl font-bold text-[#3f250f]">
-            Máte zájem o pronájem prostoru Divadelieru?
+            Máte zájem o pronájem prostoru Divadeliéru?
           </h3>
 
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-[#5f4a35] sm:text-base">

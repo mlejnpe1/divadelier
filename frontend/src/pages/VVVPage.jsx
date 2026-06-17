@@ -301,9 +301,14 @@ const VVVPage = () => {
   return (
     <>
       <Hero
-        title="VVV - Výstavy ve výloze"
+        title={
+          <>
+            <span className="block">VVV</span>
+            <span className="block">Výstavy ve výloze</span>
+          </>
+        }
         subtitle="Aktuální výstava na dosah"
-        description="Prohlédněte si umělecká díla přímo z výlohy. Objevte novinky, plán výstav a možnost zakoupení obrazu."
+        description="Prohlédněte si umělecká díla přímo z výlohy. Objevte novinky a kompletní plán výstav."
         buttonText="Prohlédnout výstavní plán"
         onButtonClick={() => {
           const el = document.getElementById("exhibitionsSection");

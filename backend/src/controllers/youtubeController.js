@@ -1,11 +1,7 @@
 const YOUTUBE_API_BASE_URL = "https://www.googleapis.com/youtube/v3";
 const CACHE_TTL_MS = 15 * 60 * 1000;
 
-let latestPlaylistVideoCache = {
-  cacheKey: "",
-  expiresAt: 0,
-  payload: null,
-};
+const latestPlaylistVideoCaches = new Map();
 
 function extractPlaylistId(input) {
   const value = String(input || "").trim();
@@ -22,10 +18,14 @@ function extractPlaylistId(input) {
   return value;
 }
 
-function getYouTubeConfig() {
-  const apiKey = String(process.env.YOUTUBE_API_KEY || "").trim();
+function getYouTubeConfig({
+  apiKeyEnv = "YOUTUBE_API_KEY",
+  playlistIdEnv = "YOUTUBE_PLAYLIST_ID",
+  playlistUrlEnv = "YOUTUBE_PLAYLIST_URL",
+} = {}) {
+  const apiKey = String(process.env[apiKeyEnv] || "").trim();
   const playlistId = extractPlaylistId(
-    process.env.YOUTUBE_PLAYLIST_ID || process.env.YOUTUBE_PLAYLIST_URL,
+    process.env[playlistIdEnv] || process.env[playlistUrlEnv],
   );
 
   return {
@@ -105,45 +105,57 @@ async function fetchLatestPlaylistVideo({ apiKey, playlistId }) {
   };
 }
 
-export async function getLatestPlaylistVideo(_, res) {
-  const config = getYouTubeConfig();
+function createLatestPlaylistVideoHandler(configOptions) {
+  return async function latestPlaylistVideoHandler(_, res) {
+    const config = getYouTubeConfig(configOptions);
 
-  if (!config.configured) {
-    return res.status(200).json({
-      configured: false,
-      video: null,
-      message: "YouTube playlist zatím není nakonfigurovaný.",
-    });
-  }
+    if (!config.configured) {
+      return res.status(200).json({
+        configured: false,
+        video: null,
+        message: "YouTube playlist zatím není nakonfigurovaný.",
+      });
+    }
 
-  const cacheKey = `${config.playlistId}:${config.apiKey}`;
-  const now = Date.now();
+    const cacheKey = `${config.playlistId}:${config.apiKey}`;
+    const now = Date.now();
+    const cacheId = `${configOptions?.playlistIdEnv || "YOUTUBE_PLAYLIST_ID"}:${cacheKey}`;
+    const cached = latestPlaylistVideoCaches.get(cacheId);
 
-  if (
-    latestPlaylistVideoCache.payload &&
-    latestPlaylistVideoCache.cacheKey === cacheKey &&
-    latestPlaylistVideoCache.expiresAt > now
-  ) {
-    return res.status(200).json(latestPlaylistVideoCache.payload);
-  }
+    if (cached && cached.expiresAt > now) {
+      return res.status(200).json(cached.payload);
+    }
 
-  try {
-    const payload = await fetchLatestPlaylistVideo(config);
+    try {
+      const payload = await fetchLatestPlaylistVideo(config);
 
-    latestPlaylistVideoCache = {
-      cacheKey,
-      expiresAt: now + CACHE_TTL_MS,
-      payload,
-    };
+      latestPlaylistVideoCaches.set(cacheId, {
+        cacheKey,
+        expiresAt: now + CACHE_TTL_MS,
+        payload,
+      });
 
-    return res.status(200).json(payload);
-  } catch (error) {
-    console.error("Error in getLatestPlaylistVideo controller.", error);
-    return res.status(200).json({
-      configured: true,
-      video: null,
-      message: "Nepodařilo se načíst poslední video z YouTube playlistu.",
-      details: error?.message || "Neznámá chyba YouTube API.",
-    });
-  }
+      return res.status(200).json(payload);
+    } catch (error) {
+      console.error("Error in getLatestPlaylistVideo controller.", error);
+      return res.status(200).json({
+        configured: true,
+        video: null,
+        message: "Nepodařilo se načíst poslední video z YouTube playlistu.",
+        details: error?.message || "Neznámá chyba YouTube API.",
+      });
+    }
+  };
 }
+
+export const getLatestPlaylistVideo = createLatestPlaylistVideoHandler({
+  apiKeyEnv: "YOUTUBE_API_KEY",
+  playlistIdEnv: "YOUTUBE_PLAYLIST_ID",
+  playlistUrlEnv: "YOUTUBE_PLAYLIST_URL",
+});
+
+export const getLatestSpecialPlaylistVideo = createLatestPlaylistVideoHandler({
+  apiKeyEnv: "YOUTUBE_API_KEY",
+  playlistIdEnv: "YOUTUBE_SPECIAL_PLAYLIST_ID",
+  playlistUrlEnv: "YOUTUBE_SPECIAL_PLAYLIST_URL",
+});

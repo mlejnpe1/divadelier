@@ -287,7 +287,7 @@ export default function CoursesPage() {
                 Lektorské vedení
               </p>
               <h2 className="mt-3 text-3xl font-bold leading-tight text-gray-900">
-                Mgr. Adéla Pellarová
+                Mgr. Adéla Pellarová (DAMU)
               </h2>
               <p className="mt-4 max-w-3xl text-base leading-8 text-[#5f4a35]">
                 Kurzy vede divadelní pedagožka, herečka a autorka, která staví

@@ -17,8 +17,16 @@ function formatPublishedAt(value) {
   });
 }
 
-export default function LatestYoutubeVideoPanel({ user }) {
-  const { data, loading } = useFetch("/api/youtube/latest-playlist-video");
+export default function LatestYoutubeVideoPanel({
+  user,
+  endpoint = "/api/youtube/latest-playlist-video",
+  badge = "YouTube",
+  heading = "Poslední video novinky",
+  emptyHeading = "Poslední video se připravuje",
+  emptyMessage = "Video je připravené ke spuštění přímo na webu.",
+  loadingHeightClassName = "h-72",
+}) {
+  const { data, loading } = useFetch(endpoint);
 
   const video = data?.video || null;
   const publishedAt = formatPublishedAt(video?.publishedAt);
@@ -34,16 +42,16 @@ export default function LatestYoutubeVideoPanel({ user }) {
         </div>
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#9a590b]">
-            YouTube
+            {badge}
           </p>
-          <h3 className="text-3xl font-bold text-[#3d2514]">
-            Poslední video novinky
-          </h3>
+          <h3 className="text-3xl font-bold text-[#3d2514]">{heading}</h3>
         </div>
       </div>
 
       {loading ? (
-        <div className="mt-8 flex h-72 items-center justify-center rounded-[1.8rem] border border-white/40 bg-white/40">
+        <div
+          className={`mt-8 flex items-center justify-center rounded-[1.8rem] border border-white/40 bg-white/40 ${loadingHeightClassName}`}
+        >
           <div className="h-12 w-12 animate-spin rounded-full border-t-4 border-[#f5a623] border-solid" />
         </div>
       ) : null}
@@ -84,7 +92,7 @@ export default function LatestYoutubeVideoPanel({ user }) {
 
             <p className="mt-4 line-clamp-6 text-sm leading-7 text-[#6b4b2b] md:text-base">
               {video.description ||
-                "Video je připravené ke spuštění přímo na webu."}
+                emptyMessage}
             </p>
 
             <div className="mt-6 flex flex-wrap gap-3">
@@ -104,7 +112,7 @@ export default function LatestYoutubeVideoPanel({ user }) {
           </div>
 
           <h4 className="mt-4 text-2xl font-semibold text-gray-900">
-            Poslední video se připravuje
+            {emptyHeading}
           </h4>
           {data?.details && user ? (
             <div className="mt-3 rounded-2xl border border-red-200/70 bg-red-50/75 px-4 py-3 text-sm text-red-700">

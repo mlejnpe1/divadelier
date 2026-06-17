@@ -190,6 +190,22 @@ const TVVVPage = () => {
         <LatestYoutubeVideoPanel user={user} />
       </Section>
 
+      <Section border={true}>
+        <div className="flex items-center mb-8">
+          <Theater className="w-9 h-9 text-[#f5a623] mr-3" />
+          <h2 className="text-3xl font-bold">Poslední Speciál z Divadeliéru</h2>
+        </div>
+        <LatestYoutubeVideoPanel
+          user={user}
+          endpoint="/api/youtube/latest-special-playlist-video"
+          badge="TV VV"
+          heading="Poslední speciál z Divadeliéru"
+          emptyHeading="Poslední speciál se připravuje"
+          emptyMessage="Speciál je připravený ke spuštění přímo na webu."
+          loadingHeightClassName="h-72"
+        />
+      </Section>
+
       <Section id="specialsSection">
         <div className="relative overflow-hidden rounded-[2rem] md:p-8">
           <div className="relative mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">

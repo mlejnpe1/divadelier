@@ -14,7 +14,7 @@ const About = () => {
           transition={{ duration: 1.5 }}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-            O <span className="text-[#f5a623]">Divadeliéru</span>
+            O Divadeliéru
           </h2>
           <p className="text-lg text-gray-700 leading-relaxed mb-4">
             Divadeliér je otevřený prostor pro divadelní tvorbu, koncerty,
@@ -25,7 +25,7 @@ const About = () => {
             i zkušeným umělcům.
           </p>
           <p className="text-lg text-gray-700 leading-relaxed">
-            Chceme, aby si každý našel své místo – ať už jako divák, účinkující,
+            Chceme, aby si každý našel své místo – ať už jako divák, účinkující
             nebo organizátor.
           </p>
         </motion.div>

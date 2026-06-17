@@ -49,7 +49,7 @@ const EVENT_FACTS = [
   {
     title: "Co zažijete",
     value: "Andělé v ulicích, loutky, světla a svíčky",
-    note: "Velcí papíroví andělé a andělská ulička",
+    note: "Velcí papíroví andělé v Andělské ulici",
     Icon: Sparkles,
   },
   {
@@ -250,9 +250,10 @@ export default function LetAndeluPage() {
                 Kdo chce, může se k andělům přidat
               </h2>
               <p className="mt-4 text-base leading-8 text-[#5f4a35]">
-                Let andělů má být vidět, ale také sdílet. Pokud chcete být u
-                toho blíž, můžete se přidat v andělském převleku nebo akci
-                sledovat jako součást předvánočního setkání v centru města.
+                Let andělů je krásné vidět, ale můžete jej i prožít. Pokud
+                chcete být u toho blíž, můžete se přidat v andělském převleku
+                nebo akci sledovat jako součást předvánočního setkání v centru
+                města.
               </p>
             </div>
 
