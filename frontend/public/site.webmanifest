@@ -1,0 +1,17 @@
+{
+  "name": "Divadeliér",
+  "short_name": "Divadeliér",
+  "description": "Divadlo a kulturní prostor ve Vysokém Mýtě.",
+  "lang": "cs",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fffaf4",
+  "theme_color": "#2f2417",
+  "icons": [
+    {
+      "src": "/logo.webp",
+      "sizes": "512x512",
+      "type": "image/webp"
+    }
+  ]
+}

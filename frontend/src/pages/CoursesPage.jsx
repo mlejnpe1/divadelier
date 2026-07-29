@@ -50,7 +50,7 @@ export default function CoursesPage() {
           {
             title: "Dr. ZDIV",
             meta: "Dramaťák pro děti • 2 představení ročně",
-            price: "1700 Kč / pololetí",
+            price: "1900 Kč / pololetí",
             badges: [
               "Prosinec: stínové divadlo",
               "Květen/červen: představení v M-klubu",

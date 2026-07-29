@@ -6,6 +6,8 @@ import Placeholder from "../assets/images/placeholder.png";
 import { useFetch } from "../hooks/useFetch.js";
 import Gallery from "../components/layout/Gallery.jsx";
 import Button from "../components/layout/Button.jsx";
+import { applyPageMetadata } from "../seo/applyMetadata.js";
+import { toMetaDescription } from "../seo/metadata.js";
 
 function getWebsiteLabel(website) {
   const description = String(website?.description || "").trim();
@@ -73,6 +75,20 @@ const ExhibitionDetailPage = () => {
       };
     })
     .filter((website) => website.url);
+
+  useEffect(() => {
+    if (!exh) return;
+
+    applyPageMetadata({
+      path: `/vvv/${id}`,
+      title: `${displayTitle} | Výstavy ve výloze`,
+      description: toMetaDescription(
+        exh.information || exh.author?.bio,
+        `Podrobnosti o výstavě ${displayTitle} v Divadeliéru.`,
+      ),
+      image: exh.coverImage?.url || undefined,
+    });
+  }, [displayTitle, exh, id]);
 
   useEffect(() => {
     if (!isCoverOpen) return undefined;

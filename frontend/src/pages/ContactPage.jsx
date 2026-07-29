@@ -21,9 +21,9 @@ const ContactPage = () => {
                   Kontakt
                 </p>
 
-                <h2 className="text-3xl font-bold leading-tight text-[#2f2417] sm:text-4xl">
+                <h1 className="text-3xl font-bold leading-tight text-[#2f2417] sm:text-4xl">
                   Ozvěte se nám
-                </h2>
+                </h1>
 
                 <p className="max-w-2xl text-sm leading-7 text-[#5e4b34] sm:text-base">
                   Máte dotaz, zájem o kurz, akci nebo spolupráci? Napište nám,

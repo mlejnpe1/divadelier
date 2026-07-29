@@ -5,6 +5,8 @@ import Section from "../components/layout/Section.jsx";
 import Placeholder from "../assets/images/placeholder.png";
 import { useFetch } from "../hooks/useFetch.js";
 import Button from "../components/layout/Button.jsx";
+import { applyPageMetadata } from "../seo/applyMetadata.js";
+import { toMetaDescription } from "../seo/metadata.js";
 
 function getWebsiteLabel(website) {
   const description = String(website?.description || "").trim();
@@ -63,6 +65,20 @@ const ActionDetailPage = () => {
       };
     })
     .filter((website) => website.url);
+
+  useEffect(() => {
+    if (!action) return;
+
+    applyPageMetadata({
+      path: `/akce/${id}`,
+      title: `${displayTitle} | Divadeliér`,
+      description: toMetaDescription(
+        action.description,
+        `Podrobnosti o akci ${displayTitle} v Divadeliéru.`,
+      ),
+      image: action.coverImage?.url || undefined,
+    });
+  }, [action, displayTitle, id]);
 
   useEffect(() => {
     if (!isCoverOpen) return undefined;

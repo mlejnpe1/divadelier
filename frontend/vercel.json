@@ -1,14 +1,51 @@
 {
-  "version": 2,
-  "builds": [
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "trailingSlash": false,
+  "headers": [
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "dist" }
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
     }
   ],
-  "routes": [
-    { "src": "/assets/(.*)", "dest": "/assets/$1" },
-    { "src": "/(.*)", "dest": "/index.html" }
+  "rewrites": [
+    { "source": "/kontakt", "destination": "/kontakt/index.html" },
+    { "source": "/drZdiv", "destination": "/drZdiv/index.html" },
+    { "source": "/divan", "destination": "/divan/index.html" },
+    { "source": "/vvv", "destination": "/vvv/index.html" },
+    { "source": "/tvvv", "destination": "/tvvv/index.html" },
+    { "source": "/eshop", "destination": "/eshop/index.html" },
+    { "source": "/historie", "destination": "/historie/index.html" },
+    { "source": "/kurzy", "destination": "/kurzy/index.html" },
+    { "source": "/akce", "destination": "/akce/index.html" },
+    { "source": "/let-andelu", "destination": "/let-andelu/index.html" },
+    { "source": "/pronajem", "destination": "/pronajem/index.html" },
+    { "source": "/login", "destination": "/login/index.html" },
+    {
+      "source": "/obchodni-podminky",
+      "destination": "/obchodni-podminky/index.html"
+    },
+    {
+      "source": "/zasady-zpracovani-osobnich-udaju",
+      "destination": "/zasady-zpracovani-osobnich-udaju/index.html"
+    },
+    {
+      "source": "/zasady-cookies",
+      "destination": "/zasady-cookies/index.html"
+    },
+    {
+      "source": "/mimosoudni-reseni-spotrebitelskych-sporu",
+      "destination": "/mimosoudni-reseni-spotrebitelskych-sporu/index.html"
+    },
+    { "source": "/akce/:id", "destination": "/index.html" },
+    { "source": "/vvv/:id", "destination": "/index.html" }
   ]
 }
