@@ -26,7 +26,7 @@ const heroImages = Object.values(
 const INTRO_TEXT = `
 Divan vznikl v roce 2015 jako skupina dospělých divadelních nadšenců, ve které se lidé prolínají dle časových možností a životních okolností. Od doby svého vzniku zrealizovala představení Blázinec v prvním poschodí, Hajzlbáby, Monologový večer, 17. listopad - 30 let, Firemní večírek, Tatíček zůstavitel. Taky během Covidu natočili pidifilm a účastní se Letu andělů.
 
-V současné době hrají kolektivní autorskou hru Nalezená tečka v duši.
+V současné době hrají kolektivní autorskou hru Nalezená tečka v duši.
 
 Historii Divanu si můžete prohlédnout na historických webových stránkách.
 `;
@@ -37,7 +37,7 @@ const DivanPage = () => {
       <Hero
         title="Divan"
         subtitle="Skupina dospělých divadelních nadšenců, která skrze vedení Adély Pellarové objevuje a rozvíjí herecké dovednosti a tvoří divadelní představení."
-        description="Termíny schůzek: Pátek 19.00 – 21.00"
+        description="Termíny schůzek: Pátek 17.00 – 19.00"
         children={
           <HeroMediaShowcase
             images={heroImages}
@@ -83,7 +83,7 @@ const DivanPage = () => {
           přidat.
         </p>
         <p className="mt-6 whitespace-pre-line text-lg text-gray-700 md:text-xl">
-          Termíny schůzek: Pátek 19.00 – 21.00
+          Termíny schůzek: Pátek 17.00 – 19.00
         </p>
       </Section>
 

@@ -93,6 +93,18 @@ function buildAuthor(author = {}) {
   };
 }
 
+function getStartOfTomorrowInPrague() {
+  const today = new Intl.DateTimeFormat("sv-SE", {
+    timeZone: "Europe/Prague",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+  const startOfTomorrow = new Date(`${today}T00:00:00.000Z`);
+  startOfTomorrow.setUTCDate(startOfTomorrow.getUTCDate() + 1);
+  return startOfTomorrow;
+}
+
 async function cleanupR2Keys(keys, logLabel) {
   const normalizedKeys = Array.from(new Set((keys || []).filter(Boolean)));
 
@@ -341,19 +353,16 @@ export async function deleteExhibition(req, res) {
 
 export async function getFeaturedExhibition(req, res) {
   try {
-    const now = new Date();
-    const startOfToday = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-    );
+    const startOfTomorrow = getStartOfTomorrowInPrague();
 
     let exhibition = await Exhibition.findOne({
-      date: { $gte: startOfToday },
-    }).sort({ date: 1 });
+      date: { $lt: startOfTomorrow },
+    }).sort({ date: -1, _id: -1 });
 
     if (!exhibition) {
-      exhibition = await Exhibition.findOne().sort({ date: -1 });
+      exhibition = await Exhibition.findOne({
+        date: { $gte: startOfTomorrow },
+      }).sort({ date: 1, _id: 1 });
     }
 
     if (!exhibition) {
@@ -374,32 +383,16 @@ export async function getCarouselExhibitions(req, res) {
       Math.min(20, parseInt(req.query.limit || "6", 10)),
     );
 
-    const now = new Date();
-    const startOfToday = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-    );
+    const startOfTomorrow = getStartOfTomorrowInPrague();
 
     const upcoming = await Exhibition.find({
-      date: { $gte: startOfToday },
+      date: { $gte: startOfTomorrow },
     })
       .sort({ date: 1, _id: 1 })
       .limit(limit)
       .lean();
 
-    if (upcoming.length > 0) {
-      return res.status(200).json({ items: upcoming });
-    }
-
-    const recentPast = await Exhibition.find({
-      date: { $exists: true, $ne: null },
-    })
-      .sort({ date: -1, _id: 1 })
-      .limit(limit)
-      .lean();
-
-    return res.status(200).json({ items: recentPast });
+    return res.status(200).json({ items: upcoming });
   } catch (error) {
     console.error("Error in getCarouselExhibitions controller.", error);
     return res.status(500).json({ message: "Internal server error." });

@@ -1,15 +1,14 @@
-import React from "react";
+import { useState } from "react";
 import { ExternalLink, PlayCircle, Youtube } from "lucide-react";
-import { useFetch } from "../../hooks/useFetch.js";
 import Button from "../layout/Button.jsx";
-import ExternalContentGate from "../cookies/ExternalContentGate";
+import ExternalContentGate from "../cookies/ExternalContentGate.jsx";
+import { displayVideoTitle } from "../../utils/videoTitle.js";
+import YoutubeArtwork from "./YoutubeArtwork.jsx";
 
 function formatPublishedAt(value) {
   if (!value) return "";
-
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return "";
-
   return parsed.toLocaleDateString("cs-CZ", {
     day: "2-digit",
     month: "2-digit",
@@ -18,109 +17,96 @@ function formatPublishedAt(value) {
 }
 
 export default function LatestYoutubeVideoPanel({
+  video,
+  loading,
+  details,
   user,
-  endpoint = "/api/youtube/latest-playlist-video",
-  badge = "YouTube",
-  heading = "Poslední video novinky",
-  emptyHeading = "Poslední video se připravuje",
-  emptyMessage = "Video je připravené ke spuštění přímo na webu.",
-  loadingHeightClassName = "h-72",
+  badge = "TV VV",
+  heading = "Nejnovější video",
+  kind = "special",
 }) {
-  const { data, loading } = useFetch(endpoint);
-
-  const video = data?.video || null;
+  const [showPlayer, setShowPlayer] = useState(false);
   const publishedAt = formatPublishedAt(video?.publishedAt);
+  const title = displayVideoTitle(video?.title, kind);
 
   return (
-    <div className="relative overflow-hidden rounded-[2rem] border border-[#ffd799]/20 bg-[linear-gradient(145deg,rgba(255,248,236,0.82),rgba(255,234,196,0.44))] p-6 shadow-[0_22px_60px_rgba(95,47,0,0.12)] backdrop-blur-xl md:p-8">
-      <div className="pointer-events-none absolute -left-8 top-4 h-24 w-24 rounded-full bg-[#f5a623]/18 blur-3xl" />
-      <div className="pointer-events-none absolute right-0 top-0 h-24 w-24 rounded-full bg-white/35 blur-3xl" />
-
-      <div className="relative flex items-center gap-3">
-        <div className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-[#ffd799]/30 bg-[rgba(245,166,35,0.14)] text-[#9a590b]">
-          <Youtube size={22} />
+    <div className="overflow-hidden rounded-[2rem] border border-[#ffd799]/20 bg-[linear-gradient(145deg,rgba(255,248,236,0.82),rgba(255,234,196,0.44))] p-5 shadow-[0_22px_60px_rgba(95,47,0,0.12)] md:p-7">
+      <div className="flex items-center gap-3">
+        <div className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#ffd799]/30 bg-[rgba(245,166,35,0.14)] text-[#9a590b]">
+          <Youtube size={21} />
         </div>
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#9a590b]">
-            {badge}
-          </p>
-          <h3 className="text-3xl font-bold text-[#3d2514]">{heading}</h3>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#9a590b]">{badge}</p>
+          <h3 className="text-xl font-bold text-[#3d2514] md:text-2xl">{heading}</h3>
         </div>
       </div>
 
-      {loading ? (
-        <div
-          className={`mt-8 flex items-center justify-center rounded-[1.8rem] border border-white/40 bg-white/40 ${loadingHeightClassName}`}
-        >
+      {loading && (
+        <div className="mt-6 flex h-52 items-center justify-center rounded-[1.6rem] bg-white/40">
           <div className="h-12 w-12 animate-spin rounded-full border-t-4 border-[#f5a623] border-solid" />
         </div>
-      ) : null}
+      )}
 
-      {!loading && video ? (
-        <div className="relative mt-8 grid gap-6 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.85fr)] lg:items-start">
-          <ExternalContentGate
-            type="YouTube"
-            title={video.title || "Nejnovější video"}
-            description="Video přehrajeme až po vašem souhlasu s externím obsahem. Pokud nechcete nic povolovat, můžete ho otevřít přímo na YouTube."
-            sourceLabel="YouTube"
-            sourceHref={video.watchUrl}
-            loadLabel="Načíst video"
-            iframeSrc={video.embedUrl}
-            iframeTitle={video.title || "YouTube video"}
-            iframeAllow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            className="overflow-hidden rounded-[1.8rem] border border-white/45 bg-black shadow-[0_24px_60px_rgba(15,23,42,0.18)]"
-            iframeClassName="aspect-video h-full w-full"
-          />
+      {!loading && video && (
+        <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1.25fr)_minmax(280px,0.75fr)] lg:items-stretch">
+          {showPlayer ? (
+            <ExternalContentGate
+              type="YouTube"
+              title={video.title}
+              description="Video načteme po vašem souhlasu s externím obsahem."
+              sourceLabel="YouTube"
+              sourceHref={video.watchUrl}
+              loadLabel="Načíst video"
+              iframeSrc={video.embedUrl || `https://www.youtube.com/embed/${video.videoId}`}
+              iframeTitle={video.title}
+              iframeAllow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              className="overflow-hidden rounded-[1.6rem] border border-white/45 bg-black"
+              iframeClassName="aspect-video h-full w-full"
+            />
+          ) : (
+            <button
+              type="button"
+              onClick={() => setShowPlayer(true)}
+              aria-label={`Přehrát na stránce: ${title}`}
+              className="group relative overflow-hidden rounded-[1.6rem] text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f5a623]"
+            >
+              <YoutubeArtwork video={video} kind={kind} />
+              <span className="absolute bottom-4 left-4 rounded-full bg-white/95 px-4 py-2 text-sm font-semibold text-[#4a2c14] shadow-lg transition group-hover:bg-[#f5a623] group-hover:text-white">
+                Přehrát na stránce
+              </span>
+            </button>
+          )}
 
-          <div className="rounded-[1.6rem] border border-white/45 bg-white/55 p-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] backdrop-blur-sm">
-            <div className="flex flex-wrap items-center gap-3">
-              {publishedAt ? (
-                <span className="rounded-full border border-[#ffd799]/30 bg-[rgba(245,166,35,0.14)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#9a590b]">
-                  {publishedAt}
-                </span>
-              ) : null}
-              {video.channelTitle ? (
-                <span className="rounded-full border border-white/60 bg-white/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#7a4d16]">
-                  {video.channelTitle}
-                </span>
-              ) : null}
+          <div className="flex flex-col rounded-[1.6rem] border border-white/45 bg-white/55 p-5">
+            <div className="flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-[#9a590b]">
+              {publishedAt && <span>{publishedAt}</span>}
+              {video.channelTitle && <span>· {video.channelTitle}</span>}
             </div>
-
-            <h4 className="mt-4 text-2xl font-semibold leading-tight text-gray-900">
-              {video.title || "Nejnovější video"}
+            <h4 title={video.title} className="mt-4 text-2xl font-semibold leading-tight text-[#3d2514]">
+              {title}
             </h4>
-
-            <p className="mt-4 line-clamp-6 text-sm leading-7 text-[#6b4b2b] md:text-base">
-              {video.description ||
-                emptyMessage}
-            </p>
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Button href={video.watchUrl} target="_blank" rel="noreferrer">
+            {video.description && (
+              <p className="mt-4 line-clamp-3 text-sm leading-7 text-[#6b4b2b]">
+                {video.description}
+              </p>
+            )}
+            <div className="mt-auto pt-5">
+              <Button href={video.watchUrl} target="_blank" rel="noopener noreferrer">
                 Přehrát na YouTube
                 <ExternalLink size={16} />
               </Button>
             </div>
           </div>
         </div>
-      ) : null}
+      )}
 
-      {!loading && !video ? (
-        <div className="mt-8 rounded-[1.8rem] border border-white/45 bg-white/55 p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.3)] backdrop-blur-sm">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-[#ffd799]/30 bg-[rgba(245,166,35,0.14)] text-[#9a590b]">
-            <PlayCircle size={22} />
-          </div>
-
-          <h4 className="mt-4 text-2xl font-semibold text-gray-900">
-            {emptyHeading}
-          </h4>
-          {data?.details && user ? (
-            <div className="mt-3 rounded-2xl border border-red-200/70 bg-red-50/75 px-4 py-3 text-sm text-red-700">
-              {data.details}
-            </div>
-          ) : null}
+      {!loading && !video && (
+        <div className="mt-6 rounded-[1.6rem] border border-white/45 bg-white/55 p-6">
+          <PlayCircle size={26} className="text-[#9a590b]" />
+          <p className="mt-3 text-[#6b4b2b]">Nejnovější video se zatím nepodařilo načíst.</p>
+          {details && user && <p className="mt-2 text-sm text-red-700">{details}</p>}
         </div>
-      ) : null}
+      )}
     </div>
   );
 }

@@ -1,276 +1,203 @@
-import React, { useEffect, useState } from "react";
-import { Plus, Theater, Tv } from "lucide-react";
-import toast from "react-hot-toast";
+import { useEffect, useState } from "react";
+import { Mic2, Theater, Tv } from "lucide-react";
 import Hero from "../components/layout/Hero.jsx";
+import HeroFeatureCard from "../components/layout/HeroFeatureCard.jsx";
+import HeroFeaturePanel from "../components/layout/HeroFeaturePanel.jsx";
 import Section from "../components/layout/Section.jsx";
-import Button from "../components/layout/Button.jsx";
-import SpecialForm from "../components/specials/SpecialForm.jsx";
-import SpecialsList from "../components/specials/SpecialList.jsx";
-import Pagination from "../components/layout/Pagiantion.jsx";
-import ListToolbar from "../components/layout/ListToolbar.jsx";
-import ScrollHint from "../components/layout/ScrollHint.jsx";
 import { useFetch } from "../hooks/useFetch.js";
 import { useAuth } from "../hooks/useAuth.js";
-import { useListControls } from "../hooks/useListControls.js";
-import { toastAction } from "../utils/toastAction.jsx";
-import { apiFetch } from "../utils/api.js";
-import { confirmToast } from "../utils/confirmToast.jsx";
 import LatestYoutubeVideoPanel from "../components/specials/LatestYoutubeVideoPanel.jsx";
+import PlaylistArchive from "../components/specials/PlaylistArchive.jsx";
+import PlaylistPreview from "../components/specials/PlaylistPreview.jsx";
 
-const EMPTY_SPECIAL_DRAFT = {
-  name: "",
-  authorName: "",
-  information: "",
-  link: "",
-};
+const POETRYCAST_PLAYLIST_ID = "PLguhGFa3IXO_FMOcm71QJWcNXIL3Cww2W";
+const EMPTY_PLAYLIST = [];
+const TV_SECTIONS = [
+  {
+    id: "newsSection",
+    icon: Theater,
+    title: "Novinky z výlohy",
+    shortTitle: "Novinky",
+    text: "Co se právě děje v Divadeliéru.",
+  },
+  {
+    id: "specialsSection",
+    icon: Tv,
+    title: "Speciály z Divadeliéru",
+    shortTitle: "Rozhovory",
+    text: "Rozhovory s hosty a záznamy.",
+  },
+  {
+    id: "poetrycastsSection",
+    icon: Mic2,
+    title: "PoetryCasty",
+    shortTitle: "PoetryCasty",
+    text: "Všechny díly PoetryCastů.",
+  },
+];
 
-const TVVVPage = () => {
-  const { data, loading } = useFetch("/api/specials");
-  const { user } = useAuth();
-  const [specials, setSpecials] = useState([]);
-  const [showForm, setShowForm] = useState(false);
-  const [editingId, setEditingId] = useState(null);
-  const [creating, setCreating] = useState(false);
-  const [draft, setDraft] = useState(EMPTY_SPECIAL_DRAFT);
+function scrollTo(id) {
+  const target = document.getElementById(id);
+  if (!target) return;
+  const top = window.scrollY + target.getBoundingClientRect().top - 144;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  window.scrollTo({ top, behavior: reduceMotion ? "auto" : "smooth" });
+}
+
+export default function TVVVPage() {
+  const [activeSection, setActiveSection] = useState(TV_SECTIONS[0].id);
 
   useEffect(() => {
-    if (Array.isArray(data)) setSpecials(data);
-  }, [data]);
-
-  const isEdit = Boolean(editingId);
-
-  const controls = useListControls(specials, {
-    pageSize: 8,
-    getSortValue: (s) => new Date(s.createdAt || 0),
-    sortDirection: "desc",
-    searchFields: [
-      (s) => s.name,
-      (s) => s.authorName,
-      (s) => s.information,
-      (s) => s.link,
-    ],
-  });
-
-  const openCreate = () => {
-    setEditingId(null);
-    setDraft(EMPTY_SPECIAL_DRAFT);
-    setShowForm(true);
-  };
-
-  const openEdit = (s) => {
-    setEditingId(s._id);
-    setDraft({
-      name: s.name || "",
-      authorName: s.authorName || "",
-      information: s.information || "",
-      link: s.link || "",
-    });
-    setShowForm(true);
-  };
-
-  const close = () => {
-    setEditingId(null);
-    setDraft(EMPTY_SPECIAL_DRAFT);
-    setShowForm(false);
-  };
-
-  const validate = (d) => {
-    if (!d.name?.trim()) return "Zadej název speciálu.";
-    if (!d.link?.trim()) return "Zadej odkaz.";
-    try {
-      new URL(d.link.trim());
-    } catch {
-      return "Odkaz musí být validní URL (např. https://...).";
-    }
-    return null;
-  };
-
-  const onSave = async (e) => {
-    e?.preventDefault?.();
-
-    const err = validate(draft);
-    if (err) return toast.error(err);
-
-    const payload = {
-      name: draft.name.trim(),
-      authorName: (draft.authorName || "").trim(),
-      information: (draft.information || "").trim(),
-      link: draft.link.trim(),
+    const updateActiveSection = () => {
+      const current = [...TV_SECTIONS]
+        .reverse()
+        .find(({ id }) => document.getElementById(id)?.getBoundingClientRect().top <= 170);
+      setActiveSection(current?.id || TV_SECTIONS[0].id);
     };
 
-    setCreating(true);
-    try {
-      const saved = await toastAction(
-        () =>
-          apiFetch(isEdit ? `/api/specials/${editingId}` : "/api/specials", {
-            method: isEdit ? "PUT" : "POST",
-            body: payload,
-          }),
-        {
-          loading: isEdit ? "Ukládám změny..." : "Přidávám speciál...",
-          success: isEdit ? "Speciál aktualizován." : "Speciál přidán.",
-          error: isEdit
-            ? "Chyba při ukládání."
-            : "Nepodařilo se přidat speciál.",
-        },
-      );
+    updateActiveSection();
+    window.addEventListener("scroll", updateActiveSection, { passive: true });
+    return () => window.removeEventListener("scroll", updateActiveSection);
+  }, []);
 
-      setSpecials((prev) =>
-        isEdit
-          ? prev.map((x) => (x._id === saved._id ? saved : x))
-          : [saved, ...prev],
-      );
+  const { data: newsData, loading: newsLoading } = useFetch(
+    "/api/youtube/latest-playlist-video",
+  );
+  const {
+    data: specialData,
+    loading: specialLoading,
+    error: specialError,
+  } = useFetch("/api/youtube/special-playlist");
+  const {
+    data: poetrycastData,
+    loading: poetrycastLoading,
+    error: poetrycastError,
+  } = useFetch("/api/youtube/poetrycast-playlist");
+  const { user } = useAuth();
 
-      close();
-    } finally {
-      setCreating(false);
-    }
-
-    controls.setQuery("");
-    controls.setPage(1);
-  };
-
-  const onDelete = async (id) => {
-    const ok = await confirmToast({
-      message: "Opravdu chcete smazat tento speciál?",
-      description: "Tuto akci nelze vrátit zpět.",
-      confirmText: "Smazat",
-      danger: true,
-    });
-    if (!ok) return;
-
-    await toastAction(
-      () => apiFetch(`/api/specials/${id}`, { method: "DELETE" }),
-      {
-        loading: "Mažu speciál...",
-        success: "Speciál smazán.",
-        error: "Nepodařilo se smazat speciál.",
-      },
-    );
-
-    setSpecials((prev) => prev.filter((s) => s._id !== id));
-    if (editingId === id) close();
-
-    controls.setPage((p) => Math.max(1, Math.min(p, controls.pageCount)));
-  };
+  const specials = specialData?.items || EMPTY_PLAYLIST;
+  const poetrycasts = poetrycastData?.items || EMPTY_PLAYLIST;
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800">
       <Hero
-        title="TV VV – Televize ve výloze"
-        subtitle="Archiv i aktuální přehled speciálů z Divadelieru."
-        buttonText="Přejít na speciály"
-        onButtonClick={() => {
-          const el = document.getElementById("specialsSection");
-          if (el) el.scrollIntoView({ behavior: "smooth" });
-        }}
+        title="TV VV"
+        subtitle="Televize ve výloze"
+        description="Vyberte si pořad a pusťte si videa z Divadeliéru."
+        children={
+          <nav aria-label="Vybrat pořad TV VV">
+            <HeroFeaturePanel
+              eyebrow="Pořady TV VV"
+              title="Vyberte pořad"
+              items={TV_SECTIONS}
+              columnsClassName="grid-cols-1"
+              renderItem={(section) => (
+                <HeroFeatureCard
+                  as="button"
+                  onClick={() => scrollTo(section.id)}
+                  icon={section.icon}
+                  title={section.title}
+                  text={section.text}
+                  actionLabel="Přejít na videa"
+                  compact
+                />
+              )}
+            />
+          </nav>
+        }
       />
-      <div className="relative">
-        <ScrollHint variant="overlay" color="light" />
-      </div>
 
-      <Section border={true}>
-        <div className="flex items-center mb-8">
-          <Tv className="w-9 h-9 text-[#f5a623] mr-3" />
-          <h2 className="text-3xl font-bold">Co je TV VV?</h2>
+      <nav
+        aria-label="Sekce TV VV"
+        className="sticky top-16 z-40 border-b border-[#ffd799]/30 bg-white/95 px-3 shadow-sm backdrop-blur-xl md:px-12"
+      >
+        <div className="mx-auto grid max-w-6xl grid-cols-3 gap-1">
+          {TV_SECTIONS.map((section) => (
+            <button
+              key={section.id}
+              type="button"
+              onClick={() => scrollTo(section.id)}
+              aria-current={activeSection === section.id ? "location" : undefined}
+              className={`border-b-2 px-2 py-4 text-center text-xs font-semibold transition focus-visible:outline-2 focus-visible:outline-[#f5a623] sm:text-sm ${
+                activeSection === section.id
+                  ? "border-[#f5a623] text-[#9a590b]"
+                  : "border-transparent text-[#5f4126] hover:bg-[#fff1d9]"
+              }`}
+            >
+              <span className="sm:hidden">{section.shortTitle}</span>
+              <span className="hidden sm:inline">{section.title}</span>
+            </button>
+          ))}
         </div>
-        <p className="text-gray-700">
-          Televize ve výloze vás každý týden informuje o událostech v
-          Divadeliéru v Novinkách z výlohy a ve Speciálu z Divadeliéru se můžete
-          podívat na rozhovory s úžasnými hosty, kteří Divadeliér navštívili či
-          v něm vystupovali.
-        </p>
-      </Section>
+      </nav>
 
-      <Section border={true}>
-        <div className="flex items-center mb-8">
-          <Theater className="w-9 h-9 text-[#f5a623] mr-3" />
-          <h2 className="text-3xl font-bold">Novinky z výlohy</h2>
-        </div>
-        <LatestYoutubeVideoPanel user={user} />
-      </Section>
-
-      <Section border={true}>
-        <div className="flex items-center mb-8">
-          <Theater className="w-9 h-9 text-[#f5a623] mr-3" />
-          <h2 className="text-3xl font-bold">Poslední Speciál z Divadeliéru</h2>
+      <Section id="newsSection" border compact>
+        <div className="mb-6 flex items-center gap-3">
+          <Theater className="h-8 w-8 text-[#f5a623]" aria-hidden="true" />
+          <div>
+            <h2 className="text-3xl font-bold text-[#3d2514]">Novinky z výlohy</h2>
+            <p className="mt-1 text-sm text-[#6b4b2b] md:text-base">
+              Nejnovější video z Divadeliéru.
+            </p>
+          </div>
         </div>
         <LatestYoutubeVideoPanel
+          key={newsData?.video?.videoId || "empty"}
+          video={newsData?.video || null}
+          loading={newsLoading}
+          details={newsData?.details}
           user={user}
-          endpoint="/api/youtube/latest-special-playlist-video"
-          badge="TV VV"
-          heading="Poslední speciál z Divadeliéru"
-          emptyHeading="Poslední speciál se připravuje"
-          emptyMessage="Speciál je připravený ke spuštění přímo na webu."
-          loadingHeightClassName="h-72"
+          badge="Novinky z výlohy"
+          heading="Poslední video"
+          kind="news"
         />
       </Section>
 
-      <Section id="specialsSection">
-        <div className="relative overflow-hidden rounded-[2rem] md:p-8">
-          <div className="relative mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-            <div>
-              <h2 className="text-3xl font-bold text-[#3d2514]">
-                Speciály z Divadeliéru
-              </h2>
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-[#6b4b2b] md:text-base">
-                Výběr rozhovorů, hostů a záznamů z TV VV v jednom přehledném
-                archivu.
-              </p>
-            </div>
-
-            {user && (
-              <Button onClick={openCreate}>
-                <Plus size={18} />
-                Přidat speciál
-              </Button>
-            )}
+      <Section id="specialsSection" border compact>
+        <div className="mb-7 flex items-center gap-3">
+          <Tv className="h-8 w-8 text-[#f5a623]" aria-hidden="true" />
+          <div>
+            <h2 className="text-3xl font-bold text-[#3d2514]">
+              Speciály z Divadeliéru
+            </h2>
+            <p className="mt-1 text-sm text-[#6b4b2b] md:text-base">
+              Rozhovory a záznamy se automaticky načítají z playlistu TV VV.
+            </p>
           </div>
-
-          {user && showForm && (
-            <div className="relative mb-6 md:p-6">
-              <SpecialForm
-                isEdit={isEdit}
-                draft={draft}
-                setDraft={setDraft}
-                creating={creating}
-                onClose={close}
-                onSubmit={onSave}
-              />
-            </div>
-          )}
-
-          {loading ? (
-            <div className="flex h-32 items-center justify-center">
-              <div className="h-12 w-12 animate-spin rounded-full border-t-4 border-[#f5a623] border-solid" />
-            </div>
-          ) : (
-            <div className="relative md:p-6">
-              <ListToolbar
-                query={controls.query}
-                setQuery={controls.setQuery}
-                totalCount={controls.totalCount}
-                filteredCount={controls.filteredCount}
-              />
-
-              <SpecialsList
-                specials={controls.items}
-                user={user}
-                onEdit={openEdit}
-                onDelete={onDelete}
-              />
-
-              <Pagination
-                page={controls.page}
-                pageCount={controls.pageCount}
-                onPageChange={controls.setPage}
-              />
-            </div>
-          )}
         </div>
+        <PlaylistArchive
+          items={specials}
+          loading={specialLoading}
+          error={specialError}
+          kind="special"
+          emptyMessage="V playlistu zatím nejsou žádné veřejné speciály."
+        />
+      </Section>
+
+      <Section id="poetrycastsSection" compact>
+        <div className="mb-7 flex items-center gap-3">
+          <Mic2 className="h-8 w-8 text-[#f5a623]" aria-hidden="true" />
+          <div>
+            <h2 className="text-3xl font-bold text-[#3d2514]">PoetryCasty</h2>
+            <p className="mt-1 text-sm text-[#6b4b2b] md:text-base">
+              Všechny díly se automaticky načítají z playlistu Divadeliéru.
+            </p>
+          </div>
+        </div>
+        <PlaylistPreview
+          video={poetrycasts[0]}
+          playlistId={POETRYCAST_PLAYLIST_ID}
+          title="PoetryCasty"
+          heading="Celý playlist PoetryCastů"
+        />
+        <PlaylistArchive
+          items={poetrycasts}
+          loading={poetrycastLoading}
+          error={poetrycastError}
+          kind="poetrycast"
+          emptyMessage="V playlistu zatím nejsou žádné veřejné díly."
+        />
       </Section>
     </div>
   );
-};
-
-export default TVVVPage;
+}

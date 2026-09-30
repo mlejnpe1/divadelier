@@ -425,7 +425,7 @@ const DrZdivPage = () => {
         </p>
         <div className="flex flex-row gap-4 my-3">
           <Button onClick={() => handleDownload()} className="cursor-pointer">
-            Stáhnout přihlášku
+            Stáhnout přihlášku (PDF)
             <DownloadIcon size={20} />
           </Button>
         </div>
